@@ -58,6 +58,10 @@ class Application extends EventEmitter {
 
   _initSocketIO(io, server) {
     io.attach(server);
+    io.use(function(socket, next) {
+      socket.join('54321');
+      next();
+    });
   }
 
   _initKoa(app, io, amqp) {

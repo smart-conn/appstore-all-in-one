@@ -3,14 +3,110 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
 </head>
-<body>
+<body ng-app="app" ng-controller="AppController as appCtrl">
+
+  <div class="container">
+    <h1>{{$appInfo.name}}</h1>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#select-device">安装</button>
+    <button class="btn btn-default" ng-repeat="alias in $ownedDevices" ng-click="appCtrl.uninstall($appInfo.id, alias)">卸载 on {{alias}}</button>
+    <button class="btn btn-default" ng-click="appCtrl.update($appInfo.id, '0.0.2')">触发更新</button>
+    <p>{{$appInfo.description}}</p>
+  </div>
+
+  <div id="select-device" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>请选择设备</h4>
+        </div>
+        <div class="modal-body">
+          <button class="btn btn-default" ng-repeat="alias in $ownedDevices" ng-click="appCtrl.install($appInfo.id, alias, $appInfo.version)">{{alias}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
   <script>
+    window.prefetched = {
+      appInfo: {
+        id: 'NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj',
+        name: '变声',
+        version: '0.0.1',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+      },
+      ownedDevices: ['54321']
+    };
+  </script>
+
+  <script>
+
+    angular.module('app', [])
+      .controller('AppController', AppController)
+      .service('AppService', AppService);
+
+    function AppController(AppService, $scope) {
+      this.AppService = AppService;
+      $scope.$appInfo = window.prefetched.appInfo;
+      $scope.$ownedDevices = window.prefetched.ownedDevices;
+    }
+
+    AppController.prototype.install = function(id, alias, version) {
+      var AppService = this.AppService;
+      AppService.install(id, alias, version).then(function() {
+        $('#select-device').modal('hide');
+        console.log(arguments)
+      });
+    };
+
+    AppController.prototype.uninstall = function(id, alias) {
+      var AppService = this.AppService;
+      AppService.uninstall(id, alias).then(console.log.bind(console));
+    };
+
+    AppController.prototype.update = function(id, version) {
+      var AppService = this.AppService;
+      AppService.update(id, version).then(console.log.bind(console));
+    };
+
+    function AppService($http) {
+      this.$http = $http;
+    }
+
+    AppService.prototype.install = function(id, alias, version) {
+      var $http = this.$http;
+      return $http.post(`/device/${alias}/install/${id}`, {version});
+    };
+
+    AppService.prototype.uninstall = function(id, alias) {
+      var $http = this.$http;
+      return $http.post(`/device/${alias}/uninstall/${id}`);
+    };
+
+    AppService.prototype.update = function(id, version) {
+      var $http = this.$http;
+      return $http.post(`/app/${id}/update`, {version});
+    };
+
     var socket = io();
+
     socket.on('connect', function() {
-      console.log('ok');
+      console.log('conn');
     });
+
+    socket.on('app.install', function(msg) {
+      console.log('install', msg);
+    });
+
+    socket.on('app.uninstall', function(msg) {
+      console.log('uninstall', msg);
+    });
+
   </script>
 </body>
 </html>

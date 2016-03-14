@@ -1,3 +1,5 @@
 module.exports = [
-  require('./install')
+  require('./device-manager'),
+  require('./command-server'),
+  require('./store-front')
 ];
