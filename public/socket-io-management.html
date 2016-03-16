@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-app="app">
+
+  <div class="container">
+
+    <table class="table" ng-controller="SocketController as socketCtrl">
+      <thead>
+        <tr>
+          <th>Socket ID</th>
+          <th>Rooms</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="socket in socketCtrl.sockets track by $index">
+          <td>{{socket.id}}</td>
+          <td><span class="label label-default" ng-repeat="room in socket.rooms track by $index">{{room}}</span></td>
+          <td><button class="btn btn-danger btn-xs">kick</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+
+  <script>
+    angular.module('app', []);
+  </script>
+
+  <script>
+    angular.module('app').controller('SocketController', SocketController);
+
+    function SocketController(socket, $q) {
+      this.socket = socket;
+      this.$q = $q;
+      this.initialize();
+    }
+
+    SocketController.prototype.initialize = function() {
+      var socket = this.socket;
+      this.update();
+      socket.on('update', this.onUpdate.bind(this));
+    };
+
+    SocketController.prototype.onUpdate = function() {
+      this.update();
+    };
+
+    SocketController.prototype.update = function() {
+      this.findAll().then((sockets) => {
+        this.sockets = sockets;
+      });
+    };
+
+    SocketController.prototype.findAll = function() {
+      var socket = this.socket;
+      var $q = this.$q;
+      return $q((resolve, reject) => {
+        socket.emit('findAll', (err, sockets) => {
+          if (err) return reject(err);
+          resolve(sockets);
+        });
+      });
+    };
+  </script>
+
+  <script>
+    angular.module('app').value('socket', io('/admin'));
+  </script>
+</body>
+</html>

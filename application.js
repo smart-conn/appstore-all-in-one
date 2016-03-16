@@ -59,7 +59,7 @@ class Application extends EventEmitter {
 
   _initSocketIO(io, server) {
     io.attach(server);
-    io.use(socketIoAuthenticate);
+    io.of('/nasc').use(socketIoAuthenticate);
   }
 
   _initKoa(app, io, amqp) {
