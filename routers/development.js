@@ -40,12 +40,4 @@ function setAccessToken(accessToken) {
   });
 }
 
-getAlias().then((alias) => {
-  return bindDevice('userId', alias);
-}).then((accessToken) => {
-  return setAccessToken(accessToken);
-}).then(() => {
-  console.log('done');
-});
-
 module.exports = router.routes();

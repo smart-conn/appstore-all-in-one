@@ -92,7 +92,7 @@ class Application extends EventEmitter {
   }
 
   _initModels() {
-    
+
   }
 
   _initServices() {
