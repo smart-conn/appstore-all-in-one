@@ -5,6 +5,7 @@ const nconf = require('nconf');
 const socketIO = require('socket.io');
 const EventEmitter = require('events');
 const http = require('http');
+const Sequelize = require('sequelize');
 
 // middlewares
 const bodyParser = require('koa-bodyparser');
@@ -27,6 +28,7 @@ class Application extends EventEmitter {
     var amqp = this.amqp = rpc(this.getConfig('brokerAddress') || 'amqp://127.0.0.1');
     this._initKoa(app, io, amqp);
     this._initSocketIO(io, server);
+    this._initSequelize();
     this._initServices();
   }
 
@@ -72,6 +74,25 @@ class Application extends EventEmitter {
     require('./routers').forEach((router) => {
       app.use(router);
     });
+  }
+
+  _initSequelize() {
+    const database = this.getConfig('database');
+    const username = this.getConfig('username');
+    const password = this.getConfig('password');
+    const host = this.getConfig('host');
+    const dialect = this.getConfig('dialect');
+
+    const sequelize = new Sequelize(database, username, password, {
+      host,
+      dialect
+    });
+
+    this.setContext('sequelize', sequelize);
+  }
+
+  _initModels() {
+    
   }
 
   _initServices() {
