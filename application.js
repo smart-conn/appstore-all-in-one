@@ -14,6 +14,7 @@ const serveStatic = require('koa-static');
 
 // helper
 const rpc = require('./lib/amqp-rpc');
+const socketIoAuthenticate = require('./lib/socket-io-authenticate');
 
 class Application extends EventEmitter {
 
@@ -58,10 +59,7 @@ class Application extends EventEmitter {
 
   _initSocketIO(io, server) {
     io.attach(server);
-    io.use(function(socket, next) {
-      socket.join('54321');
-      next();
-    });
+    io.of('/nasc').use(socketIoAuthenticate);
   }
 
   _initKoa(app, io, amqp) {

@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
   const amqp = app.getContext('amqp');
-  const io = app.getContext('io');
+  const io = app.getContext('io').of('/nasc');
 
   amqp.on('notify.app.install', (msg, callback) => {
     const id = msg.id;

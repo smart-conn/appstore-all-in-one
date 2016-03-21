@@ -21,6 +21,16 @@ router.post('/device/:alias/uninstall/:id', function*() {
   this.body = 'ok';
 });
 
+router.post('/device/:alias/bind', function*() {
+  const amqp = this.app.context.amqp;
+
+  const alias = this.params.alias;
+  const userId = this.request.body.userId;
+
+  const accessToken = yield amqp.call('device.bind', {alias, userId});
+  this.body = {accessToken};
+});
+
 router.post('/app/:id/update', function*() {
   const amqp = this.app.context.amqp;
 
@@ -35,6 +45,12 @@ router.get('/repo/:packageAtVersion', function*() {
   const amqp = this.app.context.amqp;
   const packageAtVersion = this.params.packageAtVersion;
   this.body = yield amqp.call('get.package', {packageAtVersion});
+});
+
+router.get('/device/:alias/manifest', function*() {
+  const amqp = this.app.context.amqp;
+  const alias = this.params.manifest;
+  this.body = yield amqp.call('get.manifest', {alias});
 });
 
 module.exports = router.routes();

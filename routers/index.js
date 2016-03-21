@@ -1,3 +1,6 @@
 module.exports = [
-  require('./main')
+    require('./main'),
+    require('./development'),
+    require('./findAllApps'),
+    require('./findAllDevice')
 ];
