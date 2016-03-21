@@ -1,0 +1,12 @@
+<div id="select-device" class="modal fade" ng-controller="SelectDevice as selectDevice">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>请选择设备</h4>
+            </div>
+            <div class="modal-body">
+                <button class="btn btn-default" ng-repeat="device in devices" ng-click="selectDevice.install(id, device.alias)">{{device.name}}</button>
+            </div>
+        </div>
+    </div>
+</div>
