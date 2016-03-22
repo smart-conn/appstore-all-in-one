@@ -82,10 +82,14 @@ module.exports = function(app) {
   }];
 
   const amqp = app.getContext('amqp');
+  const Application = app.getModel('app');
+
   amqp.on("app.findAllApps", (msg, callback) => {
-    callback(null, repo);
-    console.log(repo);
+    Application.findAll().then(function(apps) {
+      return callback(null, apps);
+    });
   });
+
   amqp.on("app.findAppByID", (msg, callback) => {
     callback(null, _.find(repo, { id: msg.appID }));
   });

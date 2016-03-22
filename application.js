@@ -36,6 +36,12 @@ class Application extends EventEmitter {
     this._loadModules(this);
   }
 
+  getModel(name) {
+    const sequelize = this.getContext('sequelize');
+    // faker
+    return sequelize.get(name);
+  }
+
   getContext(key) {
     return this.app.context[key];
   }
