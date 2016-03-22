@@ -36,34 +36,6 @@ class Application extends EventEmitter {
     this._loadModules(this);
   }
 
-  _injectKoaContext(io, sequelize, broker) {
-    this.setContext('io', io);
-    this.setContext('sequelize', sequelize);
-    this.setContext('amqp', amqp);
-  }
-
-  _initSocketIO(server) {
-    const io = sio();
-    io.attach(server);
-    return io;
-  }
-
-  _initServer(koaApp) {
-    const server = http.createServer(koaApp.callback());
-    return server;
-  }
-
-  _initAMQP() {
-    const broker = this.getConfig('brokerAddress') || 'amqp://127.0.0.1';
-    const broker = amqpRPC(brokerAddress);
-    return broker;
-  }
-
-  setContext(key, value) {
-    this.app.context[key] = value;
-    return this;
-  }
-
   getContext(key) {
     return this.app.context[key];
   }
@@ -84,6 +56,34 @@ class Application extends EventEmitter {
         reject(err);
       }
     });
+  }
+
+  _injectKoaContext(io, sequelize, amqp) {
+    this._setContext('io', io);
+    this._setContext('sequelize', sequelize);
+    this._setContext('amqp', amqp);
+  }
+
+  _initSocketIO(server) {
+    const io = sio();
+    io.attach(server);
+    return io;
+  }
+
+  _initServer(koaApp) {
+    const server = http.createServer(koaApp.callback());
+    return server;
+  }
+
+  _initAMQP() {
+    const brokerAddress = this.getConfig('brokerAddress') || 'amqp://127.0.0.1';
+    const broker = amqpRPC(brokerAddress);
+    return broker;
+  }
+
+  _setContext(key, value) {
+    this.app.context[key] = value;
+    return this;
   }
 
   _initKoa() {

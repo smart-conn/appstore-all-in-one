@@ -9,6 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "peerDependencies": {
+    "sqlite3": "^3.1.1"
+  },
   "dependencies": {
     "amqplib": "^0.4.1",
     "bluebird": "^3.3.4",
@@ -22,11 +25,9 @@
     "koa-static": "^2.0.0",
     "nconf": "^0.8.4",
     "node-uuid": "^1.4.7",
-    "rabbit.js": "^0.4.4",
     "request": "^2.69.0",
     "sequelize": "^3.19.3",
     "socket.io": "^1.4.5",
-    "sqlite3": "^3.1.1",
     "underscore": "^1.8.3"
   }
 }

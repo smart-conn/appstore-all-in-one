@@ -40,7 +40,7 @@ const manifest = [
 
 module.exports = function(app) {
 
-  const amqp = app.getContext('app');
+  const amqp = app.getContext('amqp');
 
   amqp.on('app.install', (msg, callback) => {
     console.log(msg);
