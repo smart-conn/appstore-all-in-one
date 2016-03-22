@@ -40,10 +40,7 @@ const manifest = [
 
 module.exports = function(app) {
 
-  const broker = app.getService('broker');
-  const worker = broker.socket('SUB');
-
-  worker.connect('app.install');
+  const amqp = app.getContext('app');
 
   amqp.on('app.install', (msg, callback) => {
     console.log(msg);

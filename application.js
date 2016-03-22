@@ -5,7 +5,6 @@ const nconf = require('nconf');
 const EventEmitter = require('events');
 const http = require('http');
 const Sequelize = require('sequelize');
-const rabbit = require('rabbit.js');
 const sio = require('socket.io');
 
 // middlewares
@@ -15,6 +14,7 @@ const morgan = require('koa-morgan');
 const serveStatic = require('koa-static');
 
 // helper
+const amqpRPC = require('./lib/amqp-rpc');
 const socketIoAuthenticate = require('./lib/socket-io-authenticate');
 
 class Application extends EventEmitter {
@@ -23,15 +23,23 @@ class Application extends EventEmitter {
     super();
     this._configure(process.env.NODE_ENV);
 
-    const broker = this.broker = this._initRabbit();
+    const amqp = this.amqp = this._initAMQP();
     const sequelize = this.sequelize = this._initSequelize();
-    const koaApp = this.app = this._initKoa(brokerContext, sequelize);
+    const koaApp = this.app = this._initKoa();
     const server = this.server = this._initServer(koaApp);
     const io = this.io = this._initSocketIO(server);
+
+    this._injectKoaContext(io, sequelize, amqp);
 
     this._loadRouters(koaApp);
     this._loadModels(sequelize);
     this._loadModules(this);
+  }
+
+  _injectKoaContext(io, sequelize, broker) {
+    this.setContext('io', io);
+    this.setContext('sequelize', sequelize);
+    this.setContext('amqp', amqp);
   }
 
   _initSocketIO(server) {
@@ -45,19 +53,15 @@ class Application extends EventEmitter {
     return server;
   }
 
-  _initRabbit() {
-    const brokerAddress = this.getConfig('brokerAddress') || 'amqp://127.0.0.1';
-    const brokerContext = rabbit.createContext(brokerAddress);
-    return brokerContext;
+  _initAMQP() {
+    const broker = this.getConfig('brokerAddress') || 'amqp://127.0.0.1';
+    const broker = amqpRPC(brokerAddress);
+    return broker;
   }
 
   setContext(key, value) {
     this.app.context[key] = value;
     return this;
-  }
-
-  getService(key) {
-    return this.app.context[key];
   }
 
   getContext(key) {
@@ -70,35 +74,24 @@ class Application extends EventEmitter {
 
   start() {
     const PORT = this.getConfig('port') || 3000;
-    return Promise.all([
-      new Promise((resolve, reject) => {
-        try {
-          this.server.listen(PORT, () => {
-            this.emit('startup');
-            resolve();
-          });
-        } catch(err) {
-          reject(err);
-        }
-      }),
-      new Promise((resolve, reject) => {
-        this.broker.on('ready', resolve);
-        this.broker.on('error', reject);
-      });
-    ]);
+    return new Promise((resolve, reject) => {
+      try {
+        this.server.listen(PORT, () => {
+          this.emit('startup');
+          resolve();
+        });
+      } catch(err) {
+        reject(err);
+      }
+    });
   }
 
-  _initKoa(brokerContext, sequelize) {
+  _initKoa() {
     const app = koa();
-
-    this.setContext('broker', brokerContext);
-    this.setContext('sequelize', sequelize);
-
     app.use(errorHandler());
     app.use(morgan.middleware('dev'));
     app.use(serveStatic(`${__dirname}/public`));
     app.use(bodyParser());
-
     return app;
   }
 
