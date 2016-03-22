@@ -26,7 +26,6 @@ function AppInfo(AppService, $state, $http, $scope, AppService) {
     });
 }
 AppInfo.prototype.selectDevice = function(id) {
-    // $("#select-device").modal('show');
     this.http.get("/findAllDevice").then((data) => {
         var data = data.data;
         this.devices = data;
@@ -35,29 +34,4 @@ AppInfo.prototype.selectDevice = function(id) {
 }
 AppInfo.prototype.install = function(id, alias) {
     this.appInfoService.install(id, alias);
-    // http.post(`/device/${alias}/install/${id}`, {
-    //     version
-    // });
 }
-
-// function selectDevice($http, $state) {
-//     var _this = this;
-
-// }
-// AppController.prototype.install = function(id, alias, version) {
-//     var AppService = this.AppService;
-//     AppService.install(id, alias, version).then(function() {
-//         $('#select-device').modal('hide');
-//         console.log(arguments)
-//     });
-// };
-
-// AppController.prototype.uninstall = function(id, alias) {
-//     var AppService = this.AppService;
-//     AppService.uninstall(id, alias).then(console.log.bind(console));
-// };
-
-// AppController.prototype.update = function(id, version) {
-//     var AppService = this.AppService;
-//     AppService.update(id, version).then(console.log.bind(console));
-// };

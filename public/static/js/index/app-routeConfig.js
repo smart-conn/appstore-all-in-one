@@ -1,12 +1,6 @@
 angular.module('app').config(routeConfig);
 
 function routeConfig($stateProvider, $urlRouterProvider) {
-
-    // $stateProvider.state('appInstallation', {
-    //     url: '/app/install',
-    //     templateUrl: '_include/app-installation.html'
-    // });
-
     $stateProvider.state('deviceManagement', {
         url: '/device/management',
         templateUrl: '_include/device-management.html'
