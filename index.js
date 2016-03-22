@@ -1,7 +1,8 @@
 'use strict';
 
-require('./application')()
-  .start()
+const app = require('./application')()
+
+app.start()
   .then(function() {
     console.log('started');
   });

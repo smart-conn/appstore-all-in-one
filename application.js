@@ -2,10 +2,10 @@
 
 const koa = require('koa');
 const nconf = require('nconf');
-const socketIO = require('socket.io');
 const EventEmitter = require('events');
 const http = require('http');
 const Sequelize = require('sequelize');
+const sio = require('socket.io');
 
 // middlewares
 const bodyParser = require('koa-bodyparser');
@@ -14,100 +14,131 @@ const morgan = require('koa-morgan');
 const serveStatic = require('koa-static');
 
 // helper
-const rpc = require('./lib/amqp-rpc');
+const amqpRPC = require('./lib/amqp-rpc');
 const socketIoAuthenticate = require('./lib/socket-io-authenticate');
 
 class Application extends EventEmitter {
 
-    constructor() {
-        super();
-        this._configure(process.env.NODE_ENV);
-        var app = this.app = koa();
-        var server = this.server = http.createServer(app.callback());
-        var io = this.io = socketIO();
-        var amqp = this.amqp = rpc(this.getConfig('brokerAddress') || 'amqp://127.0.0.1');
-        this._initKoa(app, io, amqp);
-        this._initSocketIO(io, server);
-        this._initSequelize();
-        this._initServices();
-    }
+  constructor() {
+    super();
+    this._configure(process.env.NODE_ENV);
 
-    setContext(key, value) {
-        this.app.context[key] = value;
-        return this;
-    }
+    const amqp = this.amqp = this._initAMQP();
+    const sequelize = this.sequelize = this._initSequelize();
+    const koaApp = this.app = this._initKoa();
+    const server = this.server = this._initServer(koaApp);
+    const io = this.io = this._initSocketIO(server);
 
-    getContext(key) {
-        return this.app.context[key];
-    }
+    this._injectKoaContext(io, sequelize, amqp);
 
-    getConfig(key) {
-        return nconf.get(key);
-    }
+    this._loadRouters(koaApp);
+    this._loadModels(sequelize);
+    this._loadModules(this);
+  }
 
-    start() {
-        const PORT = this.getConfig('port') || 3000;
-        return new Promise((resolve, reject) => {
-            try {
-                this.server.listen(PORT, () => {
-                    this.emit('startup');
-                    resolve();
-                });
-            } catch (err) {
-                reject(err);
-            }
+  getModel(name) {
+    const sequelize = this.getContext('sequelize');
+    // faker
+    return sequelize.get(name);
+  }
+
+  getContext(key) {
+    return this.app.context[key];
+  }
+
+  getConfig(key) {
+    return nconf.get(key);
+  }
+
+  start() {
+    const PORT = this.getConfig('port') || 3000;
+    return new Promise((resolve, reject) => {
+      try {
+        this.server.listen(PORT, () => {
+          this.emit('startup');
+          resolve();
         });
-    }
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
 
-    _initSocketIO(io, server) {
-        io.attach(server);
-        io.of('/nasc').use(socketIoAuthenticate);
-    }
+  _injectKoaContext(io, sequelize, amqp) {
+    this._setContext('io', io);
+    this._setContext('sequelize', sequelize);
+    this._setContext('amqp', amqp);
+  }
 
-    _initKoa(app, io, amqp) {
-        this.setContext('io', io);
-        this.setContext('amqp', amqp);
-        app.use(errorHandler());
-        app.use(morgan.middleware('dev'));
-        app.use(serveStatic(`${__dirname}/public`));
-        app.use(bodyParser());
-        require('./routers').forEach((router) => {
-            app.use(router);
-        });
-    }
+  _initSocketIO(server) {
+    const io = sio();
+    io.attach(server);
+    return io;
+  }
 
-    _initSequelize() {
-        const database = this.getConfig('database');
-        const username = this.getConfig('username');
-        const password = this.getConfig('password');
-        const host = this.getConfig('host');
-        const dialect = this.getConfig('dialect');
+  _initServer(koaApp) {
+    const server = http.createServer(koaApp.callback());
+    return server;
+  }
 
-        const sequelize = new Sequelize(database, username, password, {
-            host,
-            dialect
-        });
+  _initAMQP() {
+    const brokerAddress = this.getConfig('brokerAddress') || 'amqp://127.0.0.1';
+    const broker = amqpRPC(brokerAddress);
+    return broker;
+  }
 
-        this.setContext('sequelize', sequelize);
-    }
+  _setContext(key, value) {
+    this.app.context[key] = value;
+    return this;
+  }
 
-    _initModels() {
-        require('./models').forEach((model) => {
-            model(sequelize);
-        })
-    }
+  _initKoa() {
+    const app = koa();
+    app.use(errorHandler());
+    app.use(morgan.middleware('dev'));
+    app.use(serveStatic(`${__dirname}/public`));
+    app.use(bodyParser());
+    return app;
+  }
 
-    _initServices() {
-        require('./services').forEach((service) => {
-            service(this);
-        });
-    }
+  _initSequelize() {
+    const database = this.getConfig('database');
+    const username = this.getConfig('username');
+    const password = this.getConfig('password');
+    const host = this.getConfig('host');
+    const dialect = this.getConfig('dialect');
 
-    _configure(env) {
-        const NODE_ENV = env || 'development';
-        nconf.argv().env();
-        nconf.file(`config.${NODE_ENV}.json`);
-    }
+    const sequelize = new Sequelize(database, username, password, {
+      host,
+      dialect
+    });
+
+    return sequelize;
+  }
+
+  _loadModels(sequelize) {
+    require('./models').forEach((model) => {
+      model(sequelize);
+    });
+  }
+
+  _loadRouters(koaApp) {
+    require('./routers').forEach((router) => {
+      koaApp.use(router);
+    });
+  }
+
+  _loadModules(applicationInstance) {
+    require('./services').forEach((service) => {
+      service(applicationInstance);
+    });
+  }
+
+  _configure(env) {
+    const NODE_ENV = env || 'development';
+    nconf.argv().env();
+    nconf.file(`config.${NODE_ENV}.json`);
+  }
 
 }
 
