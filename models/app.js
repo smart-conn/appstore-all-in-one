@@ -1,5 +1,5 @@
 "use strict";
-const Sequelize = require("sequelize");
+
 module.exports = function(sequelize) {
     sequelize.define('app', {
         id: { type: Sequelize.STRING, primaryKey: true },

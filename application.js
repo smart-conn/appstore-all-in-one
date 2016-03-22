@@ -92,7 +92,9 @@ class Application extends EventEmitter {
     }
 
     _initModels() {
-
+        require('./models').forEach((model) => {
+            model(sequelize);
+        })
     }
 
     _initServices() {
