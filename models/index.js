@@ -1,5 +1,5 @@
 module.exports = [
-  './device',
-  './user',
-  './application'
+  require('./device'),
+  require('./user'),
+  require('./app')
 ];

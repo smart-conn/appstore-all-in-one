@@ -2,10 +2,11 @@
 
 const koa = require('koa');
 const nconf = require('nconf');
-const socketIO = require('socket.io');
 const EventEmitter = require('events');
 const http = require('http');
 const Sequelize = require('sequelize');
+const rabbit = require('rabbit.js');
+const sio = require('socket.io');
 
 // middlewares
 const bodyParser = require('koa-bodyparser');
@@ -14,7 +15,6 @@ const morgan = require('koa-morgan');
 const serveStatic = require('koa-static');
 
 // helper
-const rpc = require('./lib/amqp-rpc');
 const socketIoAuthenticate = require('./lib/socket-io-authenticate');
 
 class Application extends EventEmitter {
@@ -22,19 +22,42 @@ class Application extends EventEmitter {
   constructor() {
     super();
     this._configure(process.env.NODE_ENV);
-    var app = this.app = koa();
-    var server = this.server = http.createServer(app.callback());
-    var io = this.io = socketIO();
-    var amqp = this.amqp = rpc(this.getConfig('brokerAddress') || 'amqp://127.0.0.1');
-    this._initKoa(app, io, amqp);
-    this._initSocketIO(io, server);
-    this._initSequelize();
-    this._initServices();
+
+    const broker = this.broker = this._initRabbit();
+    const sequelize = this.sequelize = this._initSequelize();
+    const koaApp = this.app = this._initKoa(brokerContext, sequelize);
+    const server = this.server = this._initServer(koaApp);
+    const io = this.io = this._initSocketIO(server);
+
+    this._loadRouters(koaApp);
+    this._loadModels(sequelize);
+    this._loadModules(this);
+  }
+
+  _initSocketIO(server) {
+    const io = sio();
+    io.attach(server);
+    return io;
+  }
+
+  _initServer(koaApp) {
+    const server = http.createServer(koaApp.callback());
+    return server;
+  }
+
+  _initRabbit() {
+    const brokerAddress = this.getConfig('brokerAddress') || 'amqp://127.0.0.1';
+    const brokerContext = rabbit.createContext(brokerAddress);
+    return brokerContext;
   }
 
   setContext(key, value) {
     this.app.context[key] = value;
     return this;
+  }
+
+  getService(key) {
+    return this.app.context[key];
   }
 
   getContext(key) {
@@ -47,33 +70,36 @@ class Application extends EventEmitter {
 
   start() {
     const PORT = this.getConfig('port') || 3000;
-    return new Promise((resolve, reject) => {
-      try {
-        this.server.listen(PORT, () => {
-          this.emit('startup');
-          resolve();
-        });
-      } catch(err) {
-        reject(err);
-      }
-    });
+    return Promise.all([
+      new Promise((resolve, reject) => {
+        try {
+          this.server.listen(PORT, () => {
+            this.emit('startup');
+            resolve();
+          });
+        } catch(err) {
+          reject(err);
+        }
+      }),
+      new Promise((resolve, reject) => {
+        this.broker.on('ready', resolve);
+        this.broker.on('error', reject);
+      });
+    ]);
   }
 
-  _initSocketIO(io, server) {
-    io.attach(server);
-    io.of('/nasc').use(socketIoAuthenticate);
-  }
+  _initKoa(brokerContext, sequelize) {
+    const app = koa();
 
-  _initKoa(app, io, amqp) {
-    this.setContext('io', io);
-    this.setContext('amqp', amqp);
+    this.setContext('broker', brokerContext);
+    this.setContext('sequelize', sequelize);
+
     app.use(errorHandler());
     app.use(morgan.middleware('dev'));
     app.use(serveStatic(`${__dirname}/public`));
     app.use(bodyParser());
-    require('./routers').forEach((router) => {
-      app.use(router);
-    });
+
+    return app;
   }
 
   _initSequelize() {
@@ -88,16 +114,24 @@ class Application extends EventEmitter {
       dialect
     });
 
-    this.setContext('sequelize', sequelize);
+    return sequelize;
   }
 
-  _initModels() {
-
+  _loadModels(sequelize) {
+    require('./models').forEach((model) => {
+      model(sequelize);
+    });
   }
 
-  _initServices() {
+  _loadRouters(koaApp) {
+    require('./routers').forEach((router) => {
+      koaApp.use(router);
+    });
+  }
+
+  _loadModules(applicationInstance) {
     require('./services').forEach((service) => {
-      service(this);
+      service(applicationInstance);
     });
   }
 
