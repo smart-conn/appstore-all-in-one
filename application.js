@@ -137,5 +137,5 @@ class Application extends EventEmitter {
 }
 
 module.exports = function factory() {
-  return new Application();
+    return new Application();
 };
