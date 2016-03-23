@@ -1,20 +1,19 @@
 <div ng-controller="AppInfo as appInfo">
-    <h2>{{appInfo.name}}</h2>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#select-device" ng-click="appInfo.selectDevice(appInfo.id)">安装 {{appInfo.name}}</button>
-    <p>{{appInfo.description}}</p>
-    <!-- <button class="btn btn-default" ng-repeat="alias in $ownedDevices" ng-click="appCtrl.uninstall($appInfo.id, alias)">卸载 on {{alias}}</button>
-<button class="btn btn-default" ng-click="appCtrl.update($appInfo.id, '0.0.2')">触发更新</button>
--->
-    <div id="select-device" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>请选择设备</h4>
-                </div>
-                <div class="modal-body">
-                    <button class="btn btn-default" ng-repeat="device in appInfo.devices" ng-click="appInfo.install(appInfo.id, device.id)">{{device.name}}</button>
-                </div>
-            </div>
+  <h2>{{appInfo.name}}</h2>
+  <button class="btn btn-primary" data-toggle="modal" data-target="#select-device" ng-click="appInfo.selectDevice(appInfo.id)">安装 {{appInfo.name}}</button>
+  <p>{{appInfo.description}}</p>
+  <!-- <button class="btn btn-default" ng-repeat="alias in $ownedDevices" ng-click="appCtrl.uninstall($appInfo.id, alias)">卸载 on {{alias}}</button>
+  <button class="btn btn-default" ng-click="appCtrl.update($appInfo.id, '0.0.2')">触发更新</button> -->
+  <div id="select-device" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>请选择设备</h4>
         </div>
+        <div class="modal-body">
+          <button class="btn btn-default" ng-repeat="device in appInfo.devices" ng-click="appInfo.install(appInfo.id, device.id)">{{device.name}}</button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

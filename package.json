@@ -15,7 +15,6 @@
   "dependencies": {
     "amqplib": "^0.4.1",
     "bluebird": "^3.3.4",
-    "co": "^4.6.0",
     "jsonwebtoken": "^5.7.0",
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.0.1",
