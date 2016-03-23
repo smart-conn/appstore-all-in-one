@@ -33,13 +33,14 @@ class Application extends EventEmitter {
 
     this._loadRouters(koaApp);
     this._loadModels(sequelize);
+
     this._loadModules(this);
   }
 
   getModel(name) {
     const sequelize = this.getContext('sequelize');
     // faker
-    return sequelize.get(name);
+    return sequelize.models[name];
   }
 
   getContext(key) {
@@ -58,7 +59,7 @@ class Application extends EventEmitter {
           this.emit('startup');
           resolve();
         });
-      } catch(err) {
+      } catch (err) {
         reject(err);
       }
     });
@@ -107,10 +108,12 @@ class Application extends EventEmitter {
     const password = this.getConfig('password');
     const host = this.getConfig('host');
     const dialect = this.getConfig('dialect');
+    const storage = this.getConfig('storage');
 
     const sequelize = new Sequelize(database, username, password, {
       host,
-      dialect
+      dialect,
+      storage
     });
 
     return sequelize;
@@ -120,6 +123,7 @@ class Application extends EventEmitter {
     require('./models').forEach((model) => {
       model(sequelize);
     });
+    require('./models/relationships')(sequelize);
   }
 
   _loadRouters(koaApp) {
@@ -143,5 +147,5 @@ class Application extends EventEmitter {
 }
 
 module.exports = function factory() {
-    return new Application();
+  return new Application();
 };
