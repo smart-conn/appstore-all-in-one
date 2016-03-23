@@ -1,54 +1,56 @@
+<!DOCTYPE html>
+
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>已安装应用列表</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+  <meta charset="UTF-8">
+  <title>已安装应用列表</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
 </head>
 
 <body ng-app="app" ng-controller="AppController as appCtrl">
-    <div class="container">
-        <ul ng-repeat="item in items">
-            {{item.name}}
-        </ul>
-    </div>
-    <script src="../bower_components/jquery/dist/jquery.js"></script>
-    <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="../bower_components/angular/angular.js"></script>
-    <script>
-    var userInfo = {
-        hasInstalled: 52,
-        Installed: 23,
-        needUpdate: 3
-    };
-    var applist = [{
-        name: "dolor",
-        version: "v1.2",
-        updateTime: "2015/12/12"
-    }, {
-        name: "dolor",
-        version: "v1.2",
-        updateTime: "2015/12/12"
-    }, {
-        name: "dolor",
-        version: "v1.2",
-        updateTime: "2015/12/12"
-    }];
-    angular.module('app', [])
-        .controller('AppController', AppController)
-        .service('AppService', AppService);
+  <div class="container">
+    <ul ng-repeat="item in items">
+      {{item.name}}
+    </ul>
+  </div>
+  <script src="../bower_components/jquery/dist/jquery.js"></script>
+  <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="../bower_components/angular/angular.js"></script>
+  <script>
+  var userInfo = {
+    hasInstalled: 52,
+    Installed: 23,
+    needUpdate: 3
+  };
+  var applist = [{
+    name: "dolor",
+    version: "v1.2",
+    updateTime: "2015/12/12"
+  }, {
+    name: "dolor",
+    version: "v1.2",
+    updateTime: "2015/12/12"
+  }, {
+    name: "dolor",
+    version: "v1.2",
+    updateTime: "2015/12/12"
+  }];
+  angular.module('app', [])
+  .controller('AppController', AppController)
+  .service('AppService', AppService);
 
-    function AppController(AppService, $scope) {
-        this.AppService = AppService;
-        $scope.items = applist;
-        $scope.userInfo = userInfo;
-    }
+  function AppController(AppService, $scope) {
+    this.AppService = AppService;
+    $scope.items = applist;
+    $scope.userInfo = userInfo;
+  }
 
-    function AppService($http) {
-        this.$http = $http;
-    }
-    </script>
+  function AppService($http) {
+    this.$http = $http;
+  }
+  </script>
 </body>
 
 </html>
