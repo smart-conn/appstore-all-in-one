@@ -2,45 +2,33 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
 </head>
 
 <body ng-app="app" ng-controller="AppController as appCtrl">
-    <div class="container">
-        <h1>应用商店原型</h1>
-        <nav>
-            <ul>
-                <li><a ui-sref="appList">应用安装</a></li>
-                <li><a ui-sref="deviceManagement">设备管理</a></li>
-                <li><a ui-sref="appInformation">应用详情</a></li>
-            </ul>
-        </nav>
-        <div ui-view></div>
-    </div>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/holderjs/holder.js"></script>
-    <script>
-    window.prefetched = {
-        appInfo: {
-            id: 'NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj',
-            name: '变声',
-            version: '0.0.1',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        ownedDevices: ['54321']
-    };
-    </script>
-    <script src="static/js/index/app-module.js"></script>
-    <script src="static/js/index/app-routeConfig.js"></script>
-    <script src="static/js/index/app-AppController.js"></script>
-    <script src="static/js/index/app-AppService.js"></script>
+  <div class="container">
+    <h1>应用商店原型</h1>
+    <nav>
+      <ul>
+        <li><a ui-sref="appList">应用安装</a></li>
+        <li><a ui-sref="deviceManagement">设备管理</a></li>
+        <li><a ui-sref="appInformation">应用详情</a></li>
+      </ul>
+    </nav>
+    <div ui-view></div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/holderjs/holder.js"></script>
+  <script src="static/js/index/app-module.js"></script>
+  <script src="static/js/index/app-routeConfig.js"></script>
+  <script src="static/js/index/app-AppController.js"></script>
+  <script src="static/js/index/app-AppService.js"></script>
 </body>
 
 </html>
