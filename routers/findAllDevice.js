@@ -1,14 +1,16 @@
 "use strict";
 const router = require('koa-router')();
 
-router.get("/findAllDevice", function*() {
-  let appID = this.query.appID;
+router.get("/findAllDevice", function* () {
+  let appID = this.query.appID || "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk";
+  let userID = "852741";
   const amqp = this.app.context.amqp;
   this.body = yield amqp.call('app.findAllDeviceByID', {
-    appID
+    appID,
+    userID
   });
 });
-router.get("/findLatestVersionByDeviceModel", function*() {
+router.get("/findLatestVersionByDeviceModel", function* () {
   const amqp = this.app.context.amqp;
   this.body = yield amqp.call('app.findLatestVersionByDeviceModel', {
     deviceModel: 1,

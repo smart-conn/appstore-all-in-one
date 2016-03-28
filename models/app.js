@@ -1,11 +1,15 @@
 "use strict";
 
 const Sequelize = require('sequelize');
-module.exports = function(sequelize) {
+module.exports = function (sequelize) {
   sequelize.define('app', {
-    appid: { type: Sequelize.STRING, primaryKey: true },
+    id: {
+      type: Sequelize.STRING,
+      primaryKey: true,
+      defaultValue: Sequelize.UUIDV4
+    },
     name: Sequelize.STRING,
-    decription: Sequelize.TEXT,
+    description: Sequelize.TEXT,
     icon: Sequelize.STRING,
     author: Sequelize.STRING
   });

@@ -2,6 +2,13 @@ angular.module('app').controller('AppController', AppController);
 angular.module("appList")
   .controller("AppList", AppList)
   .controller("AppInfo", AppInfo);
+angular.module("appUpload")
+  .controller("AppUpload", AppUpload)
+  .controller("")
+
+function AppUpload() {
+
+}
 
 function AppController(AppService) {
   this.AppService = AppService;
@@ -9,7 +16,7 @@ function AppController(AppService) {
 
 function AppList($http) {
   var _this = this;
-  $http.get("/apps").then(function(data) {
+  $http.get("/apps").then(function (data) {
     _this.lists = data.data;
   });
 }
@@ -19,13 +26,14 @@ function AppInfo(AppService, $state, $http, AppService) {
   this.appInfoService = AppService;
   var _this = this;
   this.id = $state.params.appID;
-  $http.get("/apps/" + $state.params.appID).then(function(data) {
+  $http.get("/apps/" + $state.params.appID).then(function (data) {
     var data = data.data;
-    console.log(data.name)
+    console.log(data)
     _this.name = data.name;
+    _this.description = data.description;
   });
 }
-AppInfo.prototype.selectDevice = function(id) {
+AppInfo.prototype.selectDevice = function (id) {
   this.http.get("/findAllDevice", {
     params: {
       appID: id
@@ -36,6 +44,6 @@ AppInfo.prototype.selectDevice = function(id) {
     this.appID = id;
   });
 }
-AppInfo.prototype.install = function(id, alias) {
+AppInfo.prototype.install = function (id, alias) {
   this.appInfoService.install(id, alias);
 }

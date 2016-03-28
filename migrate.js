@@ -6,24 +6,32 @@ if (fs.existsSync("./application.db")) {
   fs.unlinkSync("./application.db");
 }
 
-Sequelize.sync().then(function() {
+Sequelize.sync().then(function () {
   console.log("Database sync Done.");
   Promise.all([
     app.getModel("app").create({
-      appid: 'NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj',
-      name: '变声'
+      id: 'NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj',
+      name: '变声',
+      description: '好玩儿到爱不释手',
+      icon: "1.jpg",
+      author: "tosone"
     }),
     app.getModel("app").create({
-      appid: 'MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1',
-      name: '电话本'
-
+      id: 'MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1',
+      name: '电话本',
+      description: "好玩儿到爱不释手",
+      icon: "1.jpg",
+      author: "tosone"
     }),
     app.getModel("app").create({
-      appid: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
-      name: 'UUID 生成器'
+      id: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
+      name: 'UUID 生成器',
+      description: '好玩儿到爱不释手',
+      icon: "1.jpg",
+      author: "tosone"
     }),
-    app.getModel("appVersion").create({
-      appid: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
+    app.getModel("appPackage").create({
+      appID: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
       version: '0.0.2',
       flow: JSON.stringify([{
         "id": "3367e45f.cc981c",
@@ -51,8 +59,8 @@ Sequelize.sync().then(function() {
         ]
       }])
     }),
-    app.getModel("appVersion").create({
-      appid: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
+    app.getModel("appPackage").create({
+      appID: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
       version: '0.0.1',
       flow: JSON.stringify([{
         "id": "3367e45f.cc981c",
@@ -80,8 +88,9 @@ Sequelize.sync().then(function() {
         ]
       }])
     }),
-    app.getModel("appVersion").create({
-      appid: "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk",
+    app.getModel("appPackage").create({
+      id: 5,
+      appID: "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk",
       version: '0.0.1',
       flow: JSON.stringify([{
         "id": "3012f18f.cfed0e",
@@ -112,8 +121,9 @@ Sequelize.sync().then(function() {
         "wires": []
       }])
     }),
-    app.getModel("appVersion").create({
-      appid: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
+    app.getModel("appPackage").create({
+      id: 8,
+      appID: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
       version: '0.0.1',
       flow: JSON.stringify([{
         "id": "3b911b0e.c46ee4",
@@ -147,31 +157,44 @@ Sequelize.sync().then(function() {
         "z": "3595e52c.ca6a1a",
         "wires": []
       }])
-    }), app.getModel('user').create({
+    }),
+    app.getModel('user').create({
       id: "852741",
       name: "tosone"
     }),
-    app.getModel("deviceCompatibleVersion").create({
+    app.getModel("deviceModel").create({
       id: 1,
-      name: "balanal doll"
+      name: "doll456"
+    }),
+    app.getModel("deviceModel").create({
+      id: 2,
+      name: "doll123"
     }),
     app.getModel('userDevice').create({
-      name: "qwer",
-      modelVersion: "123",
-      userId: "852741",
-      deviceCompatibleVersionId: 1
+      name: "doll789",
+      userID: "852741",
+      alias: "123123",
+      accessToken: "ertvdfd%d@as&dfg",
+      deviceModelID: 1
+    }),
+    app.getModel('userDevice').create({
+      name: "doll123",
+      userID: "852741",
+      alias: "123123",
+      accessToken: "ertvdfd%d@as&dfg",
+      deviceModelID: 2
     })
   ]).then(() => {
     return Promise.all([
-      app.getModel("deviceCompatibleVersionMap").create({
-        deviceCompatibleVersionId: 1,
-        appVersionId: 4
+      app.getModel("deviceModelToAppVersion").create({
+        deviceModelID: 1,
+        appPackageID: 5
       }),
-      app.getModel("deviceCompatibleVersionMap").create({
-        deviceCompatibleVersionId: 1,
-        appVersionId: 2
+      app.getModel("deviceModelToAppVersion").create({
+        deviceModelID: 1,
+        appPackageID: 8
       })
-    ])
+    ]);
   }).then(() => {
     require("process").exit(0);
   }).catch((err) => {
