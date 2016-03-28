@@ -16,5 +16,22 @@ function routeConfig($stateProvider, $urlRouterProvider) {
   $stateProvider.state('appUpload', {
     url: '/developer/appUpload',
     templateUrl: '_include/developer/appUpload.html'
-  })
+  });
+  $stateProvider.state('waitForCheck', {
+    url: '/developer/waitForCheck/',
+    templateUrl: '_include/developer/waitForCheck.html'
+  });
+  $stateProvider.state('checkResult', {
+    url: '/developer/checkResult/:result',
+    templateUrl: '_include/developer/checkResult.html'
+  });
+  $stateProvider.state('developerAppList', {
+    url: '/developer/appList',
+    templateUrl: '_include/developer/appList.html'
+  });
+  $stateProvider.state('developerAppInfo', {
+    url: '/developer/appInfo',
+    templateUrl: '_include/developer/appInfo.html'
+  });
+
 }

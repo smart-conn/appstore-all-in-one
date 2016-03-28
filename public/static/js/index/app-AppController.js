@@ -4,10 +4,35 @@ angular.module("appList")
   .controller("AppInfo", AppInfo);
 angular.module("appUpload")
   .controller("AppUpload", AppUpload)
-  .controller("")
+  .controller("WaitForCheck", WaitForCheck)
+  .controller("CheckResult", CheckResult)
+  .controller("DeveloperAppList", DeveloperAppList)
+  .controller("DeveloperAppInfo", DeveloperAppInfo)
 
-function AppUpload() {
 
+function CheckResult($state) {
+  this.result = $state.params.result == "succ" ? "truthy" : "falsy";
+}
+
+function DeveloperAppInfo() {
+
+}
+
+function DeveloperAppList() {
+
+}
+
+function WaitForCheck($state) {
+  // console.log($state.params.result);
+  // this.result = $state.params.result;
+}
+
+function AppUpload($http) {
+  var _this = this;
+  $http.get("/deviceModel").then(function (data) {
+    console.log(data);
+    _this.deviceModels = data.data;
+  });
 }
 
 function AppController(AppService) {
@@ -21,14 +46,13 @@ function AppList($http) {
   });
 }
 
-function AppInfo(AppService, $state, $http, AppService) {
+function AppInfo(AppService, $state, $http) {
   this.http = $http;
   this.appInfoService = AppService;
   var _this = this;
   this.id = $state.params.appID;
   $http.get("/apps/" + $state.params.appID).then(function (data) {
     var data = data.data;
-    console.log(data)
     _this.name = data.name;
     _this.description = data.description;
   });
