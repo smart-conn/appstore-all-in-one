@@ -1,72 +1,90 @@
 "use strict";
 const _ = require('underscore');
-module.exports = function(app) {
+module.exports = function (app) {
 
   const amqp = app.getContext('amqp');
   const Application = app.getModel('app');
-  const ApplicationVersion = app.getModel('app_version');
-  const UserDevice = app.getModel('user_device');
+  const ApplicationPackage = app.getModel('appPackage');
+  const UserDevice = app.getModel('userDevice');
   const User = app.getModel('user');
-  const deviceCompatibleVersion = app.getModel('deviceCompatibleVersion');
+  const DeviceModel = app.getModel('deviceModel');
+
   amqp.on("app.findAllApps", (msg, callback) => {
-    Application.findAll().then(function(apps) {
+    Application.findAll().then(function (apps) {
       return callback(null, apps);
     });
   });
 
-  amqp.on("app.findAppByID", function*(msg) {
-    return Application.findOne({
-      where: {
-        appid: msg.appID
-      },
-      include: [ApplicationVersion]
-    });
+  amqp.on("app.findAppByID", function* (msg) {
+    return Application.findById(msg.appID);
   });
   //查找某用户所有的设备
-  amqp.on("app.findAllDeviceByID", function*(msg) {
+  amqp.on("app.findAllDeviceByID", function* (msg) {
     let appID = msg.appID;
+    let userID = msg.userID;
+    //获得用户所有的设备
     let user = yield User.findOne({
       where: {
-        id: "852741"
+        id: userID
       },
       include: [UserDevice]
     });
-    let deviceModels = user.userDevices.map(function(device) {
-      return device.deviceCompatibleVersionId;
+    //获得用户所有的设备型号ID
+    let deviceModels = user.userDevices.map(function (device) {
+      return {
+        id: device.deviceModelID,
+        name: device.name
+      };
     });
-    return yield Promise.all(deviceModels.map(function(deviceModel) {
-      return amqp.call("app.findLatestVersionByDeviceModel", {
-        deviceModel: deviceModel,
-        appID: appID
+    for (let deviceModel of deviceModels) {
+      let availablePackage = yield DeviceModel.findById(deviceModel.id, {
+        include: [{
+          model: ApplicationPackage,
+          where: {
+            appID: appID
+          }
+        }]
       });
-    }));
-    // user.allDevices.forEach((device) => {
-
-    // });
-    // return allDevices;
+      if (availablePackage) {
+        if (availablePackage.appPackages && availablePackage.appPackages.length >= 1) {
+          deviceModel.canInstall = true;
+        } else {
+          deviceModel.canInstall = false;
+        }
+      } else {
+        deviceModel.canInstall = false;
+      }
+    }
+    return deviceModels;
   });
 
   /**
-   * deviceModel: 
-   * appID: 
+   * msg.deviceModel:设备型号
+   * msg.appID:应用ID
    */
-  amqp.on("app.findLatestVersionByDeviceModel", function*(msg) {
+  amqp.on("app.findLatestVersionByDeviceModel", function* (msg) {
     let deviceModel = msg.deviceModel;
     let appID = msg.appID;
-    let data = yield deviceCompatibleVersion.findOne({
+    let data = yield DeviceModel.findOne({
       where: {
         id: deviceModel
       },
       include: [{
-        model: ApplicationVersion,
+        model: ApplicationPackage,
         where: {
-          appid: appID
+          appID: appID
         }
       }]
     });
     console.log(data);
-    return data.appVersions.map(function(item) {
-      return item.id;
-    }).sort()[0];
+    if (data) {
+      return data.appPackages.map(function (item) {
+        return {
+          id: item.id,
+          version: item.version
+        };
+      }).sort()[0];
+    }
+
   })
 };

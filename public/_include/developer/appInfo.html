@@ -1,0 +1,12 @@
+<div class="" ng-controller="DeveloperAppInfo as developerAppInfo">
+<h3 class="text-danger">应用详细信息</h3>
+<h4>名字：{{developerAppInfo.appPackage.app.name}}</h4>
+<h4>介绍：{{developerAppInfo.appPackage.app.description}}</h4>
+<h4>安装人数：123456</h4>
+<h4>升级信息：{{developerAppInfo.appPackage.description}}</h4>
+<h4>兼容的版本：
+<span ng-repeat="deviceModel in developerAppInfo.appPackage.deviceModels" data-id="{{deviceModel.id}}">{{deviceModel.name}}</span>
+</h4>
+<a href="#" ui-sref="appEditor({action:'upgrade',id:developerAppInfo.appPackage.app.id})">升级</a>
+<a href="#" ui-sref="appEditor({action:'edit',id:developerAppInfo.appPackage.app.id})">修改</a>
+</div>

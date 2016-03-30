@@ -123,7 +123,7 @@ class Application extends EventEmitter {
     require('./models').forEach((model) => {
       model(sequelize);
     });
-    require('./models/relationships')(sequelize);
+    require('./models/_relationships')(sequelize);
   }
 
   _loadRouters(koaApp) {

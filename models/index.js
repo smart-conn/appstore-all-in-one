@@ -1,8 +1,8 @@
 module.exports = [
   require('./user'),
-  require('./app'),
-  require('./appVersion'),
   require('./userDevice'),
-  require('./deviceCompatibleVersion'),
-  require('./deviceCompatibleVersionMap')
+  require('./app'),
+  require('./appPackage'),
+  require('./deviceModel'),
+  require('./developer')
 ];
