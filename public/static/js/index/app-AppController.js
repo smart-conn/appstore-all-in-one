@@ -2,38 +2,84 @@ angular.module('app').controller('AppController', AppController);
 angular.module("appList")
   .controller("AppList", AppList)
   .controller("AppInfo", AppInfo);
-angular.module("appUpload")
-  .controller("AppUpload", AppUpload)
-  .controller("WaitForCheck", WaitForCheck)
-  .controller("CheckResult", CheckResult)
-  .controller("DeveloperAppList", DeveloperAppList)
-  .controller("DeveloperAppInfo", DeveloperAppInfo)
 
-
-function CheckResult($state) {
-  this.result = $state.params.result == "succ" ? "truthy" : "falsy";
-}
-
-function DeveloperAppInfo() {
-
-}
-
-function DeveloperAppList() {
-
-}
-
-function WaitForCheck($state) {
-  // console.log($state.params.result);
-  // this.result = $state.params.result;
-}
-
-function AppUpload($http) {
-  var _this = this;
-  $http.get("/deviceModel").then(function (data) {
-    console.log(data);
-    _this.deviceModels = data.data;
+var developer = angular.module("developer");
+developer.controller("AppEditor", function (AppService, $http, $state) {
+  this.appPackage = {}; //应用的详细信息
+  this.compatible = []; //应用兼容设备的情况
+  this.deviceModels = []; //所有设备
+  $http.get("/deviceModel").success((data) => {
+    this.deviceModels = data;
+    if ($state.params.id) {
+      $http.get("/developer/app/" + $state.params.id).success((data) => {
+        this.appPackage = data;
+        for (let deviceModel of this.deviceModels) {
+          let length = this.compatible.length;
+          for (let i in this.appPackage.deviceModels) {
+            if (deviceModel.id == this.appPackage.deviceModels[i].id) {
+              this.compatible.push(true);
+              continue;
+            }
+          }
+          if (this.compatible.length == length)
+            this.compatible.push(false);
+        }
+      });
+    }
   });
-}
+
+  this.commit = function (appPackage, compatibles) {
+    appPackage.deviceModels = [];
+    for (let i in compatibles) {
+      if (compatibles[i]) {
+        appPackage.deviceModels.push(this.deviceModels[i]);
+      }
+    }
+    let resMsg = null;
+    if ($state.params.action == "new") {
+      resMsg = AppService.newApp(appPackage);
+    } else if ($state.params.action == "edit") {
+      resMsg = AppService.editApp(appPackage);
+    } else if ($state.params.action == "upgrade") {
+      resMsg = AppService.upgradeApp(appPackage);
+    }
+    resMsg.success(function (data) {
+      if (data.code == 200) {
+        console.log("succ");
+        $state.go("developerAppList");
+      } else {
+        console.log("error");
+      }
+    });
+  }
+});
+
+developer.controller("WaitForCheck", function () {
+
+});
+developer.controller("AppHistoryVersion", function ($http, $state) {
+  $http.get("/developer/appVersions/" + $state.params.id).success((data) => {
+    this.appPackages = data;
+  });
+});
+
+developer.controller("CheckResultSucc", function () {
+
+});
+developer.controller("CheckResultError", function () {
+
+});
+developer.controller("DeveloperAppList", function ($http) {
+  $http.get("/apps").success((data) => {
+    this.apps = data;
+  });
+});
+developer.controller("DeveloperAppInfo", function ($state, $http) {
+  $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
+    this.appPackage = data;
+  });
+});
+developer.controller("DeveloperAppGround", function () {})
 
 function AppController(AppService) {
   this.AppService = AppService;

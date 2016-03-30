@@ -1,3 +1,40 @@
 <div class="" ng-controller="DeveloperAppList as developerAppList">
-
+  <h3 class="text-danger">开发者应用列表</h3>
+  <div class="form-group">
+    <a href="#" class="btn btn-primary" ui-sref="appEditor({action:'new'})">添加新的应用</a>
+  </div>
+  <table class="table table-bordered" style="text-align:center;">
+    <thead>
+      <tr>
+        <td>
+          应用名称
+        </td>
+        <td colspan="3">
+          操作
+        </td>
+        <td>
+          应用状态
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="app in developerAppList.apps">
+        <td ui-sref="appHistoryVersion({id:app.id})" style="cursor:pointer">
+          {{app.name}}
+        </td>
+        <td ui-sref="appEditor({id:app.id,action:'upgrade'})" style="cursor:pointer">
+          升级
+        </td>
+        <td style="cursor:pointer">
+          下架
+        </td>
+        <td style="cursor:pointer">
+          删除
+        </td>
+        <td class="text-danger">
+          未审核
+        </td>
+      </tr>
+    </tbody>
+</table>
 </div>

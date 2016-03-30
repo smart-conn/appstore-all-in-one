@@ -3,5 +3,6 @@ module.exports = [
   require('./development'),
   require('./findAllApps'),
   require('./findAllDevice'),
-  require('./adminApp')
+  require('./adminApp'),
+  require('./developer')
 ];

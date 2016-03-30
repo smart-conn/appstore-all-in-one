@@ -89,11 +89,11 @@ angularApp.config(['NgAdminConfigurationProvider', function (NgAdminConfiguratio
     nga.field("id").label("ID"),
     nga.field("name").label("用户名"),
     nga.field("userDevices", "template").template(
-      '{{ entry }}<span ng-repeat="group in entry.values.groups track by $index" class="label label-default">{{ group }}</span>')
+      '<a ng-repeat="group in entry.values.userDevices" class="label label-default"  href="#/userDevice/edit/{{group.id}}">{{ group.name }}</a>'
+    ).label("用户拥有设备")
   ]);
   user.creationView().fields([
-    nga.field("name"),
-
+    nga.field("name")
   ]);
   user.editionView().fields([
     nga.field("name")

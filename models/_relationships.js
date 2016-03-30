@@ -36,4 +36,9 @@ module.exports = (sequelize) => {
     through: DeviceModelMap,
     foreignKey: "deviceModelID"
   });
+
+  let Developer = sequelize.models['developer'];
+  Developer.hasMany(AppPackage, {
+    foreignKey: "developerID"
+  });
 }

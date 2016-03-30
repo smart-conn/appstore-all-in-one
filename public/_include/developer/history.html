@@ -1,0 +1,12 @@
+<div class="" ng-controller="AppHistoryVersion as appHistoryVersion">
+  <h3 class="text-danger">历史版本</h3>
+  <ul class="list-group">
+    <li class="list-group-item"
+    ng-repeat="appPackage in appHistoryVersion.appPackages"
+    data-id="appPackage.id"
+    style="cursor:pointer"
+    ui-sref="developerAppInfo({id:appPackage.app.id,version:appPackage.id})">
+      {{appPackage.app.name}} --- {{appPackage.version}}
+    </li>
+  </ul>
+</div>

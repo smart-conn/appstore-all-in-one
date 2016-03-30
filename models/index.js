@@ -3,5 +3,6 @@ module.exports = [
   require('./userDevice'),
   require('./app'),
   require('./appPackage'),
-  require('./deviceModel')
+  require('./deviceModel'),
+  require('./developer')
 ];

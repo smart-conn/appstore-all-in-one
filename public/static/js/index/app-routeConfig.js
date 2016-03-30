@@ -13,25 +13,36 @@ function routeConfig($stateProvider, $urlRouterProvider) {
     url: '/device/list',
     templateUrl: '_include/app-list.html'
   });
-  $stateProvider.state('appUpload', {
-    url: '/developer/appUpload',
-    templateUrl: '_include/developer/appUpload.html'
-  });
   $stateProvider.state('waitForCheck', {
     url: '/developer/waitForCheck/',
     templateUrl: '_include/developer/waitForCheck.html'
   });
-  $stateProvider.state('checkResult', {
-    url: '/developer/checkResult/:result',
-    templateUrl: '_include/developer/checkResult.html'
+  $stateProvider.state('checkResultSucc', {
+    url: '/developer/checkResultSucc',
+    templateUrl: '_include/developer/checkResultSucc.html'
+  });
+  $stateProvider.state('checkResultError', {
+    url: '/developer/checkResultError',
+    templateUrl: '_include/developer/checkResultError.html'
   });
   $stateProvider.state('developerAppList', {
     url: '/developer/appList',
     templateUrl: '_include/developer/appList.html'
   });
   $stateProvider.state('developerAppInfo', {
-    url: '/developer/appInfo',
+    url: '/developer/app/:id/version/:version',
     templateUrl: '_include/developer/appInfo.html'
   });
-
+  $stateProvider.state('developerAppGround', {
+    url: '/developer/appGround',
+    templateUrl: '_include/developer/appGround.html'
+  });
+  $stateProvider.state('appEditor', {
+    url: '/developer/appEditor/:action/:id', //action:[new,edit,upgrade]
+    templateUrl: '_include/developer/appEditor.html'
+  });
+  $stateProvider.state('appHistoryVersion', {
+    url: '/developer/appHistoryVersion/:id',
+    templateUrl: '_include/developer/history.html'
+  });
 }

@@ -3,5 +3,7 @@ module.exports = [
   require('./command-server'),
   require('./store-front'),
   require('./socket-io-management'),
-  require('./appAdmin/appAdmin')
+  require('./appAdmin/appAdmin'),
+  require('./developer/uploadApp'),
+  require('./developer/getAppByID')
 ];

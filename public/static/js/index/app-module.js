@@ -1,5 +1,5 @@
 angular.module('app', [
-  'ui.router', "appList", "appUpload"
+  'ui.router', "appList", "developer"
 ]);
 angular.module("appList", []);
-angular.module("appUpload", []);
+angular.module("developer", []);
