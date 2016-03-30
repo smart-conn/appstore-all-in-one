@@ -78,6 +78,9 @@ developer.controller("DeveloperAppInfo", function ($state, $http) {
   $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
     this.appPackage = data;
   });
+  $http.get("/developer/appVersions/" + $state.params.id).success((data) => {
+    this.appPackages = data;
+  });
 });
 developer.controller("DeveloperAppGround", function () {})
 
