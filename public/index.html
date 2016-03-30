@@ -8,20 +8,22 @@
 </head>
 
 <body ng-app="app" ng-controller="AppController as appCtrl">
+
+  <nav class="navbar navbar-default">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="###">应用商店原型</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a ui-sref="appList">应用安装</a></li>
+      <li><a ui-sref="deviceManagement">设备管理</a></li>
+      <li><a ui-sref="developerAppList">开发者应用列表</a></li>
+    </ul>
+  </nav>
+
   <div class="container">
-    <nav class="navbar navbar-default">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="###">应用商店原型</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li><a ui-sref="appList">应用安装</a></li>
-        <li><a ui-sref="deviceManagement">设备管理</a></li>
-        <li><a ui-sref="developerAppList">开发者应用列表</a></li>
-        <li><a ui-sref="appEditor({action:'new'})">创建新应用</a></li>
-      </ul>
-    </nav>
     <div ui-view></div>
   </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
