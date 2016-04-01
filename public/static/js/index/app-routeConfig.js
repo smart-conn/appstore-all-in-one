@@ -45,4 +45,24 @@ function routeConfig($stateProvider, $urlRouterProvider) {
     url: '/developer/appHistoryVersion/:id',
     templateUrl: '_include/developer/history.html'
   });
+  $stateProvider.state('auditorCenter', {
+    url: '/audit/appCenter',
+    templateUrl: '_include/audit/auditCenter.html'
+  });
+  $stateProvider.state('auditorBucketList', {
+    url: '/audit/bucketList',
+    templateUrl: '_include/audit/bucketList.html'
+  });
+  $stateProvider.state('auditorAppInfo', {
+    url: '/audit/appInfo/:id',
+    templateUrl: '_include/audit/appInfo.html'
+  });
+  $stateProvider.state('auditorHistoryVersion', {
+    url: '/audit/history/:id/version/:version',
+    templateUrl: '_include/audit/history.html'
+  });
+  $stateProvider.state('auditorDeveloper', {
+    url: '/audit/developer/:id',
+    templateUrl: '_include/audit/developer.html'
+  })
 }

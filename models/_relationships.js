@@ -2,17 +2,27 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
+  let User = sequelize.models['user'];
+  let Auditor = sequelize.models['auditor'];
   let Application = sequelize.models['app'];
+  let Developer = sequelize.models['developer'];
+  let UserDevice = sequelize.models['userDevice'];
   let AppPackage = sequelize.models['appPackage'];
+  let DeviceModel = sequelize.models['deviceModel'];
+  let AuditorBucket = sequelize.models['auditorBucket'];
+  let AppPackageStatus = sequelize.models['appPackageStatus'];
+  let DeviceModelMap = sequelize.define('deviceModelToAppVersion', {});
+
   AppPackage.belongsTo(Application, {
     foreignKey: "appID"
   });
   Application.hasMany(AppPackage, {
     foreignKey: "appID"
   });
+  AppPackage.belongsTo(AppPackageStatus, {
+    foreignKey: "statusID"
+  });
 
-  let User = sequelize.models['user'];
-  let UserDevice = sequelize.models['userDevice'];
   UserDevice.belongsTo(User, {
     foreignKey: "userID"
   });
@@ -20,8 +30,6 @@ module.exports = (sequelize) => {
     foreignKey: "userID"
   });
 
-  let DeviceModelMap = sequelize.define('deviceModelToAppVersion', {});
-  let DeviceModel = sequelize.models['deviceModel'];
   DeviceModel.hasMany(UserDevice, {
     foreignKey: "deviceModelID"
   });
@@ -37,8 +45,34 @@ module.exports = (sequelize) => {
     foreignKey: "deviceModelID"
   });
 
-  let Developer = sequelize.models['developer'];
-  Developer.hasMany(AppPackage, {
+  Developer.hasMany(Application, {
     foreignKey: "developerID"
+  });
+  Application.belongsTo(Developer, {
+    foreignKey: "developerID"
+  });
+
+  // AppPackage.hasMany(AppPackageStatus, {
+  //   foreignKey: "appPackageID"
+  // });
+  // AppPackageStatus.belongsTo(AppPackage, {
+  //   foreignKey: "appPackageID"
+  // });
+
+  //AuditorBucket与Auditor和AppPackage
+  AuditorBucket.belongsTo(AppPackage, {
+    foreignKey: "appPackageID"
+  });
+  AuditorBucket.belongsTo(Auditor, {
+    foreignKey: "auditorID"
+  });
+  AuditorBucket.belongsTo(AppPackageStatus, {
+    foreignKey: "statusID"
+  });
+  AppPackage.hasMany(AuditorBucket, {
+    foreignKey: "appPackageID"
+  });
+  Auditor.hasMany(AuditorBucket, {
+    foreignKey: "auditorID"
   });
 }

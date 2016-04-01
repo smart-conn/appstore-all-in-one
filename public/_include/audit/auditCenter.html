@@ -1,0 +1,52 @@
+<div class="" ng-controller="AuditCenter as auditCenter">
+  <h3 class="text-danger">审核中心</h3>
+  <div class="forn-group">
+    <button type="button" name="button" class="btn btn-default" ui-sref="auditorBucketList">我的审核任务列表</button>
+  </div>
+  <div class="form-group clearfix">
+    <a href="#" class="btn btn-primary pull-right"  ng-click="auditCenter.commit">选择</a>
+  </div>
+  <table class="table table-bordered" style="text-align:center;">
+    <thead>
+      <tr>
+        <td>
+          <input type="checkbox" ng-model="selectedAllBool" ng-click="auditCenter.selectAll(selectedAllBool)"> 全选
+        </td>
+        <td>
+          应用名称
+        </td>
+        <td>
+          应用版本
+        </td>
+        <td>
+           更新时间
+        </td>
+        <td>
+          开发者
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="app in auditCenter.apps">
+        <td>
+          <input type="checkbox" ng-model="$parent.auditCenter.selected[$index]">
+        </td>
+        <td>
+          {{app.app.name}}
+        </td>
+        <td>
+          {{app.version}}
+        </td>
+        <td>
+          {{app.updatedAt | date:'yyyy/MM/dd hh:mm:ss'}}
+        </td>
+        <td ui-sref="auditorDeveloper({id:app.app.developer.id})" style="cursor:pointer">
+          {{app.app.developer.name}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-group clearfix">
+    <a href="#" class="btn btn-primary pull-right" ng-click="auditCenter.commit(auditCenter.selected)">选择</a>
+  </div>
+</div>

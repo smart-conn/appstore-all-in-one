@@ -1,0 +1,10 @@
+<div class="" ng-controller="AuditorHistoryVersion as auditorHistoryVersion">
+  <h3 class="text-danger">应用历史详情</h3>
+  <h4>介绍：{{auditorHistoryVersion.appPackage.app.description}}</h4>
+  <h4>安装人数：123456</h4>
+  <h4>应用版本：{{auditorHistoryVersion.appPackage.version}}</h4>
+  <h4>升级信息：{{auditorHistoryVersion.appPackage.description}}</h4>
+  <h4>兼容的版本：
+  <span ng-repeat="deviceModel in auditorHistoryVersion.appPackage.deviceModels" data-id="{{deviceModel.id}}">{{deviceModel.name}}</span>
+  </h4>
+</div>

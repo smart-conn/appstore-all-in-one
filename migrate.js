@@ -2,37 +2,57 @@
 const app = require('./application')();
 const Sequelize = app.getContext('sequelize');
 const fs = require('fs');
-if (fs.existsSync("./application.db")) {
-  fs.unlinkSync("./application.db");
-}
+if (fs.existsSync("./application.db")) fs.unlinkSync("./application.db");
 
 Sequelize.sync().then(function () {
   console.log("Database sync Done.");
   Promise.all([
+    app.getModel("appPackageStatus").create({
+      id: 1,
+      status: "waitReview"
+    }),
+    app.getModel("appPackageStatus").create({
+      id: 2,
+      status: "waitReview"
+    }),
+    app.getModel("appPackageStatus").create({
+      id: 8,
+      status: "waitReview"
+    }),
+    app.getModel("appPackageStatus").create({
+      id: 10,
+      status: "reviewing"
+    }),
+    app.getModel("developer").create({
+      id: '5',
+      name: "tosone"
+    }),
     app.getModel("app").create({
       id: 'NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj',
       name: '变声',
+      developerID: '5',
       description: '好玩儿到爱不释手',
-      icon: "1.jpg",
-      author: "tosone"
+      icon: "1.jpg"
     }),
     app.getModel("app").create({
       id: 'MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1',
       name: '电话本',
+      developerID: '5',
       description: "好玩儿到爱不释手",
-      icon: "1.jpg",
-      author: "tosone"
+      icon: "1.jpg"
     }),
     app.getModel("app").create({
       id: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
       name: 'UUID 生成器',
+      developerID: '5',
       description: '好玩儿到爱不释手',
-      icon: "1.jpg",
-      author: "tosone"
+      icon: "1.jpg"
     }),
     app.getModel("appPackage").create({
       appID: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
       version: '0.0.2',
+      description: '升级信息',
+      statusID: 1,
       flow: JSON.stringify([{
         "id": "3367e45f.cc981c",
         "type": "function",
@@ -62,6 +82,8 @@ Sequelize.sync().then(function () {
     app.getModel("appPackage").create({
       appID: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
       version: '0.0.1',
+      description: '升级信息',
+      statusID: 2,
       flow: JSON.stringify([{
         "id": "3367e45f.cc981c",
         "type": "function",
@@ -92,6 +114,8 @@ Sequelize.sync().then(function () {
       id: 5,
       appID: "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk",
       version: '0.0.1',
+      description: '升级信息',
+      statusID: 8,
       flow: JSON.stringify([{
         "id": "3012f18f.cfed0e",
         "type": "inject",
@@ -125,6 +149,8 @@ Sequelize.sync().then(function () {
       id: 8,
       appID: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
       version: '0.0.1',
+      statusID: 10,
+      description: '升级信息',
       flow: JSON.stringify([{
         "id": "3b911b0e.c46ee4",
         "type": "http in",
@@ -183,19 +209,20 @@ Sequelize.sync().then(function () {
       alias: "123123",
       accessToken: "ertvdfd%d@as&dfg",
       deviceModelID: 2
+    }),
+    app.getModel("deviceModelToAppVersion").create({
+      deviceModelID: 1,
+      appPackageID: 5
+    }),
+    app.getModel("deviceModelToAppVersion").create({
+      deviceModelID: 1,
+      appPackageID: 8
+    }),
+    app.getModel("auditor").create({
+      id: "5",
+      name: "tosone"
     })
   ]).then(() => {
-    return Promise.all([
-      app.getModel("deviceModelToAppVersion").create({
-        deviceModelID: 1,
-        appPackageID: 5
-      }),
-      app.getModel("deviceModelToAppVersion").create({
-        deviceModelID: 1,
-        appPackageID: 8
-      })
-    ]);
-  }).then(() => {
     require("process").exit(0);
   }).catch((err) => {
     console.log("Error: " + err);

@@ -6,7 +6,7 @@
 ### services
 
 ### routers
-  - #### GET
+  - GET
     - 公共
       - `/app/:id` 获取某个应用详细信息
     - 应用商店
@@ -23,8 +23,23 @@
       - `/app/:id/deviceModels` 获取某个应用兼容的所有设备型号
     - 开发者
       - `/developer/apps` 获取某个开发者所有应用
-      - `/developer/app/:id` 获取某个应用的详细信息
+      - `/developer/app/:id` 获取某个应用的详细信息（包括应用详细信息和应用的历史版本）
       - `/developer/appVersions/:id` 获取某个应用的所有版本的详细信息
       - `/developer/app/:id/version/:version` 获取某个应用某个版本的详细信息
-
+    - 审核
+      - `/audit/apps` 获取所有待审核的应用
+      - `/audit/apps/status/:status` 获取某种状态的所有应用
+      - `/audit/developer/:id`
+      - `/audit/bucketList` 获取审核任务列表
+      - `/audit/bucket/:id` 获取审核者某项任务中某个应用的详细信息
+  - POST
+    - 公共
+    - 应用商店
+    - 用户
+    - 设备
+    - 兼容
+    - 开发者
+    - 审核
+      - `/audit/apps/:status` 获取某种状态的所有应用
+      - `/audit/app`
 ### models

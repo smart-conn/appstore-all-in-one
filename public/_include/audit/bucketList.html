@@ -1,0 +1,37 @@
+<div class="" ng-controller="AuditorBucketList as auditorBucketList">
+  <h3 class="text-danger">审核任务列表</h3>
+  <table class="table table-bordered" style="text-align:center;">
+    <thead>
+      <tr>
+        <td>
+          应用名称
+        </td>
+        <td>
+          应用版本
+        </td>
+        <td>
+          更新时间
+        </td>
+        <td>
+          开发者
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="app in auditorBucketList.apps">
+        <td ui-sref="auditorAppInfo({id:app.id})" style="cursor:pointer">
+          {{app.appPackage.app.name}}
+        </td>
+        <td>
+          {{app.appPackage.version}}
+        </td>
+        <td>
+          {{app.updatedAt | date:'yyyy/MM/dd hh:mm:ss'}}
+        </td>
+        <td ui-sref="auditorDeveloper({id:app.appPackage.app.developer.id})" style="cursor:pointer">
+          {{app.appPackage.app.developer.name}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
