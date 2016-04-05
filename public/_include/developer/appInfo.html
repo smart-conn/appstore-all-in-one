@@ -18,6 +18,7 @@
     style="cursor:pointer"
     ui-sref="developerAppInfo({id:appPackage.app.id,version:appPackage.id})">
      {{appPackage.version}}
+     <span class="pull-right text-danger">{{appPackage.appPackageStatus.status}}</span>
     </li>
   </ul>
 </div>

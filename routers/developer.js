@@ -1,6 +1,11 @@
 "use strict";
-const router = require('koa-router')()
+const router = require('koa-router')();
 
+router.get('/developer/apps', function* () {
+  const amqp = this.app.context.amqp;
+  this.body = yield amqp.call("developer.apps");
+});
+//添加新的APP
 router.post("/developer/newApp", function* () {
   const amqp = this.app.context.amqp;
   let result = yield amqp.call("developer.newApp", this.request.body);
@@ -8,6 +13,7 @@ router.post("/developer/newApp", function* () {
     code: 200
   }
 });
+//修改APP的信息
 router.post("/developer/editApp", function* () {
   const amqp = this.app.context.amqp;
   let result = yield amqp.call("developer.editApp", this.request.body);
@@ -15,6 +21,7 @@ router.post("/developer/editApp", function* () {
     code: 200
   }
 });
+//升级APP
 router.post("/developer/upgradeApp", function* () {
   const amqp = this.app.context.amqp;
   let result = yield amqp.call("developer.upgradeApp", this.request.body);
@@ -22,7 +29,6 @@ router.post("/developer/upgradeApp", function* () {
     code: 200
   }
 });
-
 
 //获取某个ID的APP详细信息
 router.get("/developer/app/:id", function* () {

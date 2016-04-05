@@ -9,11 +9,14 @@
         <td>
           应用名称
         </td>
-        <td colspan="3">
-          操作
+        <td>
+          最新版本
         </td>
         <td>
           应用状态
+        </td>
+        <td colspan="3">
+          操作
         </td>
       </tr>
     </thead>
@@ -21,6 +24,12 @@
       <tr ng-repeat="app in developerAppList.apps">
         <td ui-sref="developerAppInfo({id:app.id,version:'newest'})" style="cursor:pointer">
           {{app.name}}
+        </td>
+        <td>
+          {{app.appPackages[0].version}}
+        </td>
+        <td class="text-danger">
+          {{app.appPackages[0].appPackageStatus.status}}
         </td>
         <td ui-sref="appEditor({id:app.id,action:'upgrade'})" style="cursor:pointer">
           升级
@@ -30,9 +39,6 @@
         </td>
         <td style="cursor:pointer">
           删除
-        </td>
-        <td class="text-danger">
-          未审核
         </td>
       </tr>
     </tbody>
