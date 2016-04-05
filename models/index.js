@@ -4,5 +4,8 @@ module.exports = [
   require('./app'),
   require('./appPackage'),
   require('./deviceModel'),
-  require('./developer')
+  require('./developer'),
+  require('./appPackageStatus'),
+  require('./auditor'),
+  require('./auditorBucket')
 ];

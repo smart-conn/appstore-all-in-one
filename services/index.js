@@ -5,5 +5,6 @@ module.exports = [
   require('./socket-io-management'),
   require('./appAdmin/appAdmin'),
   require('./developer/uploadApp'),
-  require('./developer/getAppByID')
+  require('./developer/getAppByID'),
+  require('./audit')
 ];

@@ -19,7 +19,7 @@
     </thead>
     <tbody>
       <tr ng-repeat="app in developerAppList.apps">
-        <td ui-sref="appHistoryVersion({id:app.id})" style="cursor:pointer">
+        <td ui-sref="developerAppInfo({id:app.id,version:'newest'})" style="cursor:pointer">
           {{app.name}}
         </td>
         <td ui-sref="appEditor({id:app.id,action:'upgrade'})" style="cursor:pointer">
