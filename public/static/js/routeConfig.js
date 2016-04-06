@@ -64,5 +64,9 @@ function routeConfig($stateProvider, $urlRouterProvider) {
   $stateProvider.state('auditorDeveloper', {
     url: '/audit/developer/:id',
     templateUrl: '_include/audit/developer.html'
+  });
+  $stateProvider.state('userCenter', {
+    url: '/userCenter/login',
+    templateUrl: '_include/userCenter.html'
   })
 }
