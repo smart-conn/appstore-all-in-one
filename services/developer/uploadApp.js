@@ -4,6 +4,7 @@ module.exports = (app) => {
   const Application = app.getModel("app");
   const DeviceModel = app.getModel("deviceModel");
   const ApplicationPackage = app.getModel("appPackage");
+  const ApplicationPackageStatus = app.getModel("appPackageStatus");
 
   amqp.on("developer.newApp", function* (msg) {
     let app = yield Application.create({
@@ -28,6 +29,9 @@ module.exports = (app) => {
       where: {
         id: deviceModelID
       }
+    }));
+    yield appPackage.setAppPackageStatus(yield ApplicationPackageStatus.create({
+      status: "waitReview"
     }));
     return true;
   });
@@ -59,6 +63,9 @@ module.exports = (app) => {
         id: deviceModelID
       }
     }));
+    yield appPackage.setAppPackageStatus(yield ApplicationPackageStatus.create({
+      status: "edit"
+    }));
     return true;
   });
   amqp.on("developer.upgradeApp", function* (msg) {
@@ -88,6 +95,34 @@ module.exports = (app) => {
         id: deviceModelID
       }
     }));
+    yield appPackage.setAppPackageStatus(yield ApplicationPackageStatus.create({
+      status: "waitReview"
+    }));
     return true;
   });
+  //检查某个应用是否可以被升级或者提交审核即检查是否存在等待审核，审核中的版本
+  //edit:可以发新版
+  //waitReview:不可以发新版
+  //reviewing:不可以发新版
+  amqp.on("developer.versionStatus", function* (msg) {
+    return Application.find({
+      where: {
+        id: msg.id
+      },
+      attributes: ["id"],
+      include: [{
+        model: ApplicationPackage,
+        attributes: ["id", "updatedAt"],
+        order: [
+          ['updatedAt', 'DESC']
+        ],
+        include: [{
+          model: ApplicationPackageStatus,
+          attributes: ["id", "status"]
+        }]
+      }]
+    }).then((data) => {
+      return data ? data.appPackages[0].appPackageStatus.status : null;
+    });
+  })
 }

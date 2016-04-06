@@ -21,7 +21,7 @@ Sequelize.sync().then(function () {
     }),
     app.getModel("appPackageStatus").create({
       id: 10,
-      status: "reviewing"
+      status: "reviewPass"
     }),
     app.getModel("developer").create({
       id: '5',

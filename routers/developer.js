@@ -16,9 +16,19 @@ router.post("/developer/newApp", function* () {
 //修改APP的信息
 router.post("/developer/editApp", function* () {
   const amqp = this.app.context.amqp;
-  let result = yield amqp.call("developer.editApp", this.request.body);
-  this.body = {
-    code: 200
+  let msg = this.request.body;
+  let status = yield amqp.call("developer.versionStatus", {
+    id: msg.appID
+  });
+  if (status == "edit") {
+    let result = yield amqp.call("developer.editApp", msg);
+    this.body = {
+      code: 200
+    }
+  } else {
+    this.body = {
+      code: 500
+    }
   }
 });
 //升级APP
@@ -57,6 +67,14 @@ router.get("/developer/app/:id/version/:version", function* () {
       version: this.params.version
     });
   }
-
 });
+router.get("/developer/status/:id", function* () {
+  const amqp = this.app.context.amqp;
+  let status = yield amqp.call("developer.versionStatus", {
+    id: this.params.id
+  });
+  this.body = {
+    status: status
+  };
+})
 module.exports = router.routes();

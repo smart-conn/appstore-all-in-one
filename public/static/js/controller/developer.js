@@ -23,7 +23,7 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
     }
   });
 
-  this.commit = function (appPackage, compatibles) {
+  this.commit = function (appPackage, compatibles, action) {
     appPackage.deviceModels = [];
     for (let i in compatibles) {
       if (compatibles[i]) {
@@ -31,7 +31,9 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
       }
     }
     let resMsg = null;
-    if ($state.params.action == "new") {
+    if (action && action == "edit") {
+      resMsg = AppService.editApp(appPackage);
+    } else if ($state.params.action == "new") {
       resMsg = AppService.newApp(appPackage);
     } else if ($state.params.action == "edit") {
       resMsg = AppService.editApp(appPackage);
@@ -66,15 +68,44 @@ developer.controller("CheckResultError", function () {
 });
 developer.controller("DeveloperAppList", function ($http) {
   $http.get("/developer/apps").success((data) => {
+    console.log(data);
     this.apps = data;
   });
 });
 developer.controller("DeveloperAppInfo", function ($state, $http) {
+  this.appPackage = {};
   $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
     this.appPackage = data;
   });
   $http.get("/developer/appVersions/" + $state.params.id).success((data) => {
-    this.appPackages = data;
+    this.historys = data;
   });
+  this.edit = () => {
+    $http.get("/developer/status/" + this.appPackage.app.id).success((data) => {
+      if (data.status != "edit") {
+        $("#developerAppInfoModal .content").html("已经提交审核，不可以再更改，请耐心等待审核结果。")
+        $("#developerAppInfoModal").modal("show");
+      } else {
+        $state.go("appEditor", {
+          action: 'edit',
+          id: this.appPackage.app.id
+        });
+      }
+    });
+  }
+  this.update = () => {
+    $http.get("/developer/status/" + this.appPackage.app.id).success((data) => {
+      console.log(data.status == "reviewPass");
+      if (data.status == "edit" || data.status == "waitReview" || data.status == "reviewing") {
+        $("#developerAppInfoModal .content").html("已经提交审核，不可以再更改，请耐心等待审核结果。")
+        $("#developerAppInfoModal").modal("show");
+      } else {
+        $state.go(`appEditor`, {
+          action: 'upgrade',
+          id: this.appPackage.app.id
+        });
+      }
+    })
+  }
 });
 developer.controller("DeveloperAppGround", function () {})

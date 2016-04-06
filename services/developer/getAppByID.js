@@ -4,6 +4,7 @@ module.exports = (app) => {
   let DeviceModel = app.getModel("deviceModel");
   let ApplicationPackage = app.getModel("appPackage");
   let ApplicationPackageStatus = app.getModel("appPackageStatus");
+  let Developer = app.getModel("developer");
 
   const amqp = app.getContext("amqp");
 
@@ -11,14 +12,16 @@ module.exports = (app) => {
     return Application.findAll({
       include: [{
         model: ApplicationPackage,
-        attributes: ['id', 'version'],
+        attributes: ['id', 'version', 'updatedAt'],
         order: [
-          ['updatedAt', 'DESC']
+          ['id', 'DESC']
         ],
         include: [{
           model: ApplicationPackageStatus,
           attributes: ['id', 'status']
         }]
+      }, {
+        model: Developer
       }]
     })
   });
