@@ -90,7 +90,6 @@ module.exports = (app) => {
     let latestStatus = yield amqp.call("developer.latestStatus", {
       id: msg.appID
     });
-    console.log(msg);
     if (latestStatus == "reviewPass" || latestStatus == "reviewFail" || latestStatus == "onboard" || latestStatus == "edit") {
       yield Application.upsert({
         id: msg.appID,
@@ -113,7 +112,6 @@ module.exports = (app) => {
           id: msg.appID
         }
       });
-      console.log(msg.appID);
       let deviceModelID = [];
       msg.deviceModels.forEach(function (deviceModel) {
         deviceModelID.push(deviceModel.id);

@@ -34,35 +34,17 @@ module.exports = (app) => {
 
   amqp.on("developer.getAppByID", function* (msg) {
     //返回指定ID的APP的最新版本的详细信息，和兼容设备情况
-
     return Application.findById(msg.appID, {
       attributes: ["id", "name", "description"],
       include: [{
-          model: LatestVersion,
-          attributes: ["id"],
-          include: [{
-            model: ApplicationPackage,
-            attributes: ["id", "version", "flow", "description", "appID", "updatedAt"]
-          }]
+        model: LatestVersion,
+        attributes: ["id"],
+        include: [{
+          model: ApplicationPackage,
+          attributes: ["id", "version", "flow", "description", "appID", "updatedAt"]
         }]
-        // where: {
-        //   appID: msg.appID
-        // },
-        // order: [
-        //   ['updatedAt', 'DESC']
-        // ],
-        // include: [{
-        //   model: Application,
-        //   attributes: ["id", "name", "description", "icon"]
-        // }, {
-        //   model: DeviceModel,
-        //   attributes: ["id", "name"]
-        // }]
-    }).then((data) => {
-      return {
-
-      }
-    })
+      }]
+    });
   });
   amqp.on("developer.getHistoryVersionsByID", function* (msg) {
     return ApplicationPackage.findAll({
@@ -118,7 +100,6 @@ module.exports = (app) => {
         }]
       }]
     }).then((data) => {
-      console.log(data.latestVersion);
       return data.latestVersion.appPackage.appPackageStatus.status;
     })
   });

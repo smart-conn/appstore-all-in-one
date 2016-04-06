@@ -5,46 +5,40 @@ router.get('/developer/apps', function* () {
   const amqp = this.app.context.amqp;
   this.body = yield amqp.call("developer.apps");
 });
+
 //添加新的APP
 router.post("/developer/newApp", function* () {
   const amqp = this.app.context.amqp;
-  console.log(this.request.body);
   let result = yield amqp.call("developer.newApp", this.request.body);
   this.body = {
     code: 200
   }
 });
+
+//all 保存新的APP
 router.post("/developer/saveApp", function* () {
-    const amqp = this.app.context.amqp;
-    let result = yield amqp.call("developer.saveApp", this.request.body);
-    this.body = {
-      code: 200
-    }
-  })
-  //修改APP的信息
+  const amqp = this.app.context.amqp;
+  let result = yield amqp.call("developer.saveApp", this.request.body);
+  this.body = {
+    code: 200
+  }
+})
+
+//修改APP的信息
 router.post("/developer/editApp", function* () {
   const amqp = this.app.context.amqp;
-  let msg = this.request.body;
-  let status = yield amqp.call("developer.latestStatus", {
-    id: msg.appID
-  });
-  if (status == "edit") {
-    let result = yield amqp.call("developer.editApp", msg);
-    this.body = {
-      code: 200
-    }
-  } else {
-    this.body = {
-      code: 500
-    }
+  let result = yield amqp.call("developer.editApp", this.request.body);
+  this.body = {
+    code: result ? 200 : 500
   }
 });
+
 //升级APP
 router.post("/developer/upgradeApp", function* () {
   const amqp = this.app.context.amqp;
   let result = yield amqp.call("developer.upgradeApp", this.request.body);
   this.body = {
-    code: 200
+    code: result ? 200 : 500
   }
 });
 

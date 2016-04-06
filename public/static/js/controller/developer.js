@@ -41,9 +41,10 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
     resMsg.success(function (data) {
       if (data.code == 200) {
         console.log("succ");
-        // $state.go("developerAppList");
+        $state.go("developerAppList");
       } else {
         console.log("error");
+        alert("请耐心等待审核结果。");
       }
     });
   }
@@ -64,9 +65,10 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
     resMsg.success(function (data) {
       if (data.code == 200) {
         console.log("succ");
-        // $state.go("developerAppList");
+        $state.go("developerAppList");
       } else {
         console.log("error");
+        alert("请耐心等待审核结果。");
       }
     });
   }
