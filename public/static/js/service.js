@@ -25,8 +25,13 @@ AppService.prototype.update = function (id, version) {
 
 AppService.prototype.newApp = function (appPackage) {
   var $http = this.$http;
-  return $http.post("/developer/upgradeApp", appPackage);
+  return $http.post("/developer/newApp", appPackage);
 }
+AppService.prototype.saveApp = function (appPackage) {
+  var $http = this.$http;
+  return $http.post("/developer/saveApp", appPackage);
+}
+
 AppService.prototype.editApp = function (appPackage) {
   var $http = this.$http;
   return $http.post("/developer/editApp", appPackage);

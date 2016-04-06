@@ -5,8 +5,9 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
   this.deviceModels = []; //所有设备
   $http.get("/deviceModel").success((data) => {
     this.deviceModels = data;
-    if ($state.params.id) {
-      $http.get("/developer/app/" + $state.params.id).success((data) => {
+    if ($state.params.action == "edit") {
+      $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
+        console.log(data);
         this.appPackage = data;
         for (let deviceModel of this.deviceModels) {
           let length = this.compatible.length;
@@ -23,7 +24,7 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
     }
   });
 
-  this.commit = function (appPackage, compatibles, action) {
+  this.commit = function (appPackage, compatibles) {
     appPackage.deviceModels = [];
     for (let i in compatibles) {
       if (compatibles[i]) {
@@ -31,19 +32,39 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
       }
     }
     let resMsg = null;
-    if (action && action == "edit") {
-      resMsg = AppService.editApp(appPackage);
-    } else if ($state.params.action == "new") {
+    if ($state.params.action == "new") {
       resMsg = AppService.newApp(appPackage);
     } else if ($state.params.action == "edit") {
-      resMsg = AppService.editApp(appPackage);
-    } else if ($state.params.action == "upgrade") {
       resMsg = AppService.upgradeApp(appPackage);
+    }
+    console.log(appPackage);
+    resMsg.success(function (data) {
+      if (data.code == 200) {
+        console.log("succ");
+        // $state.go("developerAppList");
+      } else {
+        console.log("error");
+      }
+    });
+  }
+  this.save = function (appPackage, compatibles) {
+    console.log($state.params.action);
+    appPackage.deviceModels = [];
+    for (let i in compatibles) {
+      if (compatibles[i]) {
+        appPackage.deviceModels.push(this.deviceModels[i]);
+      }
+    }
+    let resMsg = null;
+    if ($state.params.action == "new") {
+      resMsg = AppService.saveApp(appPackage);
+    } else if ($state.params.action == "edit") {
+      resMsg = AppService.editApp(appPackage);
     }
     resMsg.success(function (data) {
       if (data.code == 200) {
         console.log("succ");
-        $state.go("developerAppList");
+        // $state.go("developerAppList");
       } else {
         console.log("error");
       }
@@ -74,6 +95,8 @@ developer.controller("DeveloperAppList", function ($http) {
 });
 developer.controller("DeveloperAppInfo", function ($state, $http) {
   this.appPackage = {};
+  this.appID = $state.params.id;
+  this.appVersion = $state.params.version;
   $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
     this.appPackage = data;
   });

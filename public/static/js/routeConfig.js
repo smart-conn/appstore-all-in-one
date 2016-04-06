@@ -38,7 +38,7 @@ function routeConfig($stateProvider, $urlRouterProvider) {
     templateUrl: '_include/developer/appGround.html'
   });
   $stateProvider.state('appEditor', {
-    url: '/developer/appEditor/:action/:id', //action:[new,edit,upgrade]
+    url: '/developer/appEditor/:action/appid/:id/version/:version', //action:[new,edit]
     templateUrl: '_include/developer/appEditor.html'
   });
   $stateProvider.state('appHistoryVersion', {

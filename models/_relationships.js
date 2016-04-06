@@ -12,6 +12,14 @@ module.exports = (sequelize) => {
   let AuditorBucket = sequelize.models['auditorBucket'];
   let AppPackageStatus = sequelize.models['appPackageStatus'];
   let DeviceModelMap = sequelize.define('deviceModelToAppVersion', {});
+  let LatestVersion = sequelize.define('latestVersion', {});
+
+  Application.hasOne(LatestVersion, {
+    foreignKey: "appID"
+  });
+  LatestVersion.belongsTo(AppPackage, {
+    foreignKey: "appPackageID"
+  });
 
   AppPackage.belongsTo(Application, {
     foreignKey: "appID"
@@ -51,13 +59,6 @@ module.exports = (sequelize) => {
   Application.belongsTo(Developer, {
     foreignKey: "developerID"
   });
-
-  // AppPackage.hasMany(AppPackageStatus, {
-  //   foreignKey: "appPackageID"
-  // });
-  // AppPackageStatus.belongsTo(AppPackage, {
-  //   foreignKey: "appPackageID"
-  // });
 
   //AuditorBucket与Auditor和AppPackage
   AuditorBucket.belongsTo(AppPackage, {

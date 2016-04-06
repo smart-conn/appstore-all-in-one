@@ -8,16 +8,24 @@ router.get('/developer/apps', function* () {
 //添加新的APP
 router.post("/developer/newApp", function* () {
   const amqp = this.app.context.amqp;
+  console.log(this.request.body);
   let result = yield amqp.call("developer.newApp", this.request.body);
   this.body = {
     code: 200
   }
 });
-//修改APP的信息
+router.post("/developer/saveApp", function* () {
+    const amqp = this.app.context.amqp;
+    let result = yield amqp.call("developer.saveApp", this.request.body);
+    this.body = {
+      code: 200
+    }
+  })
+  //修改APP的信息
 router.post("/developer/editApp", function* () {
   const amqp = this.app.context.amqp;
   let msg = this.request.body;
-  let status = yield amqp.call("developer.versionStatus", {
+  let status = yield amqp.call("developer.latestStatus", {
     id: msg.appID
   });
   if (status == "edit") {
@@ -70,7 +78,7 @@ router.get("/developer/app/:id/version/:version", function* () {
 });
 router.get("/developer/status/:id", function* () {
   const amqp = this.app.context.amqp;
-  let status = yield amqp.call("developer.versionStatus", {
+  let status = yield amqp.call("developer.latestStatus", {
     id: this.params.id
   });
   this.body = {
