@@ -1,9 +1,9 @@
 <div class="" ng-controller="UserCenter as userCenter">
-  <h3 class="text-danger">用户中心</h3>
+  <h3 class="text-danger">登录</h3>
   <div class="form-group">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="user name">
-      <span class="input-group-addon" id="basic-addon2">Login</span>
+      <input type="text" class="form-control" placeholder="user name" id="login-ipt">
+      <span class="input-group-addon" id="login" ng-click="userCenter.login()" style="cursor:pointer;">Login</span>
     </div>
   </div>
 </div>

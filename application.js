@@ -6,7 +6,7 @@ const EventEmitter = require('events');
 const http = require('http');
 const Sequelize = require('sequelize');
 const sio = require('socket.io');
-
+const session = require('koa-session');
 // middlewares
 const bodyParser = require('koa-bodyparser');
 const errorHandler = require('koa-error');
@@ -99,6 +99,8 @@ class Application extends EventEmitter {
     app.use(morgan.middleware('dev'));
     app.use(serveStatic(`${__dirname}/public`));
     app.use(bodyParser());
+    app.keys = ['wedudf&er$'];
+    app.use(session(app));
     return app;
   }
 

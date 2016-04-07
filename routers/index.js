@@ -5,5 +5,6 @@ module.exports = [
   require('./findAllDevice'),
   require('./adminApp'),
   require('./developer'),
-  require('./audit')
+  require('./audit'),
+  require('./login')
 ];

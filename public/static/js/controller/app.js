@@ -3,8 +3,10 @@ angular.module("appList")
   .controller("AppList", AppList)
   .controller("AppInfo", AppInfo);
 
-function AppController(AppService) {
+function AppController(AppService, $http, $state) {
   this.AppService = AppService;
+  this.$http = $http;
+  this.$state = $state;
 }
 
 function AppList($http) {
@@ -12,6 +14,13 @@ function AppList($http) {
   $http.get("/apps").then(function (data) {
     _this.lists = data.data;
   });
+}
+AppController.prototype.logout = function () {
+  this.$http.get("/logout").success((data) => {
+    console.log("logout")
+    console.log(this.$state);
+    console.log(this.$state.get());
+  })
 }
 
 function AppInfo(AppService, $state, $http) {

@@ -6,5 +6,6 @@ module.exports = [
   require('./appAdmin/appAdmin'),
   require('./developer/uploadApp'),
   require('./developer/getAppByID'),
-  require('./audit')
+  require('./audit'),
+  require('./login')
 ];

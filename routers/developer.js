@@ -1,6 +1,7 @@
 "use strict";
 const router = require('koa-router')();
-
+//登录
+//
 router.get('/developer/apps', function* () {
   const amqp = this.app.context.amqp;
   this.body = yield amqp.call("developer.apps");

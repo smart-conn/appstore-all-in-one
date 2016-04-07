@@ -7,7 +7,13 @@ module.exports = (app) => {
   let Developer = app.getModel("developer");
   let LatestVersion = app.getModel("latestVersion");
   const amqp = app.getContext("amqp");
-
+  amqp.on("developer.login", function* (msg) {
+    return Developer.find({
+      where: {
+        name: msg.name
+      }
+    });
+  });
   amqp.on("developer.apps", function* () {
     return Application.findAll({
       attributes: ["id", "name"],

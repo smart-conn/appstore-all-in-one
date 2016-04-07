@@ -7,11 +7,11 @@ function routeConfig($stateProvider, $urlRouterProvider) {
   });
   $stateProvider.state('appInformation', {
     url: '/device/information/:appID',
-    templateUrl: '_include/app-information.html'
+    templateUrl: '_include/appStore/app-information.html'
   });
   $stateProvider.state('appList', {
     url: '/device/list',
-    templateUrl: '_include/app-list.html'
+    templateUrl: '_include/appStore/app-list.html'
   });
   $stateProvider.state('waitForCheck', {
     url: '/developer/waitForCheck/',
@@ -65,8 +65,8 @@ function routeConfig($stateProvider, $urlRouterProvider) {
     url: '/audit/developer/:id',
     templateUrl: '_include/audit/developer.html'
   });
-  $stateProvider.state('userCenter', {
-    url: '/userCenter/login',
+  $stateProvider.state('login', {
+    url: '/login/:type',
     templateUrl: '_include/userCenter.html'
   })
 }

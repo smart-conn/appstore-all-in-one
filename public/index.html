@@ -15,17 +15,21 @@
         <a class="navbar-brand" href="###">应用商店原型</a>
       </div>
       <ul class="nav navbar-nav">
-        <li><a ui-sref="appList">应用安装</a></li>
         <li><a ui-sref="deviceManagement">设备管理</a></li>
-        <li><a ui-sref="developerAppList">开发者应用列表</a></li>
-        <li><a ui-sref="auditorCenter">审核中心</a></li>
-        <li><a ui-sref="userCenter">用户中心</a></li>
+        <li><a ui-sref="login({type:'user'})">应用商店</a></li>
+        <li><a ui-sref="login({type:'developer'})">开发者应用列表</a></li>
+        <li><a ui-sref="login({type:'auditor'})">审核中心</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="javascript:void(0);" ng-click="appCtrl.logout()">退出</a></li>
       </ul>
     </div>
   </nav>
 
   <div class="container">
-    <div ui-view></div>
+    <div ui-view>
+      <h3 class="text-danger">欢迎</h3>
+    </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
