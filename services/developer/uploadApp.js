@@ -7,7 +7,7 @@ module.exports = (app) => {
   const ApplicationPackageStatus = app.getModel("appPackageStatus");
   const LatestVersion = app.getModel("latestVersion");
   const Developer = app.getModel("developer");
-
+  //添加新的APP提交审核
   amqp.on("developer.newApp", function* (msg) {
     let developer = yield Developer.findById(5);
     let latestVersion = yield LatestVersion.create({});
@@ -45,6 +45,7 @@ module.exports = (app) => {
     latestVersion.setAppPackage(appPackage);
     return true;
   });
+  //编辑原有的APP信息
   amqp.on("developer.editApp", function* (msg) {
     let latestStatus = yield amqp.call("developer.latestStatus", {
       id: msg.appID
@@ -86,6 +87,7 @@ module.exports = (app) => {
       return false;
     }
   });
+  // 发布一个新版本并提交审核
   amqp.on("developer.upgradeApp", function* (msg) {
     let latestStatus = yield amqp.call("developer.latestStatus", {
       id: msg.appID
@@ -97,11 +99,22 @@ module.exports = (app) => {
         description: msg.app.description,
         author: msg.name
       });
-      let appPackage = yield ApplicationPackage.create({
-        version: msg.version,
-        flow: msg.flow,
-        description: msg.description
-      });
+      let appPackage = null;
+      if (latestStatus == "edit") { //如果最新版本处于编辑状态，不建立新的版本，只是更改原有信息
+        yield ApplicationPackage.upsert({
+          id: msg.id,
+          version: msg.version,
+          flow: msg.flow,
+          description: msg.description
+        });
+        appPackage = yield ApplicationPackage.findById(msg.id);
+      } else {
+        appPackage = yield ApplicationPackage.create({
+          version: msg.version,
+          flow: msg.flow,
+          description: msg.description
+        });
+      }
       let latestVersion = yield LatestVersion.find({
         where: {
           appID: msg.appID
@@ -137,6 +150,7 @@ module.exports = (app) => {
       return false;
     }
   });
+  //保存一个新的APP
   amqp.on("developer.saveApp", function* (msg) {
     let developer = yield Developer.findById(5);
     let latestVersion = yield LatestVersion.create({});
