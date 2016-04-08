@@ -6,12 +6,12 @@ function routeConfig($stateProvider, $urlRouterProvider) {
     templateUrl: '_include/device-management.html'
   });
   $stateProvider.state('appInformation', {
-    url: '/device/information/:appID',
-    templateUrl: '_include/appStore/app-information.html'
+    url: '/appStore/app/:appID',
+    templateUrl: '_include/appStore/info.html'
   });
   $stateProvider.state('appList', {
-    url: '/device/list',
-    templateUrl: '_include/appStore/app-list.html'
+    url: '/appStore/list',
+    templateUrl: '_include/appStore/list.html'
   });
   $stateProvider.state('waitForCheck', {
     url: '/developer/waitForCheck/',
@@ -47,23 +47,23 @@ function routeConfig($stateProvider, $urlRouterProvider) {
   });
   $stateProvider.state('auditorCenter', {
     url: '/audit/appCenter',
-    templateUrl: '_include/audit/center.html'
+    templateUrl: '_include/auditor/center.html'
   });
   $stateProvider.state('auditorTaskList', {
     url: '/audit/bucketList',
-    templateUrl: '_include/audit/taskList.html'
+    templateUrl: '_include/auditor/taskList.html'
   });
   $stateProvider.state('auditorAppInfo', {
     url: '/audit/appInfo/:id',
-    templateUrl: '_include/audit/appInfo.html'
+    templateUrl: '_include/auditor/appInfo.html'
   });
   $stateProvider.state('auditorHistoryVersion', {
     url: '/audit/history/:id/version/:version',
-    templateUrl: '_include/audit/history.html'
+    templateUrl: '_include/auditor/history.html'
   });
   $stateProvider.state('auditorDeveloper', {
     url: '/audit/developer/:id',
-    templateUrl: '_include/audit/developer.html'
+    templateUrl: '_include/auditor/developer.html'
   });
   $stateProvider.state('login', {
     url: '/login/:type',

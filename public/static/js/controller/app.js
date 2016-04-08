@@ -1,7 +1,4 @@
 angular.module('app').controller('AppController', AppController);
-angular.module("appList")
-  .controller("AppList", AppList)
-  .controller("AppInfo", AppInfo);
 
 function AppController(AppService, $http, $state) {
   this.AppService = AppService;

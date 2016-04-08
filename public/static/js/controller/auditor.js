@@ -7,7 +7,7 @@ audit.controller("AuditDeveloper", function ($http, $state) {
 });
 // 历史版本
 audit.controller("AuditorHistoryVersion", function ($http, $state) {
-  $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
+  $http.get("/auditor/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
     this.appPackage = data;
   });
 });
@@ -19,13 +19,13 @@ audit.controller("AuditorAppInfo", function ($http, $state) {
     if (data == "") $state.go("auditorTaskList");
     else {
       this.app = data;
-      $http.get("/developer/appVersions/" + data.appPackage.app.id).success((versions) => {
+      $http.get("/auditor/appVersions/" + data.appPackage.app.id).success((versions) => {
         this.appPackages = versions;
       });
     }
   });
   this.commit = (data) => {
-    $http.post("/audit/status", {
+    $http.post("/auditor/status", {
       id: this.app.appPackage.id,
       msg: data
     }).success((data) => {
@@ -33,7 +33,7 @@ audit.controller("AuditorAppInfo", function ($http, $state) {
     });
   }
 });
-//审查人员详细信息
+//审查中心
 audit.controller("AuditorCenter", function ($http, $state) {
   this.apps = [];
   this.selected = [];
@@ -51,7 +51,7 @@ audit.controller("AuditorCenter", function ($http, $state) {
       }
     }
     if (selectedAppID.length != 0) {
-      $http.post('/auditor/auditorTask', {
+      $http.post('/auditor/addTask', {
         IDs: selectedAppID
       }).success(function (data) {
         console.log(data);
@@ -67,7 +67,7 @@ audit.controller("AuditorCenter", function ($http, $state) {
 });
 audit.controller("AuditorTaskList", function ($http) {
   this.apps = [];
-  $http.get("/auditor/bucketList").success((data) => {
+  $http.get("/auditor/taskList").success((data) => {
     this.apps = data;
   });
 });

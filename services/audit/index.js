@@ -30,7 +30,7 @@ module.exports = (app) => {
     });
   });
   //auditor添加任务到自己的列表
-  amqp.on("auditor.auditBucket", function* (msg) {
+  amqp.on("auditor.addTask", function* (msg) {
     let msgReturn = [];
     for (let id of msg.IDs) {
       let appPackage = yield ApplicationPackage.findOne({
