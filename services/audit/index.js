@@ -7,8 +7,8 @@ module.exports = (app) => {
   let ApplicationPackage = app.getModel("appPackage");
   let ApplicationPackageStatus = app.getModel("appPackageStatus");
   let AuditorBucket = app.getModel("auditorBucket");
-
-  amqp.on("audit.apps", function* () {
+  //找出所有待审查的应用
+  amqp.on("auditor.apps", function* () {
     return ApplicationPackage.findAll({
       attributes: ['id', 'version', 'updatedAt'],
       order: [
@@ -29,10 +29,8 @@ module.exports = (app) => {
       }]
     });
   });
-
-  amqp.on("audit.auditBucket", function* (msg) {
-    //添加应用的状态信息
-    //存入audit的Bucket
+  //auditor添加任务到自己的列表
+  amqp.on("auditor.auditBucket", function* (msg) {
     let msgReturn = [];
     for (let id of msg.IDs) {
       let appPackage = yield ApplicationPackage.findOne({
@@ -58,8 +56,8 @@ module.exports = (app) => {
     }
     return msgReturn
   });
-
-  amqp.on("audit.bucketList", function* (msg) {
+  //获取任务列表
+  amqp.on("auditor.taskList", function* (msg) {
     return AuditorBucket.findAll({
       where: {
         auditorID: msg.auditorID
@@ -83,8 +81,8 @@ module.exports = (app) => {
       }]
     });
   });
-
-  amqp.on("audit.bucket", function* (msg) {
+  //获取某个任务的app的详细信息
+  amqp.on("auditor.task", function* (msg) {
     return AuditorBucket.findById(msg.id, {
       include: [{
         model: ApplicationPackageStatus,
@@ -105,12 +103,12 @@ module.exports = (app) => {
       }]
     });
   });
-
-  amqp.on("audit.developer", function* (msg) {
+  //查询开发人员信息
+  amqp.on("auditor.developer", function* (msg) {
     return Developer.findById(msg.id);
   });
-
-  amqp.on("audit.status", function* (msg) {
+  //提交某个APP的状态
+  amqp.on("auditor.status", function* (msg) {
     let auditorBucket = yield AuditorBucket.findOne({
       where: {
         appPackageID: msg.id

@@ -47,11 +47,11 @@ function routeConfig($stateProvider, $urlRouterProvider) {
   });
   $stateProvider.state('auditorCenter', {
     url: '/audit/appCenter',
-    templateUrl: '_include/audit/auditCenter.html'
+    templateUrl: '_include/audit/center.html'
   });
-  $stateProvider.state('auditorBucketList', {
+  $stateProvider.state('auditorTaskList', {
     url: '/audit/bucketList',
-    templateUrl: '_include/audit/bucketList.html'
+    templateUrl: '_include/audit/taskList.html'
   });
   $stateProvider.state('auditorAppInfo', {
     url: '/audit/appInfo/:id',

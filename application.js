@@ -101,6 +101,7 @@ class Application extends EventEmitter {
     app.use(bodyParser());
     app.keys = ['wedudf&er$'];
     app.use(session(app));
+    app.use(require('./global'));
     return app;
   }
 

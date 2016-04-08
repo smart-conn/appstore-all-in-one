@@ -74,4 +74,7 @@
     - 审核
       - `/audit/apps/:status` 获取某种状态的所有应用
       - `/audit/app`
-### models
+### Models
+  - audit
+### Code
+  - 302 跳转

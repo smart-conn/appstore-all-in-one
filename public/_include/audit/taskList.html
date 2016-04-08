@@ -1,4 +1,4 @@
-<div class="" ng-controller="AuditorBucketList as auditorBucketList">
+<div class="" ng-controller="AuditorTaskList as auditorTaskList">
   <h3 class="text-danger">审核任务列表</h3>
   <table class="table table-bordered" style="text-align:center;">
     <thead>
@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="app in auditorBucketList.apps">
+      <tr ng-repeat="app in auditorTaskList.apps">
         <td ui-sref="auditorAppInfo({id:app.id})" style="cursor:pointer">
           {{app.appPackage.app.name}}
         </td>

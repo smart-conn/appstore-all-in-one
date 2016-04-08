@@ -1,21 +1,22 @@
 var audit = angular.module("audit");
+//开发人员详细信息
 audit.controller("AuditDeveloper", function ($http, $state) {
-  $http.get("/audit/developer/" + $state.params.id).success((data) => {
+  $http.get("/auditor/developer/" + $state.params.id).success((data) => {
     this.developer = data;
   });
-})
+});
+// 历史版本
 audit.controller("AuditorHistoryVersion", function ($http, $state) {
   $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
     this.appPackage = data;
-    console.log(data);
   });
 });
+// 应用详细信息
 audit.controller("AuditorAppInfo", function ($http, $state) {
   this.app = {};
   this.appPackages = [];
-  console.log($state.params.id);
-  $http.get("/audit/bucket/" + $state.params.id).success((data) => {
-    if (data == "") $state.go("auditorBucketList");
+  $http.get("/auditor/task/" + $state.params.id).success((data) => {
+    if (data == "") $state.go("auditorTaskList");
     else {
       this.app = data;
       $http.get("/developer/appVersions/" + data.appPackage.app.id).success((versions) => {
@@ -24,20 +25,19 @@ audit.controller("AuditorAppInfo", function ($http, $state) {
     }
   });
   this.commit = (data) => {
-    console.log(this.app);
-    console.log(data);
     $http.post("/audit/status", {
       id: this.app.appPackage.id,
       msg: data
     }).success((data) => {
-      $state.go("auditorBucketList");
+      $state.go("auditorTaskList");
     });
   }
 });
-audit.controller("AuditCenter", function ($http, $state) {
+//审查人员详细信息
+audit.controller("AuditorCenter", function ($http, $state) {
   this.apps = [];
   this.selected = [];
-  $http.get("/audit/apps").success((data) => {
+  $http.get("/auditor/apps").success((data) => {
     this.apps = data;
     for (let i in data) {
       this.selected.push(false);
@@ -51,11 +51,11 @@ audit.controller("AuditCenter", function ($http, $state) {
       }
     }
     if (selectedAppID.length != 0) {
-      $http.post('/audit/auditorBucket', {
+      $http.post('/auditor/auditorTask', {
         IDs: selectedAppID
       }).success(function (data) {
         console.log(data);
-        $state.go("auditorBucketList");
+        $state.go("auditorTaskList");
       });
     }
   }
@@ -65,9 +65,9 @@ audit.controller("AuditCenter", function ($http, $state) {
     }
   }
 });
-audit.controller("AuditorBucketList", function ($http) {
+audit.controller("AuditorTaskList", function ($http) {
   this.apps = [];
-  $http.get("/audit/bucketList").success((data) => {
+  $http.get("/auditor/bucketList").success((data) => {
     this.apps = data;
   });
 });
