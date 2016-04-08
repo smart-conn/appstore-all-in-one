@@ -13,6 +13,7 @@ appStore.controller("AppInfo", function (AppService, $state, $http) {
     this.description = data.description;
   });
 
+
   this.selectDevice = (id) => {
     $http.get("/findAllDevice", {
       params: {
