@@ -17,11 +17,11 @@ Sequelize.sync().then(function () {
     }),
     app.getModel("appPackageStatus").create({
       id: 8,
-      status: "waitReview"
+      status: "reviewPass"
     }),
     app.getModel("appPackageStatus").create({
       id: 10,
-      status: "reviewing"
+      status: "reviewPass"
     }),
     app.getModel("developer").create({
       id: '5',
@@ -49,6 +49,7 @@ Sequelize.sync().then(function () {
       icon: "1.jpg"
     }),
     app.getModel("appPackage").create({
+      id: 1,
       appID: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
       version: '0.0.2',
       description: '升级信息',
@@ -80,6 +81,7 @@ Sequelize.sync().then(function () {
       }])
     }),
     app.getModel("appPackage").create({
+      id: 2,
       appID: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
       version: '0.0.1',
       description: '升级信息',
@@ -183,6 +185,18 @@ Sequelize.sync().then(function () {
         "z": "3595e52c.ca6a1a",
         "wires": []
       }])
+    }),
+    app.getModel('latestVersion').create({
+      appID: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
+      appPackageID: "1"
+    }),
+    app.getModel('latestVersion').create({
+      appID: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
+      appPackageID: "2"
+    }),
+    app.getModel('latestVersion').create({
+      appID: "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk",
+      appPackageID: "8"
     }),
     app.getModel('user').create({
       id: "852741",

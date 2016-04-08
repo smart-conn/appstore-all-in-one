@@ -145,23 +145,3 @@ angularApp.config(['NgAdminConfigurationProvider', function (NgAdminConfiguratio
   admin.addEntity(appPackage);
   admin.addEntity(deviceModel);
 }]);
-
-// var adminHelper = function (ngaAdmin, nga, fields, database) {
-//   var Application = nga.entity(database);
-//   var ngaFields = [];
-//   var ngaOtherFields = [];
-//   fields.forEach(function (field) {
-//     if (field.type == "json") {
-//       ngaOtherFields.push(nga.field(field.name, field.type).map(function (val, entity) {
-//         return JSON.parse(val);
-//       }));
-//       return;
-//     }
-//     if (field.name != "id") ngaOtherFields.push(nga.field(field.name, field.type));
-//     ngaFields.push(nga.field(field.name, field.type));
-//   });
-//   Application.listView().fields(ngaFields);
-//   Application.creationView().fields(ngaOtherFields);
-//   Application.editionView().fields(ngaOtherFields);
-//   ngaAdmin.addEntity(Application);
-// }
