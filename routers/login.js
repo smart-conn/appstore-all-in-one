@@ -5,7 +5,6 @@ router.post("/login/:type", function* () {
   const amqp = this.app.context.amqp;
   let name = this.request.body.name;
   let type = this.params.type;
-  console.log(name);
   let developer = yield amqp.call("user.login", {
     name: name,
     type: type

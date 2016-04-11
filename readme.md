@@ -5,8 +5,14 @@
 
 ### AMQP
   - 公共
+    - `app` 返回某个app的详细信息
+    -
   - 应用商店
+    - `appStore.apps` 返回某类APP的集合
+    - `appStore.app` 返回某个app的详细信息
+    -
   - 用户
+    - `user.apps` 返回用户某种APP集合
   - 设备
   - 兼容
   - 开发者
