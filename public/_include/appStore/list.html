@@ -1,13 +1,15 @@
-<h3 class="text-danger">应用商店列表</h3>
-<ul class="media-list" ng-controller="AppList as appList">
-  <li class="media" ng-repeat="list in appList.lists" ui-sref="appInformation({appID:list.id})">
-    <div class="media-left">
-      <a href="#">
-        <img class="media-object" src="static/img/app.png" style="width: 64px;height: 64px;">
-      </a>
-    </div>
-    <div class="media-body">
-      <h4 class="media-heading">{{list.name}}</h4>
-    </div>
-  </li>
-</ul>
+<div class="" ng-controller="AppList as appList">
+  <h3 class="text-danger">应用商店列表</h3>
+  <ul class="media-list">
+    <li class="media" ng-repeat="list in appList.lists" ui-sref="appInformation({appID:list.id})">
+      <div class="media-left">
+        <a href="#">
+          <img class="media-object" src="static/img/app.png" style="width: 64px;height: 64px;">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">{{list.name}}</h4>
+      </div>
+    </li>
+  </ul>
+</div>

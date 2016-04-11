@@ -8,9 +8,24 @@ module.exports = function (app) {
   const UserDevice = app.getModel('userDevice');
   const User = app.getModel('user');
   const DeviceModel = app.getModel('deviceModel');
+  const LatestVersion = app.getModel('latestVersion');
+  const ApplicationPackageStatus = app.getModel("appPackageStatus");
 
   amqp.on("app.findAllApps", (msg, callback) => {
-    Application.findAll().then(function (apps) {
+    Application.findAll({
+      include: [{
+        model: LatestVersion,
+        include: [{
+          model: ApplicationPackage,
+          include: [{
+            model: ApplicationPackageStatus,
+            where: {
+              status: "reviewPass"
+            }
+          }]
+        }]
+      }]
+    }).then(function (apps) {
       return callback(null, apps);
     });
   });

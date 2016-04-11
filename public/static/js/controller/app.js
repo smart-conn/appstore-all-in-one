@@ -1,15 +1,24 @@
-angular.module('app').controller('AppController', AppController);
-
-function AppController(AppService, $http, $state) {
+angular.module('app').controller('AppController', function (AppService, $http, $state) {
   this.AppService = AppService;
-  this.$http = $http;
-  this.$state = $state;
-}
-
-AppController.prototype.logout = function () {
-  this.$http.get("/logout").success((data) => {
-    console.log("logout")
-    console.log(this.$state);
-    console.log(this.$state.get());
-  })
-}
+  var auditor = new RegExp(/^\/auditor\/[\w\W]*$/);
+  var developer = new RegExp(/^\/developer\/[\w\W]*$/);
+  var appStore = new RegExp(/^\/appStore\/[\w\W]*$/);
+  this.logout = function () {
+    $http.get("/logout").success((data) => {
+      console.log("logout");
+      if (appStore.test($state.current.url)) {
+        $state.go("login", {
+          type: "user"
+        });
+      } else if (developer.test($state.current.url)) {
+        $state.go("login", {
+          type: "developer"
+        });
+      } else if (auditor.test($state.current.url)) {
+        $state.go("login", {
+          type: "auditor"
+        });
+      }
+    });
+  }
+});
