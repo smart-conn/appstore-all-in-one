@@ -1,12 +1,12 @@
-var appStore = angular.module("appList");
+var appList = angular.module("appList");
 
-appStore.controller("AppList", function ($http) {
+appList.controller("AppList", function ($http) {
   $http.get("/apps").success((data) => {
     this.lists = data;
   });
 });
 
-appStore.controller("AppInfo", function (AppService, $state, $http) {
+appList.controller("AppInfo", function (AppService, $state, $http) {
   this.id = $state.params.appID;
   $http.get("/apps/" + $state.params.appID).success((data) => {
     this.name = data.name;
@@ -28,6 +28,3 @@ appStore.controller("AppInfo", function (AppService, $state, $http) {
     AppService.install(id, alias);
   }
 });
-
-
-function AppInfo
