@@ -1,7 +1,12 @@
 angular.module('app', [
-  'ui.router', "appStore", "developer", 'audit', 'userCenter'
+  'ui.router',
+  'appList',
+  'developer',
+  'audit',
+  'userCenter'
 ]);
-angular.module("appStore", []);
-angular.module("developer", []);
-angular.module("audit", []);
-angular.module("userCenter", []);
+
+angular.module('appList', []);
+angular.module('developer', []);
+angular.module('audit', []);
+angular.module('userCenter', []);
