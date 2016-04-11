@@ -4,9 +4,11 @@
 - 数据库所有外键均自定义。
 
 ### AMQP
-  - 公共
-    - `app` 返回某个app的详细信息
-    -
+  - APP
+    - `apps` 获取某类状态的APP
+      - params
+        - status 
+    - ``
   - 应用商店
     - `appStore.apps` 返回某类APP的集合
     - `appStore.app` 返回某个app的详细信息
@@ -36,6 +38,7 @@
         - `id` AppID
         - `version` 版本号
   - 审核
+
 ### routers
   - GET
     - 公共

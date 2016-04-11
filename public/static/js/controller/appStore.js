@@ -1,6 +1,6 @@
-var appStore = angular.module("appList");
+var appStore = angular.module("appStore");
 
-appStore.controller("AppList", function ($http) {
+appStore.controller("AppStore", function ($http) {
   $http.get("/apps").success((data) => {
     this.lists = data;
   });

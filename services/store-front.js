@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 const _ = require('underscore');
 module.exports = function (app) {
 
