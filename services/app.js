@@ -10,8 +10,10 @@ module.exports = (app) => {
   let LatestVersion = app.getModel("latestVersion");
   //获取某个状态的APP
   amqp.on("apps", function* (msg) {
-    const status = msg.status;
-    return Application.findAll(msg.id, {
+    const status = msg.status ? {
+      status: msg.status
+    } : {};
+    return Application.findAll({
       attributes: ['id', 'name', 'description'],
       include: [{
         model: LatestVersion,
@@ -22,9 +24,7 @@ module.exports = (app) => {
           include: [{
             model: ApplicationPackageStatus,
             attributes: ["id", "status"],
-            where: {
-              status: status
-            }
+            where: status
           }]
         }]
       }]
@@ -46,7 +46,7 @@ module.exports = (app) => {
     }).then((data) => {
       return data.latestVersion.appPackage.version;
     });
-  })
+  });
 
   //获取最新版本的状态
   amqp.on('latestPackageStatus', function* (msg) {
