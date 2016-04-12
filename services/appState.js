@@ -27,6 +27,11 @@ module.exports = (app) => {
         status: "onboard"
       });
       return yield applicationPackage.setAppPackageStatus(applicationPackageStatus);
+    } else {
+      return {
+        code: 501,
+        msg: "不是最新版本"
+      }
     }
   });
 
