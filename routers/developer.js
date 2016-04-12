@@ -1,7 +1,7 @@
 "use strict";
 const router = require('koa-router')();
-//登录
-//
+
+//获取开发者的所有app
 router.get('/developer/apps', function* () {
   const amqp = this.app.context.amqp;
   this.body = yield amqp.call("developer.apps");
@@ -16,7 +16,7 @@ router.post("/developer/newApp", function* () {
   }
 });
 
-//all 保存新的APP
+//保存新的APP
 router.post("/developer/saveApp", function* () {
   const amqp = this.app.context.amqp;
   let result = yield amqp.call("developer.saveApp", this.request.body);
@@ -50,6 +50,7 @@ router.get("/developer/app/:id", function* () {
     appID: this.params.id
   });
 });
+
 //获取某个ID的APP所有版本的详细信息
 router.get("/developer/appVersions/:id", function* () {
   const amqp = this.app.context.amqp;
@@ -57,6 +58,7 @@ router.get("/developer/appVersions/:id", function* () {
     appID: this.params.id
   });
 });
+
 //获取某个ID的APP某个版本的详细信息
 router.get("/developer/app/:id/version/:version", function* () {
   const amqp = this.app.context.amqp;
@@ -71,6 +73,8 @@ router.get("/developer/app/:id/version/:version", function* () {
     });
   }
 });
+
+//获取某个app最新版本的状态，以确定是否可以被升级修改
 router.get("/developer/status/:id", function* () {
   const amqp = this.app.context.amqp;
   let status = yield amqp.call("developer.latestStatus", {
@@ -79,5 +83,15 @@ router.get("/developer/status/:id", function* () {
   this.body = {
     status: status
   };
+});
+
+//获取可以上架的app
+router.get('/developer/onboardList', function* () {
+  const amqp = this.app.context.amqp;
+  console.log(this.session.id);
+  this.body = yield amqp.call("apps", {
+    developerID: this.session.id,
+    status: "reviewPass"
+  });
 })
 module.exports = router.routes();

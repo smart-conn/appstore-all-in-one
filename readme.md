@@ -7,7 +7,7 @@
   - APP
     - `apps` 获取某类状态的APP
       - params
-        - status 
+        - status
     - ``
   - 应用商店
     - `appStore.apps` 返回某类APP的集合

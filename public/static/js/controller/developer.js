@@ -133,4 +133,15 @@ developer.controller("DeveloperAppInfo", function ($state, $http) {
     })
   }
 });
-developer.controller("DeveloperAppGround", function () {})
+
+developer.controller("DeveloperOnboardList", function ($http, $state) {
+  $http.get("/developer/onboardList").success((data) => {
+    this.apps = data;
+  });
+});
+
+developer.controller("DeveloperOnboard", function ($http, $state) {
+  $http.get("/developer/onboard" + $state.params.appID).success((data) => {
+    this.app = data;
+  });
+});

@@ -33,9 +33,13 @@ function routeConfig($stateProvider, $urlRouterProvider) {
     url: '/developer/app/:id/version/:version',
     templateUrl: '_include/developer/appInfo.html'
   });
-  $stateProvider.state('developerAppGround', {
-    url: '/developer/appGround',
-    templateUrl: '_include/developer/appGround.html'
+  $stateProvider.state('developerOnboardList', {
+    url: '/developer/onboardList',
+    templateUrl: '_include/developer/onboardList.html'
+  });
+  $stateProvider.state('developerOnboard', {
+    url: '/developer/onboard/:appID',
+    templateUrl: '_include/developer/onboard.html'
   });
   $stateProvider.state('appEditor', {
     url: '/developer/appEditor/:action/appid/:id/version/:version', //action:[new,edit]
@@ -68,5 +72,5 @@ function routeConfig($stateProvider, $urlRouterProvider) {
   $stateProvider.state('login', {
     url: '/login/:type',
     templateUrl: '_include/userCenter.html'
-  })
+  });
 }

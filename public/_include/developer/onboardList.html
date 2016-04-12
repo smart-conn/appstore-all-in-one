@@ -1,0 +1,12 @@
+<div class="" ng-controller="DeveloperOnboardList as developerOnboardList">
+  <h3 class="text-danger">待上架APP列表</h3>
+  {{developerOnboardList.apps}}
+  <ul class="list-group">
+    <li class="list-group-item"
+    ng-repeat="app in developerOnboardList.apps"
+    ui-sref=""
+    style="cursor:pointer">
+      {{app.name}}
+    </li>
+  </ul>
+</div>

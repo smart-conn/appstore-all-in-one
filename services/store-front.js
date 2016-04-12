@@ -3,12 +3,13 @@ const _ = require('underscore');
 module.exports = function (app) {
 
   const amqp = app.getContext('amqp');
-  const Application = app.getModel('app');
-  const ApplicationPackage = app.getModel('appPackage');
-  const UserDevice = app.getModel('userDevice');
+
   const User = app.getModel('user');
+  const Application = app.getModel('app');
+  const UserDevice = app.getModel('userDevice');
   const DeviceModel = app.getModel('deviceModel');
   const LatestVersion = app.getModel('latestVersion');
+  const ApplicationPackage = app.getModel('appPackage');
   const ApplicationPackageStatus = app.getModel("appPackageStatus");
 
   amqp.on("app.findAllApps", (msg, callback) => {
@@ -100,6 +101,5 @@ module.exports = function (app) {
         };
       }).sort()[0];
     }
-
-  })
+  });
 };
