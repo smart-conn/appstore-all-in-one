@@ -8,5 +8,6 @@ module.exports = [
   require('./developer/getAppByID'),
   require('./audit'),
   require('./login'),
-  require('./app')
+  require('./app'),
+  require('./appState')
 ];

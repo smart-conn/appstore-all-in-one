@@ -141,7 +141,30 @@ developer.controller("DeveloperOnboardList", function ($http, $state) {
 });
 
 developer.controller("DeveloperOnboard", function ($http, $state) {
-  $http.get("/developer/onboard" + $state.params.appID).success((data) => {
+  var appID = $state.params.appID;
+  var versionID = $state.params.versionID;
+
+  $http.get("/developer/appID/" + appID + "/versionID/" + versionID).success((data) => {
     this.app = data;
   });
+  $("#sell").change(function () {
+    if ($(this).val() == "free") {
+      $("#price").hide();
+    } else {
+      $("#price").show();
+    }
+  });
+
+  this.onboard = () => {
+    var params = {
+      appID: appID,
+      versionID: versionID
+    };
+    if ($("#sell").val() !== "free") {
+      params.price = $("#price").val();
+    }
+    $http.post("/developer/onboard", params).success((data) => {
+      console.log(data);
+    });
+  }
 });

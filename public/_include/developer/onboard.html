@@ -1,4 +1,22 @@
 <div class="" ng-controller="DeveloperOnboard as developerOnboard">
   <h3 class="text-danger">上架</h3>
 
+  <h4>{{developerOnboard.app.app.name}}</h4>
+  <p class="well">
+    应用说明：{{developerOnboard.app.app.description}}<br>
+    升级说明：{{developerOnboard.app.description}}<br>
+    兼容设备：
+    <span ng-repeat="deviceModel in developerOnboard.app.deviceModels">
+      {{deviceModel.name}}
+    </span>
+  </p>
+  <form class="form-inline">
+    <select class="form-control" name="" id="sell">
+      <option value="free" selected>免费</option>
+      <option value="notfree">收费</option>
+    </select>
+    <input class="form-control" type="text" name="name" style="display:none" placeholder="收费钱数" id="price">
+  </form>
+
+  <button type="button" name="button" class="btn btn-default" style="margin-top:10px" ng-click="developerOnboard.onboard()">上架</button>
 </div>

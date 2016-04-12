@@ -1,73 +1,73 @@
-"use strict";
+'use strict';
 const router = require('koa-router')();
 
 //获取开发者的所有app
 router.get('/developer/apps', function* () {
   const amqp = this.app.context.amqp;
-  this.body = yield amqp.call("developer.apps");
+  this.body = yield amqp.call('developer.apps');
 });
 
 //添加新的APP
-router.post("/developer/newApp", function* () {
+router.post('/developer/newApp', function* () {
   const amqp = this.app.context.amqp;
-  let result = yield amqp.call("developer.newApp", this.request.body);
+  let result = yield amqp.call('developer.newApp', this.request.body);
   this.body = {
     code: 200
   }
 });
 
 //保存新的APP
-router.post("/developer/saveApp", function* () {
+router.post('/developer/saveApp', function* () {
   const amqp = this.app.context.amqp;
-  let result = yield amqp.call("developer.saveApp", this.request.body);
+  let result = yield amqp.call('developer.saveApp', this.request.body);
   this.body = {
     code: 200
   }
 })
 
 //修改APP的信息
-router.post("/developer/editApp", function* () {
+router.post('/developer/editApp', function* () {
   const amqp = this.app.context.amqp;
-  let result = yield amqp.call("developer.editApp", this.request.body);
+  let result = yield amqp.call('developer.editApp', this.request.body);
   this.body = {
     code: result ? 200 : 500
   }
 });
 
 //升级APP
-router.post("/developer/upgradeApp", function* () {
+router.post('/developer/upgradeApp', function* () {
   const amqp = this.app.context.amqp;
-  let result = yield amqp.call("developer.upgradeApp", this.request.body);
+  let result = yield amqp.call('developer.upgradeApp', this.request.body);
   this.body = {
     code: result ? 200 : 500
   }
 });
 
 //获取某个ID的APP详细信息
-router.get("/developer/app/:id", function* () {
+router.get('/developer/app/:id', function* () {
   const amqp = this.app.context.amqp;
-  this.body = yield amqp.call("developer.getAppByID", {
+  this.body = yield amqp.call('developer.getAppByID', {
     appID: this.params.id
   });
 });
 
 //获取某个ID的APP所有版本的详细信息
-router.get("/developer/appVersions/:id", function* () {
+router.get('/developer/appVersions/:id', function* () {
   const amqp = this.app.context.amqp;
-  this.body = yield amqp.call("developer.getHistoryVersionsByID", {
+  this.body = yield amqp.call('developer.getHistoryVersionsByID', {
     appID: this.params.id
   });
 });
 
 //获取某个ID的APP某个版本的详细信息
-router.get("/developer/app/:id/version/:version", function* () {
+router.get('/developer/app/:id/version/:version', function* () {
   const amqp = this.app.context.amqp;
-  if (this.params.version == "newest") {
-    this.body = yield amqp.call("developer.getAppByID", {
+  if (this.params.version == 'newest') {
+    this.body = yield amqp.call('developer.getAppByID', {
       appID: this.params.id
     });
   } else {
-    this.body = yield amqp.call("developer.getAppByVersion", {
+    this.body = yield amqp.call('developer.getAppByVersion', {
       id: this.params.id,
       version: this.params.version
     });
@@ -75,9 +75,10 @@ router.get("/developer/app/:id/version/:version", function* () {
 });
 
 //获取某个app最新版本的状态，以确定是否可以被升级修改
-router.get("/developer/status/:id", function* () {
+router.get('/developer/status/:id', function* () {
   const amqp = this.app.context.amqp;
-  let status = yield amqp.call("developer.latestStatus", {
+
+  let status = yield amqp.call('developer.latestStatus', {
     id: this.params.id
   });
   this.body = {
@@ -85,13 +86,33 @@ router.get("/developer/status/:id", function* () {
   };
 });
 
-//获取可以上架的app
+//获取可以上架的所有APP
 router.get('/developer/onboardList', function* () {
   const amqp = this.app.context.amqp;
-  console.log(this.session.id);
-  this.body = yield amqp.call("apps", {
+
+  this.body = yield amqp.call('app.apps', {
     developerID: this.session.id,
-    status: "reviewPass"
+    status: 'reviewPass'
   });
-})
+});
+
+//某个可以上架的APP的信息
+router.get('/developer/appID/:appID/versionID/:versionID', function* () {
+  const amqp = this.app.context.amqp;
+
+  const appID = this.params.appID;
+  const versionID = this.params.versionID;
+
+  this.body = yield amqp.call('app.appByVersion', {
+    appID: appID,
+    versionID: versionID
+  });
+});
+router.post('/developer/onboard', function* () {
+  const amqp = this.app.context.amqp;
+
+  const body = this.request.body;
+
+  this.body = yield amqp.call('appState.onboard', body);
+});
 module.exports = router.routes();

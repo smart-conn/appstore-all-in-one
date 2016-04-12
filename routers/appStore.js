@@ -3,7 +3,7 @@ const router = require('koa-router')();
 
 router.get("/apps", function* () {
   const amqp = this.app.context.amqp;
-  this.body = yield amqp.call('apps', {
+  this.body = yield amqp.call('app.apps', {
     status: 'waitReview'
   });
 });

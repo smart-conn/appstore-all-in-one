@@ -38,11 +38,11 @@ function routeConfig($stateProvider, $urlRouterProvider) {
     templateUrl: '_include/developer/onboardList.html'
   });
   $stateProvider.state('developerOnboard', {
-    url: '/developer/onboard/:appID',
+    url: '/developer/onboard/:appID/versionID/:versionID',
     templateUrl: '_include/developer/onboard.html'
   });
   $stateProvider.state('appEditor', {
-    url: '/developer/appEditor/:action/appid/:id/version/:version', //action:[new,edit]
+    url: '/developer/appEditor/:action/appid/:id/versionID/:versionID', //action:[new,edit]
     templateUrl: '_include/developer/appEditor.html'
   });
   $stateProvider.state('appHistoryVersion', {

@@ -1,16 +1,19 @@
 'use strict';
 module.exports = (app) => {
   const amqp = app.getContext('amqp');
-  let Application = app.getModel('app');
-  let Auditor = app.getModel('auditor');
-  let Developer = app.getModel('developer');
-  let ApplicationPackage = app.getModel('appPackage');
-  let ApplicationPackageStatus = app.getModel('appPackageStatus');
-  let AuditorBucket = app.getModel('auditorBucket');
-  let LatestVersion = app.getModel('latestVersion');
 
-  //获取某个状态的APP
-  amqp.on('apps', function* (msg) {
+  const Application = app.getModel('app');
+  const Auditor = app.getModel('auditor');
+  const Developer = app.getModel('developer');
+  const DeviceModel = app.getModel('deviceModel');
+  const AuditorBucket = app.getModel('auditorBucket');
+  const LatestVersion = app.getModel('latestVersion');
+  const ApplicationPackage = app.getModel('appPackage');
+  const ApplicationPackageStatus = app.getModel('appPackageStatus');
+
+
+  //获取某种条件下APP的集合
+  amqp.on('app.apps', function* (msg) {
     const status = msg.status ? {
       status: msg.status
     } : {};
@@ -41,7 +44,7 @@ module.exports = (app) => {
   });
 
   //获取某个APP的最新版本号
-  amqp.on('latestPackageVersion', function* (msg) {
+  amqp.on('app.latestPackageVersion', function* (msg) {
     const id = msg.id; //APP的ID
 
     return Application.findById(id, {
@@ -59,7 +62,7 @@ module.exports = (app) => {
   });
 
   //获取某个应用某个版本的状态
-  amqp.on('packageStatus', function* (msg) {
+  amqp.on('app.packageStatus', function* (msg) {
     const appID = msg.appID; //APP的ID
     const version = msg.version; //应用的版本ID
 
@@ -80,8 +83,9 @@ module.exports = (app) => {
       return data.appPackage.appPackageStatus.status;
     });
   });
+
   //获取最新版本的状态
-  amqp.on('latestPackageStatus', function* (msg) {
+  amqp.on('app.latestPackageStatus', function* (msg) {
     const id = msg.id; //APP的ID
 
     return Application.findById(id, {
@@ -104,14 +108,14 @@ module.exports = (app) => {
   });
 
   //获取某个版本的APP
-  amqp.on('appByVersion', function* (msg) {
-    const version = msg.version; //APP的版本ID
+  amqp.on('app.appByVersion', function* (msg) {
+    const versionID = msg.versionID; //APP的版本ID
     const appID = msg.appID; //APP的ID
 
     return ApplicationPackage.findOne({
       attributes: ['id', 'version', 'flow', 'appID', 'updatedAt', 'description'],
       where: {
-        id: version,
+        id: versionID,
         appID: appID
       },
       include: [{
@@ -121,6 +125,26 @@ module.exports = (app) => {
         model: DeviceModel,
         attributes: ['id', 'name']
       }]
+    });
+  });
+
+  //获取某个版本是否为最新版本
+  amqp.on('app.isLatest', function* (msg) {
+    const versionID = msg.versionID; //APP的版本ID
+    const appID = msg.appID; //APP的ID
+
+    return Application.findById(appID, {
+      attributes: ['id'],
+      include: [{
+        model: LatestVersion,
+        attributes: ['id'],
+        include: [{
+          model: ApplicationPackage,
+          attributes: ['id']
+        }]
+      }]
+    }).then((data) => {
+      return data.latestVersion.appPackage.id.toString() === versionID;
     });
   });
 }
