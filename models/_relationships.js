@@ -1,18 +1,21 @@
 'use strict';
-const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-  let User = sequelize.models['user'];
-  let Auditor = sequelize.models['auditor'];
-  let Application = sequelize.models['app'];
-  let Developer = sequelize.models['developer'];
-  let UserDevice = sequelize.models['userDevice'];
-  let AppPackage = sequelize.models['appPackage'];
-  let DeviceModel = sequelize.models['deviceModel'];
-  let AuditorBucket = sequelize.models['auditorBucket'];
-  let AppPackageStatus = sequelize.models['appPackageStatus'];
-  let DeviceModelMap = sequelize.define('deviceModelToAppVersion', {});
-  let LatestVersion = sequelize.define('latestVersion', {});
+  const User = sequelize.models['user'];
+  const Auditor = sequelize.models['auditor'];
+  const Application = sequelize.models['app'];
+  const Developer = sequelize.models['developer'];
+  const UserDevice = sequelize.models['userDevice'];
+  const AppPackage = sequelize.models['appPackage'];
+  const DeviceModel = sequelize.models['deviceModel'];
+  const AuditorBucket = sequelize.models['auditorBucket'];
+  const AppPackageStatus = sequelize.models['appPackageStatus'];
+
+  const DeviceModelMap = sequelize.define('deviceModelToAppVersion', {}); //
+
+  const LatestVersion = sequelize.define('latestVersion', {}); //TODO:fix name to developerLatestVersion
+  const AppStoreLatestVersion = sequelize.define('appStoreLatestVersion', {}); //Appstore中最新版本
+  const AppHistoryLatestStatus = sequelize.define('appHistoryLatestStatus', {}); //APP历史版本的最新最新状态
 
   Application.hasOne(LatestVersion, {
     foreignKey: "appID"
@@ -27,9 +30,12 @@ module.exports = (sequelize) => {
   Application.hasMany(AppPackage, {
     foreignKey: "appID"
   });
-  AppPackage.belongsTo(AppPackageStatus, {
+  AppPackage.hasMany(AppPackageStatus, {
     foreignKey: "statusID"
   });
+  AppPackageStatus.belongsTo(AppPackage, {
+    foreignKey: "statusID"
+  })
 
   UserDevice.belongsTo(User, {
     foreignKey: "userID"
