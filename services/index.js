@@ -9,5 +9,6 @@ module.exports = [
   require('./audit'),
   require('./login'),
   require('./app'),
-  require('./appState')
+  require('./appState'),
+  require('./appStore')
 ];

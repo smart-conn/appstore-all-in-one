@@ -1,57 +1,66 @@
 "use strict";
 module.exports = (app) => {
-  let Application = app.getModel("app");
-  let DeviceModel = app.getModel("deviceModel");
-  let ApplicationPackage = app.getModel("appPackage");
-  let ApplicationPackageStatus = app.getModel("appPackageStatus");
-  let Developer = app.getModel("developer");
-  let LatestVersion = app.getModel("latestVersion");
   const amqp = app.getContext("amqp");
-  amqp.on("developer.login", function* (msg) {
-    return Developer.find({
-      where: {
-        name: msg.name
-      }
-    });
-  });
-  amqp.on("developer.apps", function* () {
+
+  const Application = app.getModel("app");
+  const Developer = app.getModel("developer");
+  const DeviceModel = app.getModel("deviceModel");
+  const ApplicationPackage = app.getModel("appPackage");
+  const ApplicationPackageStatus = app.getModel("appPackageStatus");
+  const DeveloperLatestVersion = app.getModel("developerLatestVersion");
+  const AppPackageLatestStatus = app.getModel('appPackageLatestStatus');
+
+  amqp.on("developer.apps", function* (msg) {
+    const developer = msg.developerID ? {
+      id: msg.developerID
+    } : {};
+
     return Application.findAll({
       attributes: ["id", "name"],
       include: [{
-        model: LatestVersion,
+        model: DeveloperLatestVersion,
         attributes: ["id"],
         include: [{
           model: ApplicationPackage,
           attributes: ["id", "version"],
           include: [{
-            model: ApplicationPackageStatus,
-            attributes: ["id", "status"]
+            model: AppPackageLatestStatus,
+            attributes: ['id'],
+            include: [{
+              model: ApplicationPackageStatus,
+              attributes: ["id", "status"]
+            }]
           }]
         }]
       }, {
         model: Developer,
         attributes: ["id", "name"],
-        where: {
-          id: 5
-        }
+        where: developer
       }]
     });
   });
 
-  amqp.on("developer.getAppByID", function* (msg) {
-    //返回指定ID的APP的最新版本的详细信息，和兼容设备情况
-    return Application.findById(msg.appID, {
+  //返回指定ID的APP的最新版本的详细信息，和兼容设备情况
+  amqp.on("developer.latestApp", function* (msg) {
+    const appID = msg.appID;
+
+    return Application.findById(appID, {
       attributes: ["id", "name", "description"],
       include: [{
-        model: LatestVersion,
+        model: DeveloperLatestVersion,
         attributes: ["id"],
         include: [{
           model: ApplicationPackage,
-          attributes: ["id", "version", "flow", "description", "appID", "updatedAt"]
+          attributes: ["id", "version", "description", 'flow'],
+          include: [{
+            model: DeviceModel,
+            attributes: ["id", "name"]
+          }]
         }]
       }]
     });
   });
+
   amqp.on("developer.getHistoryVersionsByID", function* (msg) {
     return ApplicationPackage.findAll({
       attributes: ["id", "version", "appID", "updatedAt"],
@@ -73,12 +82,15 @@ module.exports = (app) => {
       }]
     });
   });
-  amqp.on("developer.getAppByVersion", function* (msg) {
+  amqp.on("developer.appByVersion", function* (msg) {
+    const versionID = msg.versionID;
+    const appID = msg.appID;
+
     return ApplicationPackage.findOne({
       attributes: ["id", "version", "flow", "appID", "updatedAt", "description"],
       where: {
-        id: msg.version,
-        appID: msg.id
+        id: versionID,
+        appID: appID
       },
       include: [{
         model: Application,
@@ -87,14 +99,16 @@ module.exports = (app) => {
         model: DeviceModel,
         attributes: ["id", "name"]
       }]
-    })
+    });
   });
   //检查某个应用最新版本的最新状态
   amqp.on("developer.latestStatus", function* (msg) {
-    return Application.findById(msg.id, {
+    const appID = msg.appID;
+
+    return Application.findById(appID, {
       attributes: ["id"],
       include: [{
-        model: LatestVersion,
+        model: DeveloperLatestVersion,
         attributes: ["id"],
         include: [{
           model: ApplicationPackage,
@@ -106,7 +120,7 @@ module.exports = (app) => {
         }]
       }]
     }).then((data) => {
-      return data.latestVersion.appPackage.appPackageStatus.status;
+      return data.developerLatestVersion.appPackage.appPackageStatus.status;
     })
   });
 }

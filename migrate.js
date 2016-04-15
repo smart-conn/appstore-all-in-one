@@ -7,22 +7,6 @@ if (fs.existsSync("./application.db")) fs.unlinkSync("./application.db");
 Sequelize.sync().then(function () {
   console.log("Database sync Done.");
   Promise.all([
-    app.getModel("appPackageStatus").create({
-      id: 1,
-      status: "waitReview"
-    }),
-    app.getModel("appPackageStatus").create({
-      id: 2,
-      status: "waitReview"
-    }),
-    app.getModel("appPackageStatus").create({
-      id: 8,
-      status: "reviewPass"
-    }),
-    app.getModel("appPackageStatus").create({
-      id: 10,
-      status: "reviewPass"
-    }),
     app.getModel("developer").create({
       id: '5',
       name: "tosone"
@@ -186,15 +170,35 @@ Sequelize.sync().then(function () {
         "wires": []
       }])
     }),
-    app.getModel('latestVersion').create({
+    app.getModel("appPackageStatus").create({
+      id: 1,
+      status: "waitReview",
+      appPackageID: 1
+    }),
+    app.getModel("appPackageStatus").create({
+      id: 2,
+      status: "waitReview",
+      appPackageID: 2
+    }),
+    app.getModel("appPackageStatus").create({
+      id: 8,
+      status: "reviewPass",
+      appPackageID: 5
+    }),
+    app.getModel("appPackageStatus").create({
+      id: 10,
+      status: "reviewPass",
+      appPackageID: 8
+    }),
+    app.getModel('developerLatestVersion').create({
       appID: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
       appPackageID: "1"
     }),
-    app.getModel('latestVersion').create({
+    app.getModel('developerLatestVersion').create({
       appID: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
       appPackageID: "2"
     }),
-    app.getModel('latestVersion').create({
+    app.getModel('developerLatestVersion').create({
       appID: "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk",
       appPackageID: "8"
     }),
@@ -235,6 +239,42 @@ Sequelize.sync().then(function () {
     app.getModel("auditor").create({
       id: "5",
       name: "tosone"
+    }),
+    app.getModel('appStoreLatestVersion').create({
+      appID: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
+      appPackageID: "1"
+    }),
+    app.getModel('appStoreLatestVersion').create({
+      appID: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
+      appPackageID: "2"
+    }),
+    app.getModel('appStoreLatestVersion').create({
+      appID: "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk",
+      appPackageID: "8"
+    }),
+    app.getModel('auditorLatestVersion').create({
+      appID: "NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj",
+      appPackageID: "1"
+    }),
+    app.getModel('auditorLatestVersion').create({
+      appID: "MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1",
+      appPackageID: "2"
+    }),
+    app.getModel('auditorLatestVersion').create({
+      appID: "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk",
+      appPackageID: "8"
+    }),
+    app.getModel('appPackageLatestStatus').create({
+      appPackageID: 1,
+      statusID: 1
+    }),
+    app.getModel('appPackageLatestStatus').create({
+      appPackageID: 2,
+      statusID: 2
+    }),
+    app.getModel('appPackageLatestStatus').create({
+      appPackageID: 8,
+      statusID: 8
     })
   ]).then(() => {
     require("process").exit(0);

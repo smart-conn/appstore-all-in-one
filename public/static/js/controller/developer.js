@@ -6,7 +6,7 @@ developer.controller("AppEditor", function (AppService, $http, $state) {
   $http.get("/deviceModel").success((data) => {
     this.deviceModels = data;
     if ($state.params.action == "edit") {
-      $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
+      $http.get("/developer/app/" + $state.params.id + "/version/" + $state.params.versionID).success((data) => {
         console.log(data);
         this.appPackage = data;
         for (let deviceModel of this.deviceModels) {
@@ -86,15 +86,17 @@ developer.controller("AppHistoryVersion", function ($http, $state) {
 developer.controller("CheckResultSucc", function () {
 
 });
+
 developer.controller("CheckResultError", function () {
 
 });
+
 developer.controller("DeveloperAppList", function ($http) {
   $http.get("/developer/apps").success((data) => {
-    console.log(data);
     this.apps = data;
   });
 });
+
 developer.controller("DeveloperAppInfo", function ($state, $http) {
   this.appPackage = {};
   this.appID = $state.params.id;

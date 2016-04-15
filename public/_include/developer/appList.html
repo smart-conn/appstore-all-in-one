@@ -22,14 +22,14 @@
     </thead>
     <tbody>
       <tr ng-repeat="app in developerAppList.apps">
-        <td ui-sref="developerAppInfo({id:app.id,version:app.latestVersion.appPackage.id})" style="cursor:pointer">
+        <td ui-sref="developerAppInfo({id:app.id,version:app.developerLatestVersion.appPackage.id})" style="cursor:pointer">
           {{app.name}}
         </td>
         <td>
-          {{app.latestVersion.appPackage.version}}
+          {{app.developerLatestVersion.appPackage.version}}
         </td>
         <td class="text-danger">
-          {{app.latestVersion.appPackage.appPackageStatus.status}}
+          {{app.developerLatestVersion.appPackage.appPackageLatestStatus.appPackageStatus.status}}
         </td>
         <td ui-sref="appEditor({id:app.id,action:'upgrade'})" style="cursor:pointer">
           升级

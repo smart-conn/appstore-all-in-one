@@ -20,16 +20,16 @@
     <tbody>
       <tr ng-repeat="app in auditorTaskList.apps">
         <td ui-sref="auditorAppInfo({id:app.id})" style="cursor:pointer">
-          {{app.appPackage.app.name}}
+          {{app.app.name}}
         </td>
         <td>
-          {{app.appPackage.version}}
+          {{app.app.auditorLatestVersion.appPackage.version}}
         </td>
         <td>
           {{app.updatedAt | date:'yyyy/MM/dd hh:mm:ss'}}
         </td>
-        <td ui-sref="auditorDeveloper({id:app.appPackage.app.developer.id})" style="cursor:pointer">
-          {{app.appPackage.app.developer.name}}
+        <td ui-sref="auditorDeveloper({id:app.app.developer.id})" style="cursor:pointer">
+          {{app.app.developer.name}}
         </td>
       </tr>
     </tbody>

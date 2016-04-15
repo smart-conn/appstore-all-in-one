@@ -4,7 +4,22 @@ const router = require('koa-router')();
 //获取开发者的所有app
 router.get('/developer/apps', function* () {
   const amqp = this.app.context.amqp;
-  this.body = yield amqp.call('developer.apps');
+
+  this.body = yield amqp.call('developer.apps', {
+    developerID: 5
+  });
+});
+
+//获取某个ID的APP某个版本的详细信息
+router.get('/developer/app/:appID/version/:versionID', function* () {
+  const amqp = this.app.context.amqp;
+  const appID = this.params.appID;
+  const versionID = this.params.versionID;
+
+  this.body = yield amqp.call('developer.appByVersion', {
+    appID,
+    versionID
+  });
 });
 
 //添加新的APP
@@ -23,7 +38,7 @@ router.post('/developer/saveApp', function* () {
   this.body = {
     code: 200
   }
-})
+});
 
 //修改APP的信息
 router.post('/developer/editApp', function* () {
@@ -59,20 +74,7 @@ router.get('/developer/appVersions/:id', function* () {
   });
 });
 
-//获取某个ID的APP某个版本的详细信息
-router.get('/developer/app/:id/version/:version', function* () {
-  const amqp = this.app.context.amqp;
-  if (this.params.version == 'newest') {
-    this.body = yield amqp.call('developer.getAppByID', {
-      appID: this.params.id
-    });
-  } else {
-    this.body = yield amqp.call('developer.getAppByVersion', {
-      id: this.params.id,
-      version: this.params.version
-    });
-  }
-});
+
 
 //获取某个app最新版本的状态，以确定是否可以被升级修改
 router.get('/developer/status/:id', function* () {

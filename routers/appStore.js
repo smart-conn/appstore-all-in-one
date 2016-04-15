@@ -1,24 +1,26 @@
 "use strict";
 const router = require('koa-router')();
 
-router.get("/apps", function* () {
+//应用商店所有APP
+router.get("/appStore/apps", function* () {
   const amqp = this.app.context.amqp;
-  this.body = yield amqp.call('app.apps', {
-    status: 'waitReview'
-  });
+
+  this.body = yield amqp.call('appStore.apps');
 });
 
-router.get("/apps/:id", function* () {
-  var appID = this.params.id;
+router.get("/appStore/app/:id", function* () {
+  const appID = this.params.id;
   const amqp = this.app.context.amqp;
-  this.body = yield amqp.call('app.findAppByID', {
-    appID: appID
+
+  this.body = yield amqp.call('appStore.app', {
+    appID
   });
 });
 
 router.get("/findAllDevice", function* () {
   let appID = this.query.appID || "ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk";
   let userID = "852741";
+
   const amqp = this.app.context.amqp;
   this.body = yield amqp.call('app.findAllDeviceByID', {
     appID,

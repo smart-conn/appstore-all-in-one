@@ -5,16 +5,19 @@ audit.controller("AuditDeveloper", function ($http, $state) {
     this.developer = data;
   });
 });
+
 // 历史版本
 audit.controller("AuditorHistoryVersion", function ($http, $state) {
   $http.get("/auditor/app/" + $state.params.id + "/version/" + $state.params.version).success((data) => {
     this.appPackage = data;
   });
 });
-// 应用详细信息
+
+// 应用详细信息 提交审核结果
 audit.controller("AuditorAppInfo", function ($http, $state) {
   this.app = {};
   this.appPackages = [];
+  var taskID = $state.params.id;
   $http.get("/auditor/task/" + $state.params.id).success((data) => {
     if (data == "") $state.go("auditorTaskList");
     else {
@@ -24,15 +27,17 @@ audit.controller("AuditorAppInfo", function ($http, $state) {
       });
     }
   });
+
   this.commit = (data) => {
     $http.post("/auditor/status", {
-      id: this.app.appPackage.id,
+      id: taskID,
       msg: data
     }).success((data) => {
       $state.go("auditorTaskList");
     });
   }
 });
+
 //审查中心
 audit.controller("AuditorCenter", function ($http, $state) {
   this.apps = [];
@@ -51,6 +56,7 @@ audit.controller("AuditorCenter", function ($http, $state) {
       }
     }
     if (selectedAppID.length != 0) {
+      console.log(selectedAppID);
       $http.post('/auditor/addTask', {
         IDs: selectedAppID
       }).success(function (data) {

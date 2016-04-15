@@ -32,16 +32,16 @@
           <input type="checkbox" ng-model="$parent.auditorCenter.selected[$index]">
         </td>
         <td>
-          {{app.app.name}}
+          {{app.name}}
         </td>
         <td>
-          {{app.version}}
+          {{app.auditorLatestVersion.appPackage.version}}
         </td>
         <td>
-          {{app.updatedAt | date:'yyyy/MM/dd hh:mm:ss'}}
+          {{app.auditorLatestVersion.appPackage.updatedAt | date:'yyyy/MM/dd hh:mm:ss'}}
         </td>
-        <td ui-sref="auditorDeveloper({id:app.app.developer.id})" style="cursor:pointer">
-          {{app.app.developer.name}}
+        <td ui-sref="auditorDeveloper({id:app.developer.id})" style="cursor:pointer">
+          {{app.developer.name}}
         </td>
       </tr>
     </tbody>

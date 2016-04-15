@@ -1,11 +1,11 @@
 <div class="" ng-controller="AuditorAppInfo as auditorAppInfo">
   <h3 class="text-danger">应用详情</h3>
   <p class="well">
-    应用名称：{{auditorAppInfo.app.appPackage.app.name}}<br>
-    作者：{{auditorAppInfo.app.appPackage.app.developer.name}}<br>
-    版本：{{auditorAppInfo.app.appPackage.version}}<br>
-    图标：{{auditorAppInfo.app.appPackage.app.icon}}<br>
-    Flow：{{auditorAppInfo.app.appPackage.flow}}<br>
+    应用名称：{{auditorAppInfo.app.app.name}}<br>
+    作者：{{auditorAppInfo.app.app.developer.name}}<br>
+    版本：{{auditorAppInfo.app.app.auditorLatestVersion.appPackage.version}}<br>
+    图标：{{auditorAppInfo.app.app.icon}}<br>
+    Flow：{{auditorAppInfo.app.app.auditorLatestVersion.appPackage.flow}}<br>
   </p>
   <div class="form-group">
     <button type="button" name="button" class="btn btn-default" ng-click="auditorAppInfo.commit('reviewPass')">通过</button>

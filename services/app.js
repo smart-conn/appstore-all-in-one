@@ -6,10 +6,10 @@ module.exports = (app) => {
   const Auditor = app.getModel('auditor');
   const Developer = app.getModel('developer');
   const DeviceModel = app.getModel('deviceModel');
-  const AuditorBucket = app.getModel('auditorBucket');
   const LatestVersion = app.getModel('latestVersion');
   const ApplicationPackage = app.getModel('appPackage');
   const ApplicationPackageStatus = app.getModel('appPackageStatus');
+  const AppPackageLatestStatus = app.getModel('appPackageLatestStatus');
 
 
   //获取某种条件下APP的集合
@@ -145,6 +145,38 @@ module.exports = (app) => {
       }]
     }).then((data) => {
       return data.latestVersion.appPackage.id.toString() === versionID;
+    });
+  });
+
+  amqp.on('app.historys', function* (msg) {
+    const appID = msg.appID;
+
+    let latestVersion = amqp.call("appStore.latestVersion", {
+      appID
+    });
+    //TODO：只返回历史版本，去掉应用商店最新版本
+    return Application.findById(id, {
+      attributes: ['id', 'name', 'description'],
+      include: [{
+        model: ApplicationPackage,
+        attributes: ['id', 'name', 'description', 'updatedAt'],
+        order: [
+          ['updatedAt', 'DESC']
+        ],
+        include: [{
+          model: AppPackageLatestStatus,
+          include: [{
+            model: AppPackageStatus,
+            attributes: ['id', 'status'],
+            where: {
+              status: 'onboard'
+            }
+          }]
+        }]
+      }, {
+        model: Developer,
+        attributes: ['id', 'name']
+      }]
     });
   });
 }
