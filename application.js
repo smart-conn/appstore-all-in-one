@@ -1,24 +1,7 @@
 'use strict';
 
-const koa = require('koa');
 const nconf = require('nconf');
 const EventEmitter = require('events');
-const http = require('http');
-const Sequelize = require('sequelize');
-const KoaPassport = require('koa-passport').KoaPassport;
-
-// middlewares
-const session = require('koa-session');
-const bodyParser = require('koa-bodyparser');
-const errorHandler = require('koa-error');
-const morgan = require('koa-morgan');
-const serveStatic = require('koa-static');
-
-// strategies
-const LocalStrategy = require('passport-local').Strategy;
-
-// helper
-const amqpRPC = require('./lib/amqp-rpc');
 
 class Application extends EventEmitter {
 
@@ -71,11 +54,13 @@ class Application extends EventEmitter {
   }
 
   _initServer(koaApp) {
+    const http = require('http');
     const server = http.createServer(koaApp.callback());
     return server;
   }
 
   _initAMQP() {
+    const amqpRPC = require('./lib/amqp-rpc');
     const brokerAddress = this.getConfig('brokerAddress') || 'amqp://127.0.0.1';
     const broker = amqpRPC(brokerAddress);
     return broker;
@@ -87,6 +72,13 @@ class Application extends EventEmitter {
   }
 
   _initKoa(passport) {
+    const koa = require('koa');
+    const session = require('koa-session');
+    const bodyParser = require('koa-bodyparser');
+    const errorHandler = require('koa-error');
+    const morgan = require('koa-morgan');
+    const serveStatic = require('koa-static');
+
     const app = koa();
 
     app.keys = this.getConfig('keys');
@@ -103,6 +95,8 @@ class Application extends EventEmitter {
   }
 
   _initPassport() {
+    const LocalStrategy = require('passport-local').Strategy;
+    const KoaPassport = require('koa-passport').KoaPassport;
     const passport = new KoaPassport();
     const User = this.getModel('user');
 
@@ -114,6 +108,8 @@ class Application extends EventEmitter {
   }
 
   _initSequelize() {
+    const Sequelize = require('sequelize');
+
     const database = this.getConfig('database');
     const username = this.getConfig('username');
     const password = this.getConfig('password');
@@ -131,8 +127,8 @@ class Application extends EventEmitter {
   }
 
   _loadModels(sequelize) {
-    require('./models').forEach((model) => {
-      model(sequelize);
+    require('./models').forEach((modelInitialize) => {
+      modelInitialize(sequelize);
     });
     require('./models/_relationships')(sequelize);
   }
@@ -144,8 +140,8 @@ class Application extends EventEmitter {
   }
 
   _loadModules(applicationInstance) {
-    require('./services').forEach((service) => {
-      service(applicationInstance);
+    require('./services').forEach((serviceInitialize) => {
+      serviceInitialize(applicationInstance);
     });
   }
 
