@@ -5,17 +5,20 @@ const nconf = require('nconf');
 const EventEmitter = require('events');
 const http = require('http');
 const Sequelize = require('sequelize');
-const sio = require('socket.io');
-const session = require('koa-session');
+const KoaPassport = require('koa-passport').KoaPassport;
+
 // middlewares
+const session = require('koa-session');
 const bodyParser = require('koa-bodyparser');
 const errorHandler = require('koa-error');
 const morgan = require('koa-morgan');
 const serveStatic = require('koa-static');
 
+// strategies
+const LocalStrategy = require('passport-local').Strategy;
+
 // helper
 const amqpRPC = require('./lib/amqp-rpc');
-const socketIoAuthenticate = require('./lib/socket-io-authenticate');
 
 class Application extends EventEmitter {
 
@@ -23,23 +26,20 @@ class Application extends EventEmitter {
     super();
     this._configure(process.env.NODE_ENV);
 
-    const amqp = this.amqp = this._initAMQP();
     const sequelize = this.sequelize = this._initSequelize();
-    const koaApp = this.app = this._initKoa();
-    const server = this.server = this._initServer(koaApp);
-    const io = this.io = this._initSocketIO(server);
-
-    this._injectKoaContext(io, sequelize, amqp);
-
-    this._loadRouters(koaApp);
     this._loadModels(sequelize);
 
+    const koaApp = this.app = this._initKoa();
+    const server = this.server = this._initServer(koaApp);
+    this._injectKoaContext(sequelize, amqp);
+    this._loadRouters(koaApp);
+
+    const amqp = this.amqp = this._initAMQP();
     this._loadModules(this);
   }
 
   getModel(name) {
     const sequelize = this.getContext('sequelize');
-    // faker
     return sequelize.models[name];
   }
 
@@ -65,16 +65,9 @@ class Application extends EventEmitter {
     });
   }
 
-  _injectKoaContext(io, sequelize, amqp) {
-    this._setContext('io', io);
+  _injectKoaContext(sequelize, amqp) {
     this._setContext('sequelize', sequelize);
     this._setContext('amqp', amqp);
-  }
-
-  _initSocketIO(server) {
-    const io = sio();
-    io.attach(server);
-    return io;
   }
 
   _initServer(koaApp) {
@@ -93,16 +86,31 @@ class Application extends EventEmitter {
     return this;
   }
 
-  _initKoa() {
+  _initKoa(passport) {
     const app = koa();
+
+    app.keys = this.getConfig('keys');
+
     app.use(errorHandler());
     app.use(morgan.middleware('dev'));
     app.use(serveStatic(`${__dirname}/public`));
     app.use(bodyParser());
-    app.keys = ['wedudf&er$'];
     app.use(session(app));
-    app.use(require('./global'));
+    // TODO: implements app.use(require('./global')) in passport
+    app.use(passport.initialize());
+    app.use(passport.session());
     return app;
+  }
+
+  _initPassport() {
+    const passport = new KoaPassport();
+    const User = this.getModel('user');
+
+    passport.use(new LocalStrategy(User.createStrategy()));
+    passport.serializeUser(User.serializeUser());
+    passport.deserializeUser(User.deserializeUser());
+
+    return passport;
   }
 
   _initSequelize() {
