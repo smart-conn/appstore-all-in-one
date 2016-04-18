@@ -12,17 +12,19 @@ class Application extends EventEmitter {
     const sequelize = this.sequelize = this._initSequelize();
     this._loadModels(sequelize);
 
-    const koaApp = this.app = this._initKoa();
+    const amqp = this.amqp = this._initAMQP();
+
+    const passport = this.passport = this._initPassport();
+    const koaApp = this.app = this._initKoa(passport);
     const server = this.server = this._initServer(koaApp);
     this._injectKoaContext(sequelize, amqp);
     this._loadRouters(koaApp);
 
-    const amqp = this.amqp = this._initAMQP();
     this._loadModules(this);
   }
 
   getModel(name) {
-    const sequelize = this.getContext('sequelize');
+    const sequelize = this.sequelize;
     return sequelize.models[name];
   }
 
@@ -100,7 +102,7 @@ class Application extends EventEmitter {
     const passport = new KoaPassport();
     const User = this.getModel('user');
 
-    passport.use(new LocalStrategy(User.createStrategy()));
+    passport.use(User.createStrategy());
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 
