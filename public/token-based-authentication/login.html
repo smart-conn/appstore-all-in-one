@@ -1,0 +1,29 @@
+<form ng-submit="authCtrl.login(credential)">
+  <table>
+    <tr>
+      <td>
+        <label for="input-username">Username</label>
+      </td>
+      <td>
+        <input id="input-username" name="username" ng-model="credential.username">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="input-password">Password</label>
+      </td>
+      <td>
+        <input id="input-password" type="password" name="password" ng-model="credential.password">
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+        <button type="submit">Sign In</button>
+        <a href="#">forget password</a>
+        <a ui-sref="signup">not a member</a>
+      </td>
+    </tr>
+  </table>
+</form>

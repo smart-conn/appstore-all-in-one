@@ -1,6 +1,6 @@
 'use strict';
 
-const _ = require('underscore');
+const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 
 module.exports = function (app) {

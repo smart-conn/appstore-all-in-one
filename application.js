@@ -17,10 +17,16 @@ class Application extends EventEmitter {
     const passport = this.passport = this._initPassport();
     const koaApp = this.app = this._initKoa(passport);
     const server = this.server = this._initServer(koaApp);
-    this._injectKoaContext(sequelize, amqp);
-    this._loadRouters(koaApp);
+    this._injectKoaContext(sequelize, amqp, passport, koaApp);
 
+    this._loadRouters(koaApp);
     this._loadModules(this);
+  }
+
+  loginCheck(role) {
+    const jwt = require('koa-jwt');
+    const secret = this.getConfig('secret');
+    return jwt({secret});
   }
 
   getModel(name) {
@@ -50,9 +56,11 @@ class Application extends EventEmitter {
     });
   }
 
-  _injectKoaContext(sequelize, amqp) {
+  _injectKoaContext(sequelize, amqp, passport, koaApp) {
     this._setContext('sequelize', sequelize);
     this._setContext('amqp', amqp);
+    this._setContext('passport', passport);
+    this._setContext('koa', koaApp);
   }
 
   _initServer(koaApp) {
@@ -75,24 +83,20 @@ class Application extends EventEmitter {
 
   _initKoa(passport) {
     const koa = require('koa');
-    const session = require('koa-session');
     const bodyParser = require('koa-bodyparser');
     const errorHandler = require('koa-error');
     const morgan = require('koa-morgan');
     const serveStatic = require('koa-static');
+    const path = require('path');
 
     const app = koa();
 
-    app.keys = this.getConfig('keys');
-
     app.use(errorHandler());
     app.use(morgan.middleware('dev'));
-    app.use(serveStatic(`${__dirname}/public`));
+    app.use(serveStatic(path.join(__dirname, 'public')));
     app.use(bodyParser());
-    app.use(session(app));
     // TODO: implements app.use(require('./global')) in passport
     app.use(passport.initialize());
-    app.use(passport.session());
     return app;
   }
 
@@ -103,9 +107,6 @@ class Application extends EventEmitter {
     const User = this.getModel('user');
 
     passport.use(User.createStrategy());
-    passport.serializeUser(User.serializeUser());
-    passport.deserializeUser(User.deserializeUser());
-
     return passport;
   }
 

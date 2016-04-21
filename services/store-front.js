@@ -1,5 +1,6 @@
 'use strict';
-const _ = require('underscore');
+const _ = require('lodash');
+
 module.exports = function (app) {
 
   const amqp = app.getContext('amqp');

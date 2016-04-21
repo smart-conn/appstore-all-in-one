@@ -2,7 +2,5 @@
   "port": 3000,
   "storage": "./application.db",
   "dialect": "sqlite",
-  "keys": [
-    "wedudf&er$"
-  ]
+  "secret": "secret"
 }

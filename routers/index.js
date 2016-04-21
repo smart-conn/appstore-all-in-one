@@ -3,7 +3,7 @@ module.exports = [
   require('./development'),
   require('./appStore'),
   require('./adminApp'),
-  require('./developer'),
+  // require('./developer'),
   require('./auditor'),
   require('./login')
 ];

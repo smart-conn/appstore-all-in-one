@@ -1,6 +1,8 @@
 module.exports = [
   // require('./command-server'),
   // require('./socket-io-management'),
+
+  require('./passport-satellizer'),
   require('./device-manager'),
   require('./store-front'),
   require('./appAdmin/appAdmin'),
