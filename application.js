@@ -86,11 +86,15 @@ class Application extends EventEmitter {
     const bodyParser = require('koa-bodyparser');
     const errorHandler = require('koa-error');
     const morgan = require('koa-morgan');
+    const compress = require('koa-compress');
+    const cors = require('kcors');
     const serveStatic = require('koa-static');
     const path = require('path');
 
     const app = koa();
 
+    app.use(cors());
+    app.use(compress({threshold: 2048}));
     app.use(errorHandler());
     app.use(morgan.middleware('dev'));
     app.use(serveStatic(path.join(__dirname, 'public')));
