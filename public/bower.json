@@ -1,5 +1,5 @@
 {
-  "name": "public",
+  "name": "appstore",
   "authors": [
     "Gen Liu <gerald_721@hotmail.com>"
   ],
@@ -20,6 +20,8 @@
     "angular": "^1.5.0",
     "holderjs": "^2.9.3",
     "angular-ui-router": "^0.2.18",
-    "satellizer": "^0.14.0"
+    "ui-router-extras": "^0.1.2",
+    "satellizer": "^0.14.0",
+    "angular-permission": "2.2.3"
   }
 }

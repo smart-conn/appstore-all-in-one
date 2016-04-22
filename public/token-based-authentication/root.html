@@ -1,3 +1,9 @@
 root
-<a ui-sref="login">login</a>
+<a ui-sref="login({redirectTo: 'root'})">login</a>
+<a ui-sref="dashboard">dashboard</a>
+
 <button ng-click="authCtrl.test()">test</button>
+
+<div permission except="'anonymous'">
+  <button ng-click="authCtrl.logout()">logout</button>
+</div>

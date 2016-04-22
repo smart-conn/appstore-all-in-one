@@ -22,7 +22,9 @@ module.exports = function(app) {
 
   function* generateToken(next) {
     const user = this.req.user;
-    this.req.token = jwt.sign({}, secret, {subject: user.id});
+    this.req.token = jwt.sign({
+      scope: 'consumer,developer' // TODO: for real
+    }, secret, {subject: user.id});
     yield next;
   }
 

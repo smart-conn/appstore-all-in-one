@@ -1,3 +1,4 @@
+<a ui-sref="root">home</a>
 <form ng-submit="authCtrl.login(credential)">
   <table>
     <tr>
@@ -20,7 +21,7 @@
       <td>
       </td>
       <td>
-        <button type="submit">Sign In</button>
+        <button ng-disabled="mask" type="submit">Sign In</button>
         <a href="#">forget password</a>
         <a ui-sref="signup">not a member</a>
       </td>
