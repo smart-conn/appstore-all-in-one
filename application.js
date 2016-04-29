@@ -24,9 +24,33 @@ class Application extends EventEmitter {
   }
 
   loginCheck(role) {
-    const jwt = require('koa-jwt');
+    const jwt = require('jsonwebtoken');
     const secret = this.getConfig('secret');
-    return jwt({secret});
+    return function* (next) {
+      if (this.header && this.header.authorization) {
+        let parts = this.header.authorization.split(' ');
+        if (parts.length === 2) {
+          let scheme = parts[0];
+          let credentials = parts[1];
+          if (/^Bearer$/i.test(scheme)) {
+            try {
+              let userScope = jwt.decode(credentials, secret);
+              if (userScope.scope.indexOf(role) !== -1) {
+                yield next;
+              } else {
+                console.log("No Authorization.")
+              }
+            } catch (e) {
+              console.log("Bad Authorization.");
+            }
+          }
+        } else {
+          console.log('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+        }
+      } else {
+        console.log('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
+      }
+    }
   }
 
   getModel(name) {
@@ -94,7 +118,9 @@ class Application extends EventEmitter {
     const app = koa();
 
     app.use(cors());
-    app.use(compress({threshold: 2048}));
+    app.use(compress({
+      threshold: 2048
+    }));
     app.use(errorHandler());
     app.use(morgan.middleware('dev'));
     app.use(serveStatic(path.join(__dirname, 'public')));
@@ -105,12 +131,13 @@ class Application extends EventEmitter {
   }
 
   _initPassport() {
-    const LocalStrategy = require('passport-local').Strategy;
-    const KoaPassport = require('koa-passport').KoaPassport;
-    const passport = new KoaPassport();
+    // const LocalStrategy = require('passport-local').Strategy;
+    const passport = require('./passport/passport');
     const User = this.getModel('user');
 
-    passport.use(User.createStrategy());
+    require("./passport").forEach(function (thirdParty) {
+      thirdParty(passport, User);
+    });
     return passport;
   }
 

@@ -12,13 +12,13 @@
   <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="###">应用商店原型</a>
+        <a class="navbar-brand" href="#">应用商店原型</a>
       </div>
       <ul class="nav navbar-nav">
         <li><a ui-sref="deviceManagement">设备管理</a></li>
-        <li><a ui-sref="login({type:'user'})">应用商店</a></li>
-        <li><a ui-sref="login({type:'developer'})">开发者应用列表</a></li>
-        <li><a ui-sref="login({type:'auditor'})">审核中心</a></li>
+        <li><a ui-sref="appList">应用商店</a></li>
+        <li><a ui-sref="developerAppList">开发者应用列表</a></li>
+        <li><a ui-sref="auditorCenter">审核中心</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="javascript:void(0);" ng-click="appCtrl.logout()">退出</a></li>
@@ -32,22 +32,26 @@
     </div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="bower_components/holderjs/holder.js"></script>
+  <script src="/static/js/socket.io.js"></script>
+  <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="/bower_components/angular/angular.js"></script>
+  <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="/bower_components/holderjs/holder.js"></script>
+  <script src="/bower_components/ui-router-extras/release/ct-ui-router-extras.js"></script>
+  <script src="/bower_components/satellizer/satellizer.js"></script>
+  <script src="/bower_components/angular-permission/dist/angular-permission.js"></script>
 
-  <script src="static/js/module.js"></script>
+  <script src="/static/js/module.js"></script>
 
-  <script src="static/js/routeConfig.js"></script>
-  <script src="static/js/controller/app.js"></script>
-  <script src="static/js/controller/appStore.js"></script>
-  <script src="static/js/controller/auditor.js"></script>
-  <script src="static/js/controller/developer.js"></script>
-  <script src="static/js/controller/userCenter.js"></script>
-  <script src="static/js/service.js"></script>
+  <script src="/static/js/routeConfig.js"></script>
+  <script src="/static/js/controller/app.js"></script>
+  <script src="/static/js/controller/appStore.js"></script>
+  <script src="/static/js/controller/auditor.js"></script>
+  <script src="/static/js/controller/developer.js"></script>
+  <script src="/static/js/controller/userCenter.js"></script>
+  <script src="/static/js/angular-web-user.js"></script>
+  <script src="/static/js/service.js"></script>
 </body>
 
 </html>

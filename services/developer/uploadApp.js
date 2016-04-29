@@ -10,6 +10,8 @@ module.exports = (app) => {
   const DeveloperLatestVersion = app.getModel('developerLatestVersion');
   const AuditorLatestVersion = app.getModel('auditorLatestVersion');
 
+  //以下四个逻辑很相似但是在建立关系的时候略有不同，暂时决定不进行拆分合并，以便于后边的修改维护
+
   //添加新的APP提交审核
   amqp.on("developer.newApp", function* (msg) {
     const name = msg.app.name;
@@ -75,10 +77,9 @@ module.exports = (app) => {
     let app = yield Application.findById(appID);
     //修改APP信息
     yield Application.upsert({
-      id: msg.appID,
-      name: msg.name,
-      description: msg.app.description,
-      author: msg.name
+      id: appID,
+      name,
+      description
     });
     let appPackage = null;
     //确定是否需要创建一个新的状态版本
@@ -141,7 +142,7 @@ module.exports = (app) => {
       auditorStatus == "waitReview") {
       return false;
     } else {
-      if (developerStatus == 'edit') {
+      if (developerStatus == 'edit'||developerStatus == 'reviewCancel') {
         //开发者最新版本为edit：直接将edit的版本修改后提交审核
         let app = Application.findById(appID, {
           attributes: ['id'],
@@ -153,7 +154,20 @@ module.exports = (app) => {
               attributes: ['id']
             }]
           }]
-        })
+        });
+        let appID = app.id;
+        let appPackageID = app.developerLatestVersion.appPackageID.id;
+        Application.upsert({
+          id: appID,
+          name,
+          description
+        });
+        ApplicationPackage.upsert({
+          id: appPackageID,
+          description: descriptionUpgrade,
+          flow,
+          version
+        });
       } else if (developerStatus == "reviewFail" || developerStatus == "reviewPass") {
         //开发者最新版本为reviewPass或者reviewFail：创建新的版本，并提交审核
       }

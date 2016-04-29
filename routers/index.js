@@ -5,5 +5,6 @@ module.exports = [
   require('./adminApp'),
   // require('./developer'),
   require('./auditor'),
-  require('./login')
+  require('./login'),
+  require('./auth')
 ];

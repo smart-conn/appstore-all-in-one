@@ -9,7 +9,7 @@ module.exports = function (sequelize) {
       defaultValue: Sequelize.UUIDV4
     },
     status: Sequelize.STRING
-      //后续需要添加status是真对于哪个APP哪个版本的状态
+      //后续需要添加status是针对于哪个APP哪个版本的状态
       // [{
       //   status: "edit",
       //   content: "编辑状态"

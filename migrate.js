@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 
 if (fs.existsSync('./application.db')) fs.unlinkSync('./application.db');
 
-Promise.coroutine(function*() {
+Promise.coroutine(function* () {
 
   yield sequelize.sync();
 
@@ -226,8 +226,8 @@ Promise.coroutine(function*() {
     username: 'tosone'
   });
 
-  yield new Promise(function(resolve, reject) {
-    user.setPassword('tosone', function(err, user) {
+  yield new Promise(function (resolve, reject) {
+    user.setPassword('tosone', function (err, user) {
       if (err) reject(err);
       resolve(user);
     });
@@ -235,6 +235,30 @@ Promise.coroutine(function*() {
 
   yield user.save();
 
+  yield app.getModel('userAuth').create({
+    id: 1,
+    auth: "admin"
+  });
+  yield app.getModel('userAuth').create({
+    id: 2,
+    auth: "developer"
+  });
+  yield app.getModel('userAuth').create({
+    id: 3,
+    auth: "user"
+  });
+  yield app.getModel('userAuth').create({
+    id: 4,
+    auth: "auditor"
+  });
+  yield app.getModel('userAuthMap').create({
+    userID: 1,
+    AuthID: 1
+  });
+  yield app.getModel('userAuthMap').create({
+    userID: 1,
+    AuthID: 2
+  });
   yield app.getModel('deviceModel').create({
     id: 1,
     name: 'doll456'
@@ -321,11 +345,11 @@ Promise.coroutine(function*() {
     statusID: 8
   });
 
-})().then(function() {
+})().then(function () {
 
   process.exit(0);
 
-}).catch(function(err) {
+}).catch(function (err) {
 
   console.error(err);
   process.exit(-1);

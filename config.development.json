@@ -2,5 +2,7 @@
   "port": 3000,
   "storage": "./application.db",
   "dialect": "sqlite",
-  "secret": "secret"
+  "secret": "secret",
+  "clientID": "3d032602cc3318f720bf",
+  "clientSecret": "c64449debfe67c086f279a43be222aa819c59421"
 }

@@ -12,5 +12,6 @@ module.exports = [
   require('./login'),
   require('./app'),
   require('./appState'),
-  require('./appStore')
+  require('./appStore'),
+  require('./user')
 ];

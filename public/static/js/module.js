@@ -3,8 +3,13 @@ angular.module('app', [
   'appStore',
   'developer',
   'audit',
-  'userCenter'
-]);
+  'userCenter',
+  'ngWebUser'
+]).config(function ($authProvider) {
+  $authProvider.github({
+    clientId: "3d032602cc3318f720bf"
+  })
+})
 
 angular.module('appStore', []);
 angular.module('developer', []);

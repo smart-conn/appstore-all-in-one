@@ -7,5 +7,6 @@ module.exports = [
   require('./developer'),
   require('./appPackageStatus'),
   require('./auditor'),
-  require('./auditorBucket')
+  require('./auditorBucket'),
+  require('./thirdParty')
 ];

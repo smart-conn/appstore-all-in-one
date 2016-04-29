@@ -13,7 +13,7 @@ function hasScope($auth, scope) {
     const scopes = $auth.getPayload().scope.split(',');
     const result = scopes.indexOf(scope) !== -1;
     return result;
-  } catch(err) {
+  } catch (err) {
     return false;
   }
 }
@@ -25,11 +25,11 @@ const scopes = [
 ];
 
 function permissionDefinition(PermissionStore, $auth) {
-  PermissionStore.definePermission('anonymous', function(stateParams) {
+  PermissionStore.definePermission('anonymous', function (stateParams) {
     return !$auth.isAuthenticated();
   });
-  scopes.forEach(function(scope) {
-    PermissionStore.definePermission(scope, function(stateParams) {
+  scopes.forEach(function (scope) {
+    PermissionStore.definePermission(scope, function (stateParams) {
       return hasScope($auth, scope);
     });
   });
@@ -48,26 +48,31 @@ function routeConfig($urlRouterProvider, $stateProvider) {
 
   $stateProvider.state('signup', {
     url: '/signup?redirectTo',
-    templateUrl: 'signup.html',
+    templateUrl: '/token-based-authentication/signup.html',
     controller: AuthenticationController,
     controllerAs: 'authCtrl'
   });
 
   $stateProvider.state('root', {
     url: '/',
-    templateUrl: 'root.html',
+    templateUrl: '/token-based-authentication/root.html',
     controller: AuthenticationController,
     controllerAs: 'authCtrl'
   });
 
   $stateProvider.state('dashboard', {
     url: '/dashboard',
-    templateUrl: 'dashboard.html',
+    templateUrl: '/token-based-authentication/dashboard.html',
     data: {
       permissions: {
         only: ['consumer'],
-        redirectTo: function() {
-          return {state: 'login', params: {redirectTo: 'dashboard'}};
+        redirectTo: function () {
+          return {
+            state: 'login',
+            params: {
+              redirectTo: 'dashboard'
+            }
+          };
         }
       }
     }
@@ -83,14 +88,14 @@ function AuthenticationController($auth, $http, $state, $location, $scope) {
   this.$scope = $scope;
 }
 
-AuthenticationController.prototype.logout = function() {
+AuthenticationController.prototype.logout = function () {
   const $auth = this.$auth;
   const $state = this.$state;
   $auth.logout();
   $state.reload(); // ugly hack for refresh permission directive
 }
 
-AuthenticationController.prototype.signup = function(credential) {
+AuthenticationController.prototype.signup = function (credential) {
   const $auth = this.$auth;
   const $state = this.$state;
   const $scope = this.$scope;
@@ -107,7 +112,7 @@ AuthenticationController.prototype.signup = function(credential) {
   });
 };
 
-AuthenticationController.prototype.login = function(credential) {
+AuthenticationController.prototype.login = function (credential) {
   const $auth = this.$auth;
   const $state = this.$state;
   const $scope = this.$scope;
@@ -125,7 +130,7 @@ AuthenticationController.prototype.login = function(credential) {
   });
 };
 
-AuthenticationController.prototype.test = function() {
+AuthenticationController.prototype.test = function () {
   const $auth = this.$auth;
   const $http = this.$http;
 

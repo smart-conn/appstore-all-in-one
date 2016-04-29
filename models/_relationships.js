@@ -1,4 +1,5 @@
 'use strict';
+const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
   const User = sequelize.models['user'];
@@ -10,6 +11,7 @@ module.exports = (sequelize) => {
   const DeviceModel = sequelize.models['deviceModel'];
   const AuditorBucket = sequelize.models['auditorBucket'];
   const AppPackageStatus = sequelize.models['appPackageStatus'];
+  const ThirdParty = sequelize.models['thirdParty'];
 
   const DeviceModelMap = sequelize.define('deviceModelToAppVersion', {}); //APP版本和型号之间的兼容双向关系表
 
@@ -18,6 +20,12 @@ module.exports = (sequelize) => {
   const AppStoreLatestVersion = sequelize.define('appStoreLatestVersion', {}); //应用商店中的最新版本
 
   const AppPackageLatestStatus = sequelize.define('appPackageLatestStatus', {}); //APP历史版本的最新状态
+
+  const UserAuthMap = sequelize.define('userAuthMap', {}); //用户权限关系表
+  const UserAuth = sequelize.define('userAuth', { //权限表
+    auth: Sequelize.STRING //developer admin auditor user
+  });
+  const ThirdPartyAuthMap = sequelize.define('thirdPartyAuthMap', {}); //第三方登录权限对应关系
 
   //开发者最新版本
   Application.hasOne(DeveloperLatestVersion, {
@@ -96,6 +104,34 @@ module.exports = (sequelize) => {
     foreignKey: 'userID'
   });
   User.hasMany(UserDevice, {
+    foreignKey: 'userID'
+  });
+
+  //用户权限
+  User.belongsToMany(UserAuth, {
+    through: UserAuthMap,
+    foreignKey: 'userID'
+  });
+  UserAuth.belongsToMany(User, {
+    through: UserAuthMap,
+    foreignKey: 'AuthID'
+  });
+
+  //第三方帐号权限
+  ThirdParty.belongsToMany(UserAuth, {
+    through: ThirdPartyAuthMap,
+    foreignKey: 'thirdPartyID'
+  });
+  UserAuth.belongsToMany(ThirdParty, {
+    through: ThirdPartyAuthMap,
+    foreignKey: 'AuthID'
+  });
+
+  //第三方登录
+  ThirdParty.belongsTo(User, {
+    foreignKey: 'userID'
+  });
+  User.hasMany(ThirdParty, {
     foreignKey: 'userID'
   });
 
