@@ -1,17 +1,25 @@
-module.exports = [
-  // require('./command-server'),
-  // require('./socket-io-management'),
+'use strict';
 
-  require('./passport-satellizer'),
-  require('./device-manager'),
-  require('./store-front'),
-  require('./appAdmin/appAdmin'),
-  require('./developer/uploadApp'),
-  require('./developer/getAppByID'),
-  require('./audit'),
-  require('./login'),
-  require('./app'),
-  require('./appState'),
-  require('./appStore'),
-  require('./user')
-];
+module.exports = (app) => {
+  [
+    // require('./command-server'),
+    // require('./socket-io-management'),
+
+    require('./passport-satellizer'),
+    require('./device-manager'),
+    // require('./store-front'),
+    require('./appAdmin/appAdmin'),
+    // require('./developer/uploadApp'),
+    // require('./developer/getAppByID'),
+    require('./audit'),
+    // require('./login'),
+    require('./app'),
+    require('./appState'),
+    require('./appStore'),
+    require('./thirdParty'),
+    require('./market'),
+    require('./appStore')
+  ].forEach((service) => {
+    service(app);
+  });
+}

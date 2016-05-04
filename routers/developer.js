@@ -1,12 +1,11 @@
 'use strict';
+const router = require('koa-router')();
 
-module.exports = function(app) {
+module.exports = (application) => {
+  const amqp = application.getContext('amqp');
+  const passport = application.getContext('passport');
 
-  const router = require('koa-router')();
-  const amqp = app.getContext('amqp');
-  const passport = app.getContext('passport');
-
-  //获取开发者的所有app
+  // 获取开发者的所有app
   router.get('/developer/apps', passport.authenticate('local'), function* () {
     this.body = yield amqp.call('developer.apps', {
       developerID: 5
@@ -103,7 +102,5 @@ module.exports = function(app) {
     const body = this.request.body;
     this.body = yield amqp.call('appState.onboard', body);
   });
-
-  return router.route();
-
+  application.app.use(router.routes());
 };

@@ -8,5 +8,9 @@ module.exports = [
   require('./appPackageStatus'),
   require('./auditor'),
   require('./auditorBucket'),
-  require('./thirdParty')
+  require('./thirdParty'),
+  require('./order'),
+  require('./orderItem'),
+  require('./purse'),
+  require('./purseLog')
 ];

@@ -19,11 +19,16 @@ class Application extends EventEmitter {
     const server = this.server = this._initServer(koaApp);
     this._injectKoaContext(sequelize, amqp, passport, koaApp);
 
-    this._loadRouters(koaApp);
+    this._loadRouters(this);
     this._loadModules(this);
   }
 
-  loginCheck(role) {
+  /***************************************
+   * 检测某用户是否有某个权限                *
+   * @param  {string} role 角色名         *
+   * @return {nothing}     判断权限       *
+   ***************************************/
+  authCheck(role) {
     const jwt = require('jsonwebtoken');
     const secret = this.getConfig('secret');
     return function* (next) {
@@ -131,13 +136,10 @@ class Application extends EventEmitter {
   }
 
   _initPassport() {
-    // const LocalStrategy = require('passport-local').Strategy;
-    const passport = require('./passport/passport');
+    const KoaPassport = require('koa-passport').KoaPassport;
+    const passport = new KoaPassport();
     const User = this.getModel('user');
-
-    require("./passport").forEach(function (thirdParty) {
-      thirdParty(passport, User);
-    });
+    passport.use(User.createStrategy());
     return passport;
   }
 
@@ -167,16 +169,12 @@ class Application extends EventEmitter {
     require('./models/_relationships')(sequelize);
   }
 
-  _loadRouters(koaApp) {
-    require('./routers').forEach((router) => {
-      koaApp.use(router);
-    });
+  _loadRouters(applicationInstance) {
+    require('./routers')(applicationInstance);
   }
 
   _loadModules(applicationInstance) {
-    require('./services').forEach((serviceInitialize) => {
-      serviceInitialize(applicationInstance);
-    });
+    require('./services')(applicationInstance);
   }
 
   _configure(env) {

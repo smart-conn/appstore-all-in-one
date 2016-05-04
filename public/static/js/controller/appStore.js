@@ -4,6 +4,16 @@ appStore.controller("AppStore", function ($http) {
   $http.get("/appStore/apps").success((data) => {
     this.lists = data;
   });
+  this.addCart = (id, $event) => {
+    console.log("add Cart" + id);
+    $event.stopPropagation();
+  }
+});
+
+appStore.controller('Cart', function ($http) {
+  // $http.get('/appStore/cart').success((data)=>{
+  //   console.log(data);
+  // });
 });
 
 appStore.controller("AppInfo", function (AppService, $state, $http) {

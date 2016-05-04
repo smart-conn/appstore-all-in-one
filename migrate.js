@@ -235,6 +235,48 @@ Promise.coroutine(function* () {
 
   yield user.save();
 
+  const userDeveloper = yield app.getModel('user').create({
+    id: 2,
+    username: 'developer'
+  });
+
+  yield new Promise(function (resolve, reject) {
+    userDeveloper.setPassword('developer', function (err, userDeveloper) {
+      if (err) console.log(err);
+      resolve(userDeveloper);
+    });
+  });
+
+  yield userDeveloper.save();
+
+  const userAdmin = yield app.getModel('user').create({
+    id: 3,
+    username: 'admin'
+  });
+
+  yield new Promise(function (resolve, reject) {
+    userAdmin.setPassword('admin', function (err, userAdmin) {
+      if (err) console.log(err);
+      resolve(userAdmin);
+    });
+  });
+
+  yield userAdmin.save();
+
+  const userAuditor = yield app.getModel('user').create({
+    id: 4,
+    username: 'auditor'
+  });
+
+  yield new Promise(function (resolve, reject) {
+    userAuditor.setPassword('auditor', function (err, userAuditor) {
+      if (err) console.log(err);
+      resolve(userAuditor);
+    });
+  });
+
+  yield userAuditor.save();
+
   yield app.getModel('userAuth').create({
     id: 1,
     auth: "admin"
@@ -253,11 +295,19 @@ Promise.coroutine(function* () {
   });
   yield app.getModel('userAuthMap').create({
     userID: 1,
+    AuthID: 3
+  });
+  yield app.getModel('userAuthMap').create({
+    userID: 2,
+    AuthID: 2
+  });
+  yield app.getModel('userAuthMap').create({
+    userID: 3,
     AuthID: 1
   });
   yield app.getModel('userAuthMap').create({
-    userID: 1,
-    AuthID: 2
+    userID: 4,
+    AuthID: 4
   });
   yield app.getModel('deviceModel').create({
     id: 1,

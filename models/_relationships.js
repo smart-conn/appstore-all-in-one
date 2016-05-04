@@ -12,6 +12,10 @@ module.exports = (sequelize) => {
   const AuditorBucket = sequelize.models['auditorBucket'];
   const AppPackageStatus = sequelize.models['appPackageStatus'];
   const ThirdParty = sequelize.models['thirdParty'];
+  const Order = sequelize.models['order'];
+  const OrderItem = sequelize.models['orderItem'];
+  const Purse = sequelize.models['purse'];
+  const PurseLog = sequelize.models['purseLog'];
 
   const DeviceModelMap = sequelize.define('deviceModelToAppVersion', {}); //APP版本和型号之间的兼容双向关系表
 
@@ -26,6 +30,62 @@ module.exports = (sequelize) => {
     auth: Sequelize.STRING //developer admin auditor user
   });
   const ThirdPartyAuthMap = sequelize.define('thirdPartyAuthMap', {}); //第三方登录权限对应关系
+
+  //订单和订单对象
+  Order.hasMany(OrderItem, {
+    foreignKey: 'orderID'
+  });
+  OrderItem.belongsTo(Order, {
+    foreignKey: 'orderID'
+  });
+
+  //用户和订单
+  User.hasMany(Order, {
+    foreignKey: 'userID'
+  });
+  Order.belongsTo(User, {
+    foreignKey: 'userID'
+  });
+
+  //用户和钱包
+  User.hasOne(Purse, {
+    foreignKey: 'userID'
+  });
+  Purse.belongsTo(User, {
+    foreignKey: 'userID'
+  });
+
+  //用户和钱包日志
+  User.hasMany(PurseLog, {
+    foreignKey: 'userID'
+  });
+  PurseLog.belongsTo(User, {
+    foreignKey: 'userID'
+  });
+
+  //应用和订单对象
+  Application.hasOne(OrderItem, {
+    foreignKey: 'appID'
+  });
+  OrderItem.belongsTo(Application, {
+    foreignKey: 'appID'
+  });
+
+  //声音和订单对象
+  // Voice.hasOne(OrderItem, {
+  //   foreignKey: 'voiceID'
+  // });
+  // OrderItem.belongsTo(Voice, {
+  //   foreignKey: 'voiceID'
+  // });
+
+  //用户和商品
+  // User.hasMany(Product, {
+  //   foreignKey: 'userID'
+  // });
+  // Product.hasOne(User, {
+  //   foreignKey: 'userID'
+  // });
 
   //开发者最新版本
   Application.hasOne(DeveloperLatestVersion, {

@@ -1,50 +1,93 @@
-'use strict';
-const router = require('koa-router')();
-const nconf = require('nconf');
-const passport = require('passport');
+"use strict";
+module.exports = (app) => {
 
-const secret = nconf.get('secret');
+  const jwt = require('jsonwebtoken');
+  const nconf = require('nconf');
+  // const thirdParty = require('../lib/thirdParty');
 
-// router.post('/login', function* () {
-//   this.req.token = jwt.sign({
-//     scope: 'consumer,developer' // TODO: for real
-//   }, secret, {
-//     subject: user.id
-//   })
-// });
+  const router = require('koa-router')();
+  const amqp = app.getContext('amqp');
+  const passport = app.getContext('passport');
+  const koa = app.getContext('koa');
+  const User = app.getModel('user');
+  const UserAuth = app.getModel('userAuth');
 
-// router.post('/login/:type', function* () {
-//   const amqp = this.app.context.amqp;
-//   let name = this.request.body.name;
-//   let type = this.params.type;
-//   let developer = yield amqp.call('user.login', {
-//     name: name,
-//     type: type
-//   });
-//   this.body = {
-//     code: developer ? 200 : 500
-//   };
-//   this.session.name = developer ? developer.name : null;
-//   this.session.type = developer ? type : null;
-//   this.session.id = developer ? developer.id : null;
-// });
+  const clientSecret = nconf.get('clientSecret');
+  const secret = nconf.get('secret');
 
-router.get('/logout', function* () {
-  this.session = null;
-  this.body = {
-    code: 200
-  };
-});
+  koa.use(router.routes());
 
-//当前用户是否登录
-router.get('/islogin/:type', function* () {
-  this.body = this.session.type == this.params.type ? {
-    code: 200
-  } : {
-    code: 500
+  function* generateToken(next) {
+    const user = this.req.user;
+    const scope = yield User.findById(user.id, {
+      include: [{
+        model: UserAuth
+      }]
+    }).then((user) => {
+      let scope = [];
+      for (let auth of user.userAuths) {
+        scope.push(auth.auth);
+      }
+      return scope.join(',');
+    });
+    this.req.token = jwt.sign({
+      scope: scope
+    }, secret, {
+      subject: user.id
+    });
+    yield next;
   }
-});
-// router.post('/auth/login', passport.authenticate('local', {
-//   session: false
-// }), generateToken, respond);
-module.exports = router.routes();
+
+  function* respond() {
+    this.body = {
+      user: this.req.user,
+      token: this.req.token
+    };
+  }
+
+  router.post('/auth/login', passport.authenticate('local', {
+    session: false
+  }), generateToken, respond);
+
+  router.post('/signup', function* (next) {
+    const username = this.request.body.username;
+    const password = this.request.body.password;
+    yield new Promise(function (resolve, reject) {
+      User.register(username, password, function (err) {
+        if (err) return reject();
+        resolve(true);
+      });
+    });
+    this.body = {
+      msg: 'ok'
+    };
+  });
+
+  router.post("/auth/:type", function* () {
+    let body = this.request.body;
+    let type = this.params.type;
+    console.log(body);
+    let user = yield amqp.call("thirdParty.userInfo", {
+      secret: clientSecret,
+      redirectUri: body.redirectUri,
+      code: body.code,
+      clientID: body.clientId,
+      type: type
+    });
+    this.body = {
+      user: user,
+      token: jwt.sign({
+        scope: 'user'
+      }, secret, {
+        subject: user.id
+      })
+    };
+  });
+
+  router.get('/api/test', app.authCheck("developer"), function* () {
+    this.body = {
+      msg: 'ok'
+    };
+  });
+
+}

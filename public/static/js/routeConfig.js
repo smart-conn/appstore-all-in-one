@@ -16,7 +16,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['user'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
@@ -30,13 +30,57 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
   //商店 应用信息
   $stateProvider.state('appInformation', {
     url: '/appStore/app/:appID',
-    templateUrl: '_include/appStore/info.html'
+    templateUrl: '_include/appStore/info.html',
+    data: {
+      permissions: {
+        only: ['user'],
+        redirectTo: function () {
+          return {
+            state: 'login',
+            params: {
+              redirectTo: '/appStore/list'
+            }
+          };
+        }
+      }
+    }
   });
   //商店 应用列表
   $stateProvider.state('appList', {
     url: '/appStore/list',
-    templateUrl: '_include/appStore/list.html'
+    templateUrl: '_include/appStore/list.html',
+    data: {
+      permissions: {
+        only: ['user'],
+        redirectTo: function () {
+          return {
+            state: 'login',
+            params: {
+              redirectTo: '/appStore/list'
+            }
+          };
+        }
+      }
+    }
   });
+  $stateProvider.state('cart', {
+    url: '/appStore/cart',
+    templateUrl: '_include/appStore/cart.html',
+    data: {
+      permissions: {
+        only: ['user'],
+        redirectTo: function () {
+          return {
+            state: 'login',
+            params: {
+              redirectTo: '/appStore/list'
+            }
+          };
+        }
+      }
+    }
+  });
+
   //开发者 等待审核页
   $stateProvider.state('waitForCheck', {
     url: '/developer/waitForCheck',
@@ -44,11 +88,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/waitForCheck'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -62,11 +106,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -80,11 +124,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -98,11 +142,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -116,11 +160,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -134,11 +178,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -152,11 +196,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -170,11 +214,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -188,11 +232,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['developer'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/developer/appList'
             }
           };
         }
@@ -206,11 +250,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['auditor'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/auditor/appCenter'
             }
           };
         }
@@ -224,11 +268,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['auditor'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/auditor/appCenter'
             }
           };
         }
@@ -242,11 +286,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['auditor'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/auditor/appCenter'
             }
           };
         }
@@ -260,11 +304,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['auditor'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/auditor/appCenter'
             }
           };
         }
@@ -278,11 +322,11 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     data: {
       permissions: {
         only: ['auditor'],
-        redirectTo: function() {
+        redirectTo: function () {
           return {
             state: 'login',
             params: {
-              redirectTo: '/developer/checkResultSucc'
+              redirectTo: '/auditor/appCenter'
             }
           };
         }

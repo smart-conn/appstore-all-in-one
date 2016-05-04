@@ -11,7 +11,12 @@ module.exports = (app) => {
   const ApplicationPackage = app.getModel('appPackage');
   const ApplicationPackageStatus = app.getModel('appPackageStatus');
 
-  //上架某个应用
+  /**
+   * 上架应用：
+   * @param  {[type]} 'appState.onboard' [description]
+   * @param  {[type]} function*          (msg          [description]
+   * @return {[type]}                    [description]
+   */
   amqp.on('appState.onboard', function* (msg) {
     const appID = msg.appID;
     const versionID = msg.versionID;
