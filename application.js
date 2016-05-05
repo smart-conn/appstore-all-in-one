@@ -23,39 +23,9 @@ class Application extends EventEmitter {
     this._loadModules(this);
   }
 
-  /***************************************
-   * 检测某用户是否有某个权限                *
-   * @param  {string} role 角色名         *
-   * @return {nothing}     判断权限       *
-   ***************************************/
+  //权限检查
   authCheck(role) {
-    const jwt = require('jsonwebtoken');
-    const secret = this.getConfig('secret');
-    return function* (next) {
-      if (this.header && this.header.authorization) {
-        let parts = this.header.authorization.split(' ');
-        if (parts.length === 2) {
-          let scheme = parts[0];
-          let credentials = parts[1];
-          if (/^Bearer$/i.test(scheme)) {
-            try {
-              let userScope = jwt.decode(credentials, secret);
-              if (userScope.scope.indexOf(role) !== -1) {
-                yield next;
-              } else {
-                console.log("No Authorization.")
-              }
-            } catch (e) {
-              console.log("Bad Authorization.");
-            }
-          }
-        } else {
-          console.log('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
-        }
-      } else {
-        console.log('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
-      }
-    }
+    return require('./lib/authCheck')(role, this.getConfig('secret'));
   }
 
   getModel(name) {

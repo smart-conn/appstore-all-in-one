@@ -1,16 +1,12 @@
-### 错误代码
-
->  ```
-  {
-    code:200,
-    msg:"success"
-  }
-  ```
-
+### code
 - 200 success
 - 500 error
 - 403 没有权限
 
-#### State
-- 501 不是最新版本
-- 
+### status
+- order
+  - open 尚未处理的订单
+  - close 已经处理的订单
+- orderItem
+  - on 在订单内的订单内容
+  - off 已经删除的订单内的订单内容

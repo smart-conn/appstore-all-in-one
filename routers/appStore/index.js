@@ -1,10 +1,9 @@
 'use strict';
-
 module.exports = (app) => {
   [
-    require('./get'),
-    require('./cart')
+    require('./cart'),
+    require('./get')
   ].forEach((appStore) => {
     appStore(app);
   });
-};
+}

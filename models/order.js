@@ -8,6 +8,6 @@ module.exports = function (sequelize) {
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4
     },
-    state: Sequelize.STRING
+    status: Sequelize.STRING //open,close
   });
 };

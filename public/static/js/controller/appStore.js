@@ -4,16 +4,40 @@ appStore.controller("AppStore", function ($http) {
   $http.get("/appStore/apps").success((data) => {
     this.lists = data;
   });
+
   this.addCart = (id, $event) => {
-    console.log("add Cart" + id);
+    $http.post('/appStore/addCart', {
+      type: 'app',
+      id: id
+    }).success((data) => {
+      console.log(data);
+    });
+    $event.stopPropagation();
+  };
+
+  this.buy = (id, $event) => {
+    $http.get('/appStore/cart').success((data) => {
+      console.log(data);
+    });
     $event.stopPropagation();
   }
 });
 
 appStore.controller('Cart', function ($http) {
-  // $http.get('/appStore/cart').success((data)=>{
-  //   console.log(data);
-  // });
+  $http.get('/appStore/cart').success((data) => {
+    this.products = data;
+  });
+
+  this.del = (type, id, $event) => {
+    $http.post('/appStore/delCart', {
+      type: type,
+      id: id
+    }).success((data) => {
+      console.log(data);
+    })
+    console.log("del" + id);
+    $event.stopPropagation();
+  }
 });
 
 appStore.controller("AppInfo", function (AppService, $state, $http) {

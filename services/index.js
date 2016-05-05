@@ -15,7 +15,6 @@ module.exports = (app) => {
     // require('./login'),
     require('./app'),
     require('./appState'),
-    require('./appStore'),
     require('./thirdParty'),
     require('./market'),
     require('./appStore')

@@ -6,6 +6,7 @@
     }
     .applist li:hover{
       background-color: #eee;
+      cursor: pointer;
     }
   </style>
   <h3 class="text-danger">应用商店列表</h3>
@@ -19,7 +20,7 @@
       <div class="media-body">
         <h4 class="media-heading">{{list.name}}</h4>
         <p>
-          <button type="button" name="button" class="btn btn-default">购买</button>
+          <button type="button" name="button" class="btn btn-default" ng-click="appStore.buy(list.id,$event)">购买</button>
           <button type="button" name="button" class="btn btn-default" ng-click="appStore.addCart(list.id,$event);">加入购物车</button>
         </p>
       </div>

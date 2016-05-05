@@ -1,3 +1,21 @@
 <div class="" ng-controller="Cart as cart">
   <h3 class="text-danger">购物车</h3>
+  <p class="well">
+    {{cart.products.orderItems}}
+  </p>
+  <ul class="media-list applist">
+    <li class="media" ng-repeat="orderItem in cart.products.orderItems">
+      <div class="media-left">
+        <a href="#">
+          <img class="media-object" src="static/img/app.png" style="width: 64px;height: 64px;">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">{{orderItem.app.name}}</h4>
+        <p>
+          <button type="button" name="button" class="btn btn-default" ng-click="cart.del(orderItem.type,orderItem.id,$event)">删除</button>
+        </p>
+      </div>
+    </li>
+  </ul>
 </div>
