@@ -46,6 +46,7 @@ Promise.coroutine(function* () {
     version: '0.0.2',
     description: '升级信息',
     statusID: 1,
+    price: 5,
     flow: JSON.stringify([{
       "id": "3367e45f.cc981c",
       "type": "function",
@@ -79,6 +80,7 @@ Promise.coroutine(function* () {
     version: '0.0.1',
     description: '升级信息',
     statusID: 2,
+    price: 3,
     flow: JSON.stringify([{
       "id": "3367e45f.cc981c",
       "type": "function",
@@ -112,6 +114,7 @@ Promise.coroutine(function* () {
     version: '0.0.1',
     description: '升级信息',
     statusID: 8,
+    price: 8,
     flow: JSON.stringify([{
       "id": "3012f18f.cfed0e",
       "type": "inject",
@@ -147,6 +150,7 @@ Promise.coroutine(function* () {
     appID: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
     version: '0.0.1',
     statusID: 10,
+    price: 4,
     description: '升级信息',
     flow: JSON.stringify([{
       "id": "3b911b0e.c46ee4",

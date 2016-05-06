@@ -38,7 +38,18 @@ appStore.controller('Cart', function ($http) {
     console.log("del" + id);
     $event.stopPropagation();
   }
+  this.buy = () => {
+    $http.get('/appStore/deal').success((data) => {
+      console.log(data);
+    });
+  }
 });
+
+appStore.controller('Bought', function ($http) {
+  $http.get('/appStore/bought').success((data) => {
+    this.products = data;
+  });
+})
 
 appStore.controller("AppInfo", function (AppService, $state, $http) {
   this.id = $state.params.appID;

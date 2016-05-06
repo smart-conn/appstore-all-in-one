@@ -17,6 +17,8 @@ module.exports = (sequelize) => {
   const Purse = sequelize.models['purse'];
   const PurseLog = sequelize.models['purseLog'];
 
+  const UserApp = sequelize.define('userApp', {});
+
   const DeviceModelMap = sequelize.define('deviceModelToAppVersion', {}); //APP版本和型号之间的兼容双向关系表
 
   const DeveloperLatestVersion = sequelize.define('developerLatestVersion', {}); //开发人员最新版本
@@ -86,6 +88,20 @@ module.exports = (sequelize) => {
   // Product.hasOne(User, {
   //   foreignKey: 'userID'
   // });
+
+  // 用户拥有的APP
+  Application.hasMany(UserApp, {
+    foreignKey: 'appID'
+  });
+  UserApp.belongsTo(Application, {
+    foreignKey: 'appID'
+  });
+  User.hasMany(UserApp, {
+    foreignKey: 'userID'
+  });
+  UserApp.belongsTo(User, {
+    foreignKey: 'userID'
+  });
 
   //开发者最新版本
   Application.hasOne(DeveloperLatestVersion, {

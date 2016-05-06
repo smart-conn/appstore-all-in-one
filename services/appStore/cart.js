@@ -1,5 +1,6 @@
 'use strict';
 const _ = require('lodash');
+const color = require('color');
 
 module.exports = function (app) {
   const amqp = app.getContext('amqp');
@@ -13,6 +14,7 @@ module.exports = function (app) {
   const ApplicationPackageStatus = app.getModel("appPackageStatus");
   const Order = app.getModel('order');
   const OrderItem = app.getModel('orderItem');
+  const UserApp = app.getModel('userApp');
 
   //创建新的购物车
   amqp.on('appStore.newCart', function* (msg) {
@@ -60,46 +62,111 @@ module.exports = function (app) {
     });
   });
 
-  //添加多个购物车内容
-  amqp.on('appStore.addCart', function* (msg) {
+  // 购物车中是否存在某商品
+  amqp.on('appStore.hasProduct', function* (msg) {
     let id = msg.id;
-    let products = msg.products; //[{type:'app',id:id}]
+    let productID = msg.productID;
+
     let cartID = yield amqp.call('appStore.newCart', {
       id
     });
-    let retMsg = [];
-    for (let product of products) {
-      switch (product.type) {
-      case 'app':
-        let item = yield Application.findById(product.id);
-        let orderItem = yield OrderItem.create({
-          type: product.type,
+    return yield Order.findById(cartID, {
+      include: [{
+        model: OrderItem,
+        where: {
           status: 'on'
-        });
-        orderItem.setOrder(yield Order.findById(cartID));
-        orderItem.setApp(item);
-        retMsg.push(orderItem);
-        break;
+        }
+      }]
+    }).then((data) => {
+      if (data == null) return false;
+      for (let orderItem of data.orderItems) {
+        if (orderItem.appID == productID)
+          return true;
       }
-      //其他类型的商店内容类型
+      return false;
+    });
+  });
+
+  //用户是否购买过某应用
+  amqp.on('appStore.isBought', function* (msg) {
+    let id = msg.id;
+    let productID = msg.productID;
+
+    let user = yield User.findById(id, {
+      include: [{
+        model: UserApp,
+        include: [{
+          model: Application
+        }]
+      }]
+    }).then((user) => {
+      console.log(color.red(user.userApps));
+      for (let app of user.userApps) {
+        if (app.id == productID) {
+          return false;
+        }
+      }
+      return true;
+    })
+  });
+
+  //添加多个购物车内容
+  amqp.on('appStore.addCart', function* (msg) {
+    let id = msg.id;
+    let product = msg.product; //{type:'app',id:id}
+    let cartID = yield amqp.call('appStore.newCart', {
+      id
+    });
+    switch (product.type) {
+    case 'app':
+      let hasProduct = yield amqp.call('appStore.hasProduct', {
+        id,
+        productID: product.id
+      });
+      let isBought = yield amqp.call('appStore.isBought', {
+        id,
+        productID: product.id
+      });
+      // if (!isBought) {
+      //   if (!hasProduct) {
+      let item = yield Application.findById(product.id);
+      let orderItem = yield OrderItem.create({
+        type: product.type,
+        status: 'on'
+      });
+      yield orderItem.setOrder(yield Order.findById(cartID));
+      yield orderItem.setApp(item);
+      return true;
+      //   } else {
+      //     return {
+      //       code: 4004,
+      //       msg: "购物车中已经存在的商品！"
+      //     };
+      //   }
+      // } else {
+      //   return {
+      //     code: 4005,
+      //     msg: "已经购买过了！"
+      //   }
+      // }
+
+      break;
     }
-    return retMsg;
+    //其他类型的商店内容类型
+    return false;
   });
 
   // 删除多个购物车内容
   amqp.on('appStore.delCart', function* (msg) {
     let id = msg.id;
-    let orderItems = msg.products;
-    console.log(orderItems);
-    let retMsg = [];
-    for (let orderItem of orderItems) {
-      let item = OrderItem.upsert({
-        id: orderItem.id,
-        type: orderItem.type,
-        status: 'off'
-      });
-    }
-    return retMsg;
+    let orderItem = msg.product;
+
+    let item = yield OrderItem.upsert({
+      id: orderItem.id,
+      type: orderItem.type,
+      status: 'off'
+    });
+    return true;
   });
 
   // 处理订单状态为已购买

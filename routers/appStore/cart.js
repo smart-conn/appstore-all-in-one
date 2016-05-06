@@ -11,10 +11,10 @@ module.exports = (application) => {
 
     this.body = yield amqp.call('appStore.addCart', {
       id: id,
-      products: [{
+      product: {
         type: body.type,
         id: body.id
-      }]
+      }
     });
   });
 
@@ -22,12 +22,12 @@ module.exports = (application) => {
   router.post('/appStore/delCart', application.authCheck('user'), function* () {
     let id = this.req.user.sub;
     let body = this.request.body;
-    this.body = amqp.call('appStore.delCart', {
+    this.body = yield amqp.call('appStore.delCart', {
       id: id,
-      products: [{
+      product: {
         type: body.type,
         id: body.id
-      }]
+      }
     });
   });
 
@@ -43,6 +43,26 @@ module.exports = (application) => {
       code: 6001,
       msg: '购物车为空'
     } : cart;
+  });
+
+  // 购买
+  router.get('/appStore/deal', application.authCheck('user'), function* () {
+    let id = this.req.user.sub;
+
+    this.body = yield amqp.call('settlement.deal', {
+      id
+    });
+  });
+
+  // 已经购买过的
+  router.get('/appStore/bought', application.authCheck('user'), function* () {
+    let id = this.req.user.sub;
+    yield amqp.call('appStore.isBought', {
+      id
+    });
+    this.body = yield amqp.call('appStore.bought', {
+      id
+    });
   });
 
   application.app.use(router.routes());

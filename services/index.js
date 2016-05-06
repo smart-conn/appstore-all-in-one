@@ -17,7 +17,8 @@ module.exports = (app) => {
     require('./appState'),
     require('./thirdParty'),
     require('./market'),
-    require('./appStore')
+    require('./appStore'),
+    require('./settlement')
   ].forEach((service) => {
     service(app);
   });

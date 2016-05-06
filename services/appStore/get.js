@@ -7,6 +7,7 @@ module.exports = function (app) {
 
   const User = app.getModel('user');
   const Application = app.getModel('app');
+  const UserApp = app.getModel('userApp');
   const Developer = app.getModel('developer');
   const UserDevice = app.getModel('userDevice');
   const DeviceModel = app.getModel('deviceModel');
@@ -147,4 +148,19 @@ module.exports = function (app) {
       }).sort()[0];
     }
   });
+
+  amqp.on('appStore.bought', function* (msg) {
+    let id = msg.id;
+
+    return yield User.findById(id, {
+      include: [{
+        model: UserApp,
+        include: [{
+          model: Application
+        }]
+      }]
+    }).then((data) => {
+      return data.userApps
+    });
+  })
 };

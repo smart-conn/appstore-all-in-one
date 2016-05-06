@@ -63,6 +63,8 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
       }
     }
   });
+
+  //购物车
   $stateProvider.state('cart', {
     url: '/appStore/cart',
     templateUrl: '_include/appStore/cart.html',
@@ -80,6 +82,26 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
       }
     }
   });
+
+  // 已经购买的商品
+  $stateProvider.state('bought', {
+    url: '/appStore/bought',
+    templateUrl: '_include/appStore/bought.html',
+    data: {
+      permissions: {
+        only: ['user'],
+        redirectTo: function () {
+          return {
+            state: 'login',
+            params: {
+              redirectTo: '/appStore/list'
+            }
+          };
+        }
+      }
+    }
+  });
+
 
   //开发者 等待审核页
   $stateProvider.state('waitForCheck', {
