@@ -108,8 +108,8 @@ class Application extends EventEmitter {
   _initPassport() {
     const KoaPassport = require('koa-passport').KoaPassport;
     const passport = new KoaPassport();
-    const User = this.getModel('user');
-    passport.use(User.createStrategy());
+    const Account = this.getModel('account');
+    passport.use(Account.createStrategy());
     return passport;
   }
 
@@ -133,10 +133,7 @@ class Application extends EventEmitter {
   }
 
   _loadModels(sequelize) {
-    require('./models').forEach((modelInitialize) => {
-      modelInitialize(sequelize);
-    });
-    require('./models/_relationships')(sequelize);
+    require('./models')(sequelize);
   }
 
   _loadRouters(applicationInstance) {

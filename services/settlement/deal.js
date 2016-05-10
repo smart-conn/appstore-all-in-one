@@ -23,9 +23,11 @@ module.exports = function (app) {
   amqp.on('settlement.deal', function* (msg) {
     let id = msg.id;
     // 获取用户当前的购物车
-    let cartID = yield amqp.call('appStore.newCart', {
+    // console.log("dsdf");
+    let cartID = yield amqp.call('order.newCart', {
       id
     });
+    // console.log(cartID);
     let appIDs = [];
     //TODO：其他类型的商品
     let items = yield Order.findById(cartID, {
@@ -72,8 +74,8 @@ module.exports = function (app) {
         let userApp = yield UserApp.create({});
         let user = yield User.findById(id);
         let app = yield Application.findById(appID)
-        userApp.setUser(user);
-        userApp.setApp(app);
+        yield userApp.setUser(user);
+        yield userApp.setApp(app);
       }
       Order.upsert({
         id: cartID,

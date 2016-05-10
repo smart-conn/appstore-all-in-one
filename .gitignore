@@ -3,3 +3,4 @@ bower_components/
 *.log
 *.db
 .vscode/
+sftp-config.json

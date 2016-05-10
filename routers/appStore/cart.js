@@ -9,7 +9,7 @@ module.exports = (application) => {
     let id = this.req.user.sub;
     let body = this.request.body;
 
-    this.body = yield amqp.call('appStore.addCart', {
+    this.body = yield amqp.call('order.addCart', {
       id: id,
       product: {
         type: body.type,
@@ -22,7 +22,7 @@ module.exports = (application) => {
   router.post('/appStore/delCart', application.authCheck('user'), function* () {
     let id = this.req.user.sub;
     let body = this.request.body;
-    this.body = yield amqp.call('appStore.delCart', {
+    this.body = yield amqp.call('order.delCart', {
       id: id,
       product: {
         type: body.type,
@@ -35,7 +35,7 @@ module.exports = (application) => {
   router.get('/appStore/cart', application.authCheck('user'), function* () {
     let id = this.req.user.sub;
 
-    let cart = yield amqp.call('appStore.cart', {
+    let cart = yield amqp.call('order.cart', {
       id
     });
 
@@ -57,11 +57,22 @@ module.exports = (application) => {
   // 已经购买过的
   router.get('/appStore/bought', application.authCheck('user'), function* () {
     let id = this.req.user.sub;
-    yield amqp.call('appStore.isBought', {
+    // yield amqp.call('appStore.isBought', {
+    //   id
+    // });
+    this.body = yield amqp.call('order.bought', {
       id
     });
-    this.body = yield amqp.call('appStore.bought', {
-      id
+  });
+
+  router.post('/appStore/fastBuy', application.authCheck('user'), function* () {
+    let id = this.req.user.sub;
+    let body = this.request.body;
+
+    this.body = yield amqp.call('settlement.fastOrder', {
+      id: id,
+      productID: body.id,
+      type: body.type
     });
   });
 

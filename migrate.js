@@ -225,6 +225,54 @@ Promise.coroutine(function* () {
     appPackageID: 8
   });
 
+  const account = yield app.getModel('account').create({
+    username: 'tosone'
+  });
+  yield new Promise(function (resolve, reject) {
+    account.setPassword('tosone', function (err, user) {
+      if (err) reject(err);
+      resolve(user);
+    })
+  });
+  yield account.save();
+
+  const roleUser = yield app.getModel('role').create({
+    name: 'user'
+  });
+  const roleAudotor = yield app.getModel('role').create({
+    name: 'auditor'
+  });
+  const roleAdmin = yield app.getModel('role').create({
+    name: 'admin'
+  });
+  const roleDeveloper = yield app.getModel('role').create({
+    name: 'developer'
+  });
+
+  account.addRole(roleUser);
+  account.addRole(roleAudotor);
+  account.addRole(roleAdmin);
+  account.addRole(roleDeveloper);
+
+  const permissionUser = yield app.getModel('permission').create({
+    name: 'user'
+  });
+  const permissionAuditor = yield app.getModel('permission').create({
+    name: 'auditor'
+  });
+  const permissionAdmin = yield app.getModel('permission').create({
+    name: 'admin'
+  });
+  const permissionDeveloper = yield app.getModel('permission').create({
+    name: 'developer'
+  });
+
+  roleUser.addPermission(permissionUser);
+  roleAdmin.addPermission(permissionAdmin);
+  roleAudotor.addPermission(permissionAuditor);
+  roleDeveloper.addPermission(permissionDeveloper);
+
+
   const user = yield app.getModel('user').create({
     id: 1,
     username: 'tosone'

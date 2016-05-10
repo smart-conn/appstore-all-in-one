@@ -2,24 +2,27 @@
 
 const Sequelize = require('sequelize');
 const passportLocalSequelize = require('passport-local-sequelize');
-const jwt = require('koa-jwt');
-const nconf = require('nconf');
 
 module.exports = function (sequelize) {
 
-  const User = sequelize.define('user', {
+  const Account = sequelize.define('account', {
+    id: {
+      type: Sequelize.STRING,
+      primaryKey: true,
+      defaultValue: Sequelize.UUIDV4
+    },
     username: {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true
     },
-    password: Sequelize.STRING,
+    passowrd: Sequelize.STRING,
     salt: Sequelize.STRING
   });
 
-  passportLocalSequelize.attachToUser(User, {
+  passportLocalSequelize.attachToUser(Account, {
     usernameField: 'username',
-    hashField: 'password',
+    hashField: 'passowrd',
     saltField: 'salt'
   });
 

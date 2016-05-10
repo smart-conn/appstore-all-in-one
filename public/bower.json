@@ -23,6 +23,7 @@
     "ui-router-extras": "^0.1.2",
     "satellizer": "^0.14.0",
     "angular-permission": "2.2.3",
-    "angular-web-user": "https://github.com/gengen1988/angular-web-user.git"
+    "angular-web-user": "https://github.com/gengen1988/angular-web-user.git",
+    "angular-resource": "^1.5.5"
   }
 }
