@@ -4,7 +4,8 @@ angular.module('app', [
   'developer',
   'audit',
   'userCenter',
-  'ngWebUser'
+  'ngWebUser',
+  'ngResource'
 ]).config(function ($authProvider) {
   $authProvider.github({
     clientId: "3d032602cc3318f720bf"

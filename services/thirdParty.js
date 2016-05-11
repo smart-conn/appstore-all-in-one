@@ -58,7 +58,7 @@ module.exports = (app) => {
   });
 
   /**
-   * 判断第三方用户是否存在，不存在将第三方账户加入数据库，返回用户的基本信息
+   * 判断第三方用户是否存在，不存在将第三方账户加入数据库，若存在直接返回数据库中用户的基本信息
    * @param  {json} msg           {accessToken, type}
    * @return {json}               {name, avatar, type, scope}
    */

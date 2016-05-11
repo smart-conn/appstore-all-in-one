@@ -1,25 +1,59 @@
 var appStore = angular.module("appStore");
 
-appStore.controller("AppStore", function ($http) {
-  $http.get("/appStore/apps").success((data) => {
-    this.lists = data;
+
+
+appStore.factory('App', function ($resource) {
+  return $resource('/appStore/apps');
+});
+
+appStore.service('Cart', function ($http) {
+
+  this.add = (id, type) => {
+    return $http.post('/appStore/addCart', {
+      type, id
+    }).then((data) => {
+      return data.data;
+    });
+  };
+  this.purse = () => {
+    return $http.get('/').then((data) => {
+      return data.data;
+    });
+  };
+  this.findAll = () => {
+    return $http.get('/');
+  };
+});
+
+appStore.controller("AppStore", function (Cart, App) {
+
+  App.query().$promise.then((apps) => {
+    this.lists = apps;
   });
 
   this.addCart = (id, $event) => {
-    $http.post('/appStore/addCart', {
-      type: 'app',
-      id: id
+    $event.stopPropagation();
+    Cart.add(id, 'app').then((data) => {
+      console.log(data);
+    });
+  };
+
+  this.buy = (id, $event) => {
+    $http.post('/appStore/fastBuy', {
+      id,
+      type: 'app'
     }).success((data) => {
       console.log(data);
     });
     $event.stopPropagation();
-  };
+  }
 
-  this.buy = (id, $event) => {
-    $http.get('/appStore/cart').success((data) => {
-      console.log(data);
-    });
-    $event.stopPropagation();
+  this.purse = () => {
+    Order.purse();
+  }
+
+  this.zhifubao = () => {
+    console.log("zhifubao");
   }
 });
 

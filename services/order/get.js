@@ -149,8 +149,13 @@ module.exports = function (app) {
     }
   });
 
-  amqp.on('appStore.bought', function* (msg) {
+  //获取所有已经购买的商品
+  amqp.on('order.bought', function* (msg) {
     let id = msg.id;
+
+    // amqp.call("settlement.fastOrder", {
+    //   id
+    // });
 
     return yield User.findById(id, {
       include: [{

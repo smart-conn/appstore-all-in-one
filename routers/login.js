@@ -1,53 +1,31 @@
 "use strict";
+const jwt = require('jsonwebtoken');
+const nconf = require('nconf');
+const router = require('koa-router')();
+
 module.exports = (app) => {
 
-  const jwt = require('jsonwebtoken');
-  const nconf = require('nconf');
-  // const thirdParty = require('../lib/thirdParty');
-
-  const router = require('koa-router')();
   const amqp = app.getContext('amqp');
   const passport = app.getContext('passport');
   const koa = app.getContext('koa');
   const User = app.getModel('user');
   const UserAuth = app.getModel('userAuth');
-
   const clientSecret = nconf.get('clientSecret');
   const secret = nconf.get('secret');
 
-  koa.use(router.routes());
-
-  function* generateToken(next) {
-    const user = this.req.user;
-    const scope = yield User.findById(user.id, {
-      include: [{
-        model: UserAuth
-      }]
-    }).then((user) => {
-      let scope = [];
-      for (let auth of user.userAuths) {
-        scope.push(auth.auth);
-      }
-      return scope.join(',');
-    });
-    this.req.token = jwt.sign({
-      scope: scope
-    }, secret, {
-      subject: user.id
-    });
-    yield next;
-  }
-
-  function* respond() {
-    this.body = {
-      user: this.req.user,
-      token: this.req.token
-    };
-  }
-
   router.post('/auth/login', passport.authenticate('local', {
     session: false
-  }), generateToken, respond);
+  }), function* () {
+    const user = this.req.user;
+    console.log(user);
+    let token = yield amqp.call('login.generateToken', {
+      id: user.id
+    });
+    this.body = {
+      user: user,
+      token: token
+    };
+  });
 
   router.post('/signup', function* (next) {
     const username = this.request.body.username;
@@ -90,4 +68,5 @@ module.exports = (app) => {
     };
   });
 
+  app.app.use(router.routes());
 }

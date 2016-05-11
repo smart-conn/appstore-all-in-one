@@ -10,6 +10,7 @@
     }
   </style>
   <h3 class="text-danger">应用商店列表</h3>
+  <!-- <buy-button msg="you just pushed this button"></buy-button> -->
   <ul class="media-list applist">
     <li class="media" ng-repeat="list in appStore.lists" ui-sref="appInformation({appID:list.id})">
       <div class="media-left">
@@ -20,7 +21,7 @@
       <div class="media-body">
         <h4 class="media-heading">{{list.name}}</h4>
         <p>
-          <button type="button" name="button" class="btn btn-default" ng-click="appStore.buy(list.id,$event)">购买</button>
+          <button type="button" name="button" class="btn btn-default" ng-click="appStore.aa(list.id,$event)">购买</button>
           <button type="button" name="button" class="btn btn-default" ng-click="appStore.addCart(list.id,$event);">加入购物车</button>
         </p>
       </div>
@@ -28,5 +29,18 @@
   </ul>
   <div class="form-group">
     <button type="button" name="button" class="btn btn-primary" ui-sref="cart">查看购物车</button>
+  </div>
+  <div id="select-device" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>付款方式</h4>
+        </div>
+        <div class="modal-body">
+          <button type="button" name="button" ng-click="appStore.purse()">钱包支付</button>
+          <button type="button" name="button" ng-click="appStore.zhifubao()">支付宝支付</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
