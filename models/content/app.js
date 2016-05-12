@@ -1,12 +1,15 @@
 'use strict';
 const Sequelize = require('sequelize');
 
-module.exports = function (sequelize) {
-  sequelize.define('auditorBucket', {
+module.exports = (sequelize) => {
+  sequelize.define('app', {
     id: {
       type: Sequelize.STRING,
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4
-    }
+    },
+    name: Sequelize.STRING,
+    description: Sequelize.TEXT,
+    icon: Sequelize.STRING
   });
 };

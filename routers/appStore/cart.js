@@ -5,7 +5,7 @@ module.exports = (application) => {
   let amqp = application.getContext('amqp');
 
   //添加购物车内的内容
-  router.post('/appStore/addCart', application.authCheck('user'), function* () {
+  router.post('/appStore/carts', application.authCheck('user'), function*() {
     let id = this.req.user.sub;
     let body = this.request.body;
 
@@ -19,20 +19,23 @@ module.exports = (application) => {
   });
 
   //删除购物车内的内容
-  router.post('/appStore/delCart', application.authCheck('user'), function* () {
+  router.delete('/appStore/carts/:id/:type', application.authCheck('user'), function*() {
     let id = this.req.user.sub;
-    let body = this.request.body;
-    this.body = yield amqp.call('order.delCart', {
+    let productId = this.params.id;
+    let type = this.params.type;
+    let msg = yield amqp.call('order.delCart', {
       id: id,
       product: {
-        type: body.type,
-        id: body.id
+        type: productId,
+        id: type
       }
     });
+    console.log(msg);
+    this.body = { code: 200, msg: msg };
   });
 
   //获取购物车的内容
-  router.get('/appStore/cart', application.authCheck('user'), function* () {
+  router.get('/appStore/carts', application.authCheck('user'), function*() {
     let id = this.req.user.sub;
 
     let cart = yield amqp.call('order.cart', {
@@ -46,7 +49,7 @@ module.exports = (application) => {
   });
 
   // 购买
-  router.get('/appStore/deal', application.authCheck('user'), function* () {
+  router.get('/appStore/deal', application.authCheck('user'), function*() {
     let id = this.req.user.sub;
 
     this.body = yield amqp.call('settlement.deal', {
@@ -55,17 +58,15 @@ module.exports = (application) => {
   });
 
   // 已经购买过的
-  router.get('/appStore/bought', application.authCheck('user'), function* () {
+  router.get('/appStore/bought', application.authCheck('user'), function*() {
     let id = this.req.user.sub;
-    // yield amqp.call('appStore.isBought', {
-    //   id
-    // });
+
     this.body = yield amqp.call('order.bought', {
       id
     });
   });
 
-  router.post('/appStore/fastBuy', application.authCheck('user'), function* () {
+  router.post('/appStore/fastOrder', application.authCheck('user'), function*() {
     let id = this.req.user.sub;
     let body = this.request.body;
 

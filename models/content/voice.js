@@ -1,8 +1,8 @@
 'use strict';
 const Sequelize = require('sequelize');
 
-module.exports = function (sequelize) {
-  sequelize.define('deviceModel', {
+module.exports = (sequelize) => {
+  sequelize.define('voice', {
     name: Sequelize.STRING
   });
 };

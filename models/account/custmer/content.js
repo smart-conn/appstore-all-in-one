@@ -1,0 +1,9 @@
+'use strict';
+const Sequelize = require('sequelize');
+
+module.exports = function(sequelize) {
+  sequelize.define('custmerContent', {
+    type: Sequelize.STRING,
+    accessToken: Sequelize.TEXT
+  });
+};

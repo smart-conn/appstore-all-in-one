@@ -4,13 +4,42 @@ const Sequelize = require('sequelize');
 module.exports = (sequelize) => {
   const MappingAccountRole = sequelize.define('mappingAccountRole', {});
   const MappingPermissionRole = sequelize.define('mappingPermissionRole', {});
+  const MappingThirdPartyRole = sequelize.define('MappingThirdPartyRole', {});
+  const AuditorTask = sequelize.define('auditorTask', {});
 
   const Role = sequelize.models['role'];
   const Account = sequelize.models['account'];
   const Permission = sequelize.models['permission'];
-  const ProfileCustmer = sequelize.models['profileCustmer'];
-  const ProfileOperator = sequelize.models['profileOperator'];
-  const ProfileManufacturer = sequelize.models['profileManufacturer'];
+  const Custmer = sequelize.models['profileCustmer'];
+  const Operator = sequelize.models['profileOperator'];
+  const Manufacturer = sequelize.models['profileManufacturer'];
+  const Developer = sequelize.models['profileDeveloper'];
+  const Auditor = sequelize.models['profileAuditor'];
+  const ThirdParty = sequelize.models['thirdParty'];
+
+  Custmer.belongsTo(ThirdParty, {
+    foreignKey: 'thirdPartyId'
+  });
+  ThirdParty.hasOne(Custmer, {
+    foreignKey: 'thirdPartyId'
+  });
+
+  Developer.belongsTo(ThirdParty, {
+    foreignKey: 'thirdPartyId'
+  });
+  ThirdParty.hasOne(Developer, {
+    foreignKey: 'thirdPartyId'
+  });
+
+  //ThirdParty and Role
+  ThirdParty.belongsToMany(Role, {
+    through: MappingThirdPartyRole,
+    foreignKey: 'thirdPartyId'
+  });
+  Role.belongsToMany(ThirdParty, {
+    through: MappingThirdPartyRole,
+    foreignKey: 'thirdPartyId'
+  });
 
   //Account and Role
   Account.belongsToMany(Role, {
@@ -32,27 +61,51 @@ module.exports = (sequelize) => {
     foreignKey: 'permissionId'
   });
 
-  //manufacturer
-  ProfileManufacturer.belongsTo(Account, {
+  //Manufacturer
+  Manufacturer.belongsTo(Account, {
     foreignKey: 'accountId'
   });
-  Account.hasOne(ProfileManufacturer, {
-    foreignKey: 'accountId'
-  });
-
-  //operatorProfile
-  ProfileOperator.belongsTo(Account, {
-    foreignKey: 'accountId'
-  });
-  Account.hasOne(ProfileOperator, {
+  Account.hasOne(Manufacturer, {
     foreignKey: 'accountId'
   });
 
-  //custmerProfile
-  ProfileCustmer.belongsTo(Account, {
+  //Operator
+  Operator.belongsTo(Account, {
     foreignKey: 'accountId'
   });
-  Account.hasOne(ProfileCustmer, {
+  Account.hasOne(Operator, {
     foreignKey: 'accountId'
+  });
+
+  //Custmer
+  Custmer.belongsTo(Account, {
+    foreignKey: 'accountId'
+  });
+  Account.hasOne(Custmer, {
+    foreignKey: 'accountId'
+  });
+
+  //Developer
+  Developer.belongsTo(Account, {
+    foreignKey: 'accountId'
+  });
+  Account.hasOne(Developer, {
+    foreignKey: 'accountId'
+  });
+
+  //Auditor
+  Auditor.belongsTo(Account, {
+    foreignKey: 'accountId'
+  });
+  Account.hasOne(Auditor, {
+    foreignKey: 'accountId'
+  });
+
+  //Auditor and AuditorTask
+  Auditor.hasMany(AuditorTask, {
+    foreignKey: 'auditorId'
+  });
+  AuditorTask.belongsTo(Auditor, {
+    foreignKey: 'auditorId'
   });
 }

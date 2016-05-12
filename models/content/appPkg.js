@@ -1,8 +1,8 @@
 'use strict';
 const Sequelize = require('sequelize');
 
-module.exports = function (sequelize) {
-  sequelize.define('appPackage', { //TODO:fix name to appHistory
+module.exports = (sequelize) => {
+  sequelize.define('appPkg', {
     version: Sequelize.STRING,
     flow: Sequelize.TEXT,
     price: {

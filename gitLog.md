@@ -1,3 +1,7 @@
+### 2016-05-11
+- remove Cart
+- change Order model
+
 ### 2016-05-10
 - change account to similar with BBCloud
 - change login logic, and login with Account

@@ -1,32 +1,69 @@
 var appStore = angular.module("appStore");
 
-
-
-appStore.factory('App', function ($resource) {
+appStore.factory('App', function($resource) {
   return $resource('/appStore/apps');
 });
 
-appStore.service('Cart', function ($http) {
+appStore.factory('Cart', function($resource) {
+  return $resource('/appStore/carts/:id/:type');
+});
+
+appStore.service('AppStore', function($http, $resource) {
+  this.cartREST = () => {
+    return $resource('/appStore/cart');
+  };
+
+  this.get = () => {
+    $http.get('/appStore/cart').success((data) => {
+      this.products = data;
+    });
+  };
 
   this.add = (id, type) => {
     return $http.post('/appStore/addCart', {
-      type, id
-    }).then((data) => {
-      return data.data;
+      type,
+      id
+    }).then((reply) => {
+      return reply.data;
     });
   };
+
+  this.del = () => {
+    $http.post('/appStore/delCart', {
+      type: type,
+      id: id
+    }).then((reply) => {
+      return reply.data;
+    });
+  };
+
   this.purse = () => {
-    return $http.get('/').then((data) => {
-      return data.data;
+    return $http.get('/').then((reply) => {
+      return reply.data;
     });
   };
+
   this.findAll = () => {
     return $http.get('/');
   };
+
+  this.fastOrder = (id, type) => {
+    $http.post('/appStore/fastOrder', {
+      id,
+      type
+    }).then((reply) => {
+      return reply.data;
+    });
+  };
+
+  this.fastBuy = () => {
+    $http.get('/appStore/fastBuy').then((reply) => {
+      return reply.data;
+    });
+  };
 });
 
-appStore.controller("AppStore", function (Cart, App) {
-
+appStore.controller("AppStore", function(Cart, App) {
   App.query().$promise.then((apps) => {
     this.lists = apps;
   });
@@ -39,10 +76,7 @@ appStore.controller("AppStore", function (Cart, App) {
   };
 
   this.buy = (id, $event) => {
-    $http.post('/appStore/fastBuy', {
-      id,
-      type: 'app'
-    }).success((data) => {
+    Cart.fastOrder(id, 'app').then((data) => {
       console.log(data);
     });
     $event.stopPropagation();
@@ -57,18 +91,22 @@ appStore.controller("AppStore", function (Cart, App) {
   }
 });
 
-appStore.controller('Cart', function ($http) {
-  $http.get('/appStore/cart').success((data) => {
-    this.products = data;
+appStore.controller('Cart', function(Cart) {
+  Cart.query().$promise.then((reply) => {
+    this.products = reply;
   });
 
   this.del = (type, id, $event) => {
-    $http.post('/appStore/delCart', {
-      type: type,
-      id: id
-    }).success((data) => {
-      console.log(data);
-    })
+    Cart.delete({ id: 2, type: type }).$promise.then((reply) => {
+      console.log(reply);
+    });
+    // $http.post('/appStore/delCart', {
+    //   type: type,
+    //   id: id
+    // }).success((data) => {
+    //   console.log(data);
+    // })
+
     console.log("del" + id);
     $event.stopPropagation();
   }
@@ -79,13 +117,13 @@ appStore.controller('Cart', function ($http) {
   }
 });
 
-appStore.controller('Bought', function ($http) {
+appStore.controller('Bought', function($http) {
   $http.get('/appStore/bought').success((data) => {
     this.products = data;
   });
 })
 
-appStore.controller("AppInfo", function (AppService, $state, $http) {
+appStore.controller("AppInfo", function(AppService, $state, $http) {
   this.id = $state.params.appID;
   $http.get("/appStore/app/" + $state.params.appID).success((data) => {
     this.name = data.name;
@@ -103,7 +141,7 @@ appStore.controller("AppInfo", function (AppService, $state, $http) {
     });
   }
 
-  this.install = function (id, alias) {
+  this.install = function(id, alias) {
     AppService.install(id, alias);
   }
 });

@@ -1,13 +1,14 @@
 'use strict';
 const Sequelize = require('sequelize');
 
-module.exports = function (sequelize) {
-  sequelize.define('order', {
+module.exports = function(sequelize) {
+  sequelize.define('purseLog', {
     id: {
       type: Sequelize.STRING,
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4
     },
-    status: Sequelize.STRING //open,close
+    type: Sequelize.STRING, //buy,charge
+    log: Sequelize.STRING
   });
 };

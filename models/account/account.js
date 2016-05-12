@@ -1,10 +1,8 @@
 'use strict';
-
 const Sequelize = require('sequelize');
 const passportLocalSequelize = require('passport-local-sequelize');
 
-module.exports = function (sequelize) {
-
+module.exports = function(sequelize) {
   const Account = sequelize.define('account', {
     id: {
       type: Sequelize.STRING,
@@ -25,5 +23,4 @@ module.exports = function (sequelize) {
     hashField: 'passowrd',
     saltField: 'salt'
   });
-
 };

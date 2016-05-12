@@ -1,9 +1,7 @@
 'use strict';
-
 const Sequelize = require('sequelize');
 
-module.exports = function (sequelize) {
-
+module.exports = function(sequelize) {
   sequelize.define('profileOperator', {
     id: {
       type: Sequelize.STRING,
@@ -12,5 +10,4 @@ module.exports = function (sequelize) {
     },
     name: Sequelize.STRING
   });
-
 };

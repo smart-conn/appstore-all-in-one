@@ -8,7 +8,10 @@ module.exports = (sequelize) => {
     require('./permission'),
     require('./profileCustmer'),
     require('./profileOperator'),
-    require('./profileManufacturer')
+    require('./profileManufacturer'),
+    require('./profileDeveloper'),
+    require('./profileAuditor'),
+    require('./custmer')
   ].forEach((model) => {
     model(sequelize);
   });

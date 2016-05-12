@@ -2,8 +2,16 @@
 
 const app = require('./application')();
 const sequelize = app.getContext('sequelize');
-const fs = require('fs');
 const Promise = require('bluebird');
+const fs = require('fs');
+
+const App = app.getModel('app');
+const AppPkg = app.getModel('appPkg');
+const AppPkgStatus = app.getModel('appPkgStatus');
+const Custmer = app.getModel('profileCustmer');
+const Auditor = app.getModel('profileAuditor');
+const Developer = app.getModel('profileDeveloper');
+const Manufacturer = app.getModel('profileManufacturer');
 
 if (fs.existsSync('./application.db')) fs.unlinkSync('./application.db');
 
@@ -11,12 +19,12 @@ Promise.coroutine(function* () {
 
   yield sequelize.sync();
 
-  yield app.getModel('developer').create({
+  yield Developer.create({
     id: 5,
     name: 'tosone'
   });
 
-  yield app.getModel('app').create({
+  yield App.create({
     id: 'NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj',
     name: '变声',
     developerID: 5,
@@ -24,7 +32,7 @@ Promise.coroutine(function* () {
     icon: '1.jpg'
   });
 
-  yield app.getModel('app').create({
+  yield App.create({
     id: 'MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1',
     name: '电话本',
     developerID: 5,
@@ -32,7 +40,7 @@ Promise.coroutine(function* () {
     icon: '1.jpg'
   });
 
-  yield app.getModel('app').create({
+  yield App.create({
     id: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
     name: 'UUID 生成器',
     developerID: 5,
@@ -40,7 +48,7 @@ Promise.coroutine(function* () {
     icon: '1.jpg'
   });
 
-  yield app.getModel('appPackage').create({
+  yield AppPkg.create({
     id: 1,
     appID: 'NGYxNTg2ODMtY2U2NS00Y2FiLTljYmQtZDI1ZGY3YWMwMDdj',
     version: '0.0.2',
@@ -74,7 +82,7 @@ Promise.coroutine(function* () {
     }])
   });
 
-  yield app.getModel('appPackage').create({
+  yield AppPkg.create({
     id: 2,
     appID: 'MzFiY2YxZGItMGQ0Mi00NDY5LTlkYjAtYWZlYjlhYTg0MTQ1',
     version: '0.0.1',
@@ -108,7 +116,7 @@ Promise.coroutine(function* () {
     }])
   });
 
-  yield app.getModel('appPackage').create({
+  yield AppPkg.create({
     id: 5,
     appID: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
     version: '0.0.1',
@@ -145,7 +153,7 @@ Promise.coroutine(function* () {
     }])
   });
 
-  yield app.getModel('appPackage').create({
+  yield AppPkg.create({
     id: 8,
     appID: 'ZTZkYWE5NzUtYzU4MC00MGY2LTgwNTAtYzBkYTkyN2Q4ZjFk',
     version: '0.0.1',
@@ -186,25 +194,25 @@ Promise.coroutine(function* () {
     }])
   });
 
-  yield app.getModel('appPackageStatus').create({
+  yield AppPkgStatus.create({
     id: 1,
     status: 'waitReview',
     appPackageID: 1
   });
 
-  yield app.getModel('appPackageStatus').create({
+  yield AppPkgStatus.create({
     id: 2,
     status: 'waitReview',
     appPackageID: 2
   });
 
-  yield app.getModel('appPackageStatus').create({
+  yield AppPkgStatus.create({
     id: 8,
     status: 'reviewPass',
     appPackageID: 5
   });
 
-  yield app.getModel('appPackageStatus').create({
+  yield AppPkgStatus.create({
     id: 10,
     status: 'reviewPass',
     appPackageID: 8

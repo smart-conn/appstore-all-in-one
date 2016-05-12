@@ -1,8 +1,10 @@
 'use strict';
+
 const Sequelize = require('sequelize');
 
-module.exports = function (sequelize) {
-  sequelize.define('auditor', {
+module.exports = function(sequelize) {
+
+  sequelize.define('profileAuditor', {
     id: {
       type: Sequelize.STRING,
       primaryKey: true,
@@ -10,4 +12,5 @@ module.exports = function (sequelize) {
     },
     name: Sequelize.STRING
   });
+
 };

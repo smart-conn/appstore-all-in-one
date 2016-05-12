@@ -15,9 +15,9 @@ module.exports = (app) => {
 
   router.post('/auth/login', passport.authenticate('local', {
     session: false
-  }), function* () {
+  }), function*() {
     const user = this.req.user;
-    console.log(user);
+
     let token = yield amqp.call('login.generateToken', {
       id: user.id
     });
@@ -27,11 +27,11 @@ module.exports = (app) => {
     };
   });
 
-  router.post('/signup', function* (next) {
+  router.post('/signup', function*(next) {
     const username = this.request.body.username;
     const password = this.request.body.password;
-    yield new Promise(function (resolve, reject) {
-      User.register(username, password, function (err) {
+    yield new Promise(function(resolve, reject) {
+      User.register(username, password, function(err) {
         if (err) return reject();
         resolve(true);
       });
@@ -41,7 +41,7 @@ module.exports = (app) => {
     };
   });
 
-  router.post("/auth/:type", function* () {
+  router.post("/auth/:type", function*() {
     let body = this.request.body;
     let type = this.params.type;
     console.log(body);
@@ -62,7 +62,7 @@ module.exports = (app) => {
     };
   });
 
-  router.get('/api/test', app.authCheck("developer"), function* () {
+  router.get('/api/test', app.authCheck("developer"), function*() {
     this.body = {
       msg: 'ok'
     };
