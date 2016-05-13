@@ -2,21 +2,14 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-  const CustmerDevice = sequelize.models['custmerDevice'];
+  const AccountDevice = sequelize.models['accountDevice'];
   const DeviceModel = sequelize.models['deviceModel'];
   const Custmer = sequelize.models['profileCustmer'];
+  const Account = sequelize.models['account'];
 
-  Custmer.hasMany(CustmerDevice, {
-    foreignKey: 'custmerId'
-  });
-  CustmerDevice.belongsTo(Custmer, {
-    foreignKey: 'custmerId'
-  });
+  Account.hasMany(AccountDevice);
+  AccountDevice.belongsTo(Account);
 
-  DeviceModel.hasMany(CustmerDevice, {
-    foreignKey: 'deviceModelId'
-  });
-  CustmerDevice.belongsTo(DeviceModel, {
-    foreignKey: 'deviceModelId'
-  });
+  DeviceModel.hasMany(AccountDevice);
+  AccountDevice.belongsTo(DeviceModel);
 }

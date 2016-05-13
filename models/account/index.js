@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
     require('./profileManufacturer'),
     require('./profileDeveloper'),
     require('./profileAuditor'),
-    require('./custmer')
+    require('./thirdParty')
   ].forEach((model) => {
     model(sequelize);
   });

@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = function(sequelize) {
-  sequelize.define('custmerDevice', {
+  sequelize.define('accountDevice', {
     name: Sequelize.STRING,
     alias: Sequelize.STRING,
     accessToken: Sequelize.STRING,

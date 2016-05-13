@@ -7,43 +7,48 @@ module.exports = (sequelize) => {
   const Voice = sequelize.models['voice'];
   const VoicePkg = sequelize.models['voicePkg'];
   const Custmer = sequelize.models['profileCustmer'];
-  const CustmerContent = sequelize.models['custmerContent'];
-  
-  App.hasMany(AppPkg, {
-    foreignKey: 'appId'
-  });
-  AppPkg.belongsTo(App, {
-    foreignKey: 'appId'
-  });
+  const AccountContent = sequelize.models['accountContent'];
+  const AppPkgStatus = sequelize.models['appPkgStatus'];
+  const AppPkgLatestStatus = sequelize.define('appPkgLatestStatus', {});
+  const VoicePkgStatus = sequelize.models['voicePkgStatus'];
+  const VoicePkgLatestStatus = sequelize.define('voicePkgLatestStatus');
+  const Account = sequelize.models['account'];
 
-  Voice.hasMany(VoicePkg, {
-    foreignKey: 'voiceId'
-  });
-  VoicePkg.belongsTo(Voice, {
-    foreignKey: 'voiceId'
-  });
+  //Account and App
+  Account.hasMany(App);
+  App.belongsTo(Account);
+
+  //App and AppPkg
+  App.hasMany(AppPkg);
+  AppPkg.belongsTo(App);
+
+  //Voice and VoicePkg
+  Voice.hasMany(VoicePkg);
+  VoicePkg.belongsTo(Voice);
 
   //Custmer and CustmerContent
-  Custmer.hasMany(CustmerContent, {
-    foreignKey: 'custmerId'
-  });
-  CustmerContent.belongsTo(Custmer, {
-    foreignKey: 'custmerId'
-  });
+  Account.hasMany(AccountContent);
+  AccountContent.belongsTo(Account);
 
   //AppPkg and CustmerContent
-  AppPkg.hasOne(CustmerContent, {
-    foreignKey: 'appPkgId'
-  });
-  CustmerContent.belongsTo(AppPkg, {
-    foreignKey: 'appPkgId'
-  });
+  AppPkg.hasOne(AccountContent);
+  AccountContent.belongsTo(AppPkg);
 
   //VoicePkg and CustmerContent
-  VoicePkg.hasOne(CustmerContent, {
-    foreignKey: 'voicePkg'
-  });
-  CustmerContent.belongsTo(VoicePkg, {
-    foreignKey: 'voicePkg'
-  });
+  VoicePkg.hasOne(AccountContent);
+  AccountContent.belongsTo(VoicePkg);
+
+  //AppPkg and Status
+  AppPkg.hasOne(AppPkgLatestStatus);
+  AppPkgLatestStatus.belongsTo(AppPkg);
+  AppPkgLatestStatus.belongsTo(AppPkgStatus);
+  AppPkgStatus.hasOne(AppPkgLatestStatus);
+
+  //VoicePkg and Status
+  VoicePkg.hasOne(VoicePkgLatestStatus);
+  VoicePkgLatestStatus.belongsTo(VoicePkg);
+  VoicePkgLatestStatus.belongsTo(VoicePkgStatus);
+  VoicePkgStatus.hasOne(VoicePkgLatestStatus);
+
+  //
 }

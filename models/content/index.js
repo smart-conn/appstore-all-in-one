@@ -6,7 +6,9 @@ module.exports = (sequelize) => {
     require('./voice'),
     require('./voicePkg'),
     require('./app'),
-    require('./appPkg')
+    require('./appPkg'),
+    require('./contentStatus'),
+    require('./account')
   ].forEach((relationships) => {
     relationships(sequelize);
   });

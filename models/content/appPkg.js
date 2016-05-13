@@ -3,12 +3,13 @@ const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
   sequelize.define('appPkg', {
-    version: Sequelize.STRING,
-    flow: Sequelize.TEXT,
-    price: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
+    id: {
+      type: Sequelize.STRING,
+      primaryKey: true,
+      defaultValue: Sequelize.UUIDV4
     },
+    version: Sequelize.STRING,
+    flow: Sequelize.TEXT,    
     description: Sequelize.TEXT
   });
 };
