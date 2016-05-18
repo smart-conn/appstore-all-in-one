@@ -10,6 +10,7 @@ class Application extends EventEmitter {
     this._configure(process.env.NODE_ENV);
 
     const sequelize = this.sequelize = this._initSequelize();
+    const mongoose = this._initMongo();
     this._loadModels(sequelize);
 
     const amqp = this.amqp = this._initAMQP();
@@ -60,6 +61,13 @@ class Application extends EventEmitter {
     this._setContext('amqp', amqp);
     this._setContext('passport', passport);
     this._setContext('koa', koaApp);
+  }
+
+  _initMongo() {
+    const mongoose = require('mongoose');
+    mongoose.connect(this.getConfig("mongodb"));
+    require('./mongoModels')(mongoose);
+    return mongoose;
   }
 
   _initServer(koaApp) {

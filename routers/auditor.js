@@ -17,7 +17,7 @@ module.exports = (application) => {
     });
   });
 
-  //获取某个auditot的任务列表
+  //获取某个auditor的任务列表
   router.get('/auditor/taskList', function* () {
     const amqp = this.app.context.amqp;
     this.body = yield amqp.call("auditor.taskList", {

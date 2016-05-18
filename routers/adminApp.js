@@ -33,9 +33,9 @@ module.exports = (application) => {
         appID: this.params.id
       });
     });
-  }
+  };
 
-  var adminRouters = ["app", "appPackage", "deviceModel", "user", "userDevice"];
+  var adminRouters = ["admin.appPkg", "admin.app", "admin.user", "admin.accountDevice", "admin.deviceModel", "admin.role", "admin.permission"];
   adminRouters.forEach((adminRouter) => {
     appAdminHelper(adminRouter);
   });

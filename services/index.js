@@ -8,7 +8,7 @@ module.exports = (app) => {
     require('./passport-satellizer'),
     require('./device-manager'),
     // require('./store-front'),
-    require('./appAdmin/appAdmin'),
+    require('./appAdmin'),
     // require('./developer/uploadApp'),
     // require('./developer/getAppByID'),
     require('./audit'),

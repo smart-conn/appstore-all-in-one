@@ -265,7 +265,7 @@ Promise.coroutine(function*() {
   let deviceModel = yield DeviceModel.create({
     name: 'toy'
   });
-  let accountDevice = AccountDevice.create({
+  let accountDevice =yield AccountDevice.create({
     name: 'Toy Tom',
     alias: '1234456sd',
     accessToken: '123456789',
@@ -274,8 +274,8 @@ Promise.coroutine(function*() {
     wechatDeviceId: '123456789',
     activated: true
   });
-  // yield accountDevice.setDeviceModel(deviceModel);
-  // yield accountDevice.setAccount(custmerAccount);
+  yield accountDevice.setDeviceModel(deviceModel);
+  yield accountDevice.setAccount(custmerAccount);
 
   let accountContent = yield AccountContent.create({
     type: 'app',

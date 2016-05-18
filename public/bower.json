@@ -24,6 +24,7 @@
     "satellizer": "^0.14.0",
     "angular-permission": "2.2.3",
     "angular-web-user": "https://github.com/gengen1988/angular-web-user.git",
-    "angular-resource": "^1.5.5"
+    "angular-resource": "^1.5.5",
+    "ng-admin": "^0.9.1"
   }
 }

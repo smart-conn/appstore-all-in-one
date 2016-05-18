@@ -4,7 +4,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
 
   $webUserProvider.scopes([
     'auditor',
-    'user',
+    'custmer',
     'developer',
     'admin'
   ]);
@@ -15,7 +15,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     templateUrl: '_include/deviceManagement.html',
     data: {
       permissions: {
-        only: ['user'],
+        only: ['custmer'],
         redirectTo: function () {
           return {
             state: 'login',
@@ -33,7 +33,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     templateUrl: '_include/appStore/info.html',
     data: {
       permissions: {
-        only: ['user'],
+        only: ['custmer'],
         redirectTo: function () {
           return {
             state: 'login',
@@ -51,7 +51,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     templateUrl: '_include/appStore/list.html',
     data: {
       permissions: {
-        only: ['user'],
+        only: ['custmer'],
         redirectTo: function () {
           return {
             state: 'login',
@@ -70,7 +70,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     templateUrl: '_include/appStore/cart.html',
     data: {
       permissions: {
-        only: ['user'],
+        only: ['custmer'],
         redirectTo: function () {
           return {
             state: 'login',
@@ -89,7 +89,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $webUserProvider) {
     templateUrl: '_include/appStore/bought.html',
     data: {
       permissions: {
-        only: ['user'],
+        only: ['custmer'],
         redirectTo: function () {
           return {
             state: 'login',

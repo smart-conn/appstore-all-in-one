@@ -40,7 +40,7 @@ module.exports = {
     "id": "116d5bb3.ee92a4",
     "type": "function",
     "name": "for each item",
-    "func": "if( msg.i     == undefined ) msg.i = 0;\nif( msg.items == undefined ) msg.items = msg.payload;\n\nmsg.payload = msg.items[ msg.i ];\n\nreturn msg;",
+    "func": "if( msg.i == undefined ) msg.i = 0;\nif( msg.items == undefined ) msg.items = msg.payload;\n\nmsg.payload = msg.items[ msg.i ];\n\nreturn msg;",
     "outputs": 1,
     "x": 378,
     "y": 240,

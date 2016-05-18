@@ -1,6 +1,5 @@
 'use strict';
 const _ = require('lodash');
-const colors = require('colors');
 
 module.exports = function (app) {
   const amqp = app.getContext('amqp');
