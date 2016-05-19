@@ -5,5 +5,5 @@
   "secret": "secret",
   "clientID": "3d032602cc3318f720bf",
   "clientSecret": "c64449debfe67c086f279a43be222aa819c59421",
-  "mongodb":"mongodb://sone:8541539655@115.28.87.181:27017/CodeShare"
+  "mongodb":"mongodb://127.0.0.1:27017/appStore"
 }
