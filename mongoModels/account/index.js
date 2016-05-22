@@ -2,7 +2,9 @@
 
 module.exports = (mongoose) => {
     [
-        "./account"
+        "./account",
+        './permission',
+        './role'
     ].forEach((file) => {
         require(file)(mongoose);
     });
