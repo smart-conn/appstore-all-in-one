@@ -1,12 +1,11 @@
 'use strict';
 
-const Promise = require('bluebird');
+const _ = require("underscore");
+const co = require('co');
 const fs = require('fs');
 const nconf = require('nconf');
-const Sequelize = require('sequelize');
 const mongoose = require('mongoose');
 const passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 nconf.argv().env();
@@ -18,15 +17,49 @@ mongoose.connect(nconf.get("mongodb"), err => {
   else {
     console.log("MongoDB Connect Succ.");
 
-
     const models = mongoose.models;
     const Account = models.account;
-    
-    Account.register(new Account({ name: "tosone" }), "tosone", err => {
-      if (err) console.log(err);
-      else console.log("succ");
-    });
+    const Role = models.role;
+    const Permission = models.permission;
 
+    Promise.all([
+      _.each(models, (model) => {
+        return new Promise((resolve, reject) => {
+          model.remove(err => {
+            if (!err) resolve(false)
+          });
+        });
+      })
+    ]).then(() => {
+      console.log("All Collections have been removed.");
+
+      let adminPermission = new Permission({
+        name: "developer"
+      });
+
+      let adminRole = new Role({
+        name: "role"
+      });
+      adminRole.permission.push(adminPermission);
+
+      let adminAccount = new Account({ name: "tosone" });
+      adminAccount.role.push(adminRole);
+
+      Promise.all([
+        adminPermission.save(),
+        adminRole.save(),
+        new Promise((resolve, reject) => {
+          Account.register(adminAccount, "tosone", (err) => {
+            if (!err) resolve(true);
+          });
+        })
+      ]).then(() => {
+        console.log("Init succ");
+        process.exit(0);
+      }).catch((err) => {
+        console.log(err);
+      });
+    })
   }
 });
 

@@ -58,3 +58,58 @@ test([{
 }, {
   id: 2
 }]).then(console.log.bind(console)).catch(console.log.bind(console));
+
+
+
+      // co(function* () {
+
+      //   let developerPermission = null;
+      //   let auditorPermission = null;
+      //   let custmerPermission = null;
+
+      //   yield new Promise((resolve, reject) => {
+      //     Permission.remove(() => {
+
+
+      //       custmerPermission = new Permission({
+      //         name: "custmer"
+      //       }).save(err => {
+      //         if (err) console.log(err);
+      //         else resolve(true);
+      //       });
+
+      //       auditorPermission = new Permission({
+      //         name: "auditor"
+      //       }).save(err => {
+      //         if (err) console.log(err);
+      //         else resolve(true);
+      //       });
+      //     });
+      //   });
+
+      //   let developerRole = null;
+      //   let auditorRole = null;
+      //   let custmerRole = null;
+      //   yield new Promise((resolve, reject) => {
+      //     console.log(developerPermission);
+      //     Role.remove(() => {
+      //       new Role({
+      //         name: "developer",
+      //         permission: [developerPermission._id]
+      //       }).save(err => {
+      //         if (err) console.log(err);
+      //         else resolve(true);
+      //       });
+      //     });
+      //   });
+
+      //   yield new Promise((resolve, reject) => {
+      //     Account.remove(() => {
+      //       Account.register(new Account({ name: "tosone" }), "tosone", err => {
+      //         if (err) console.log(err);
+      //         else resolve(true);
+      //       });
+      //     });
+      //   });
+
+      // });
